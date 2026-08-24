@@ -1105,6 +1105,89 @@
   #view-guia .guide-links-grid{grid-template-columns:1fr;}
 }
 
+
+
+/* =========================================================
+   CRÉDITOS 2.8 — interface de compra, confiança e histórico
+========================================================= */
+#view-creditos .credits-hero{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:stretch;margin-bottom:18px;}
+#view-creditos .credits-intro{border:1px solid rgba(18,165,148,.18);border-radius:16px;padding:22px 24px;background:linear-gradient(135deg,#10233d 0%,#183653 100%);color:#fff;box-shadow:0 18px 44px rgba(15,27,45,.12);}
+#view-creditos .credits-kicker{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;background:rgba(95,215,199,.12);border:1px solid rgba(95,215,199,.22);color:#7ce5d5;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;}
+#view-creditos .credits-intro h2{margin:12px 0 7px;font-size:29px;line-height:1.12;color:#fff;}
+#view-creditos .credits-intro p{margin:0;color:#dce7f2;font-size:13.5px;line-height:1.55;max-width:680px;}
+#view-creditos .credits-points{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px;}
+#view-creditos .credits-point{padding:7px 9px;border-radius:999px;background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.12);font-size:10.8px;color:#eef6fb;}
+#view-creditos .credits-trust{border:1px solid var(--line);border-radius:16px;background:#fff;padding:18px;box-shadow:0 12px 30px rgba(16,32,59,.05);display:flex;flex-direction:column;justify-content:center;}
+#view-creditos .credits-trust .shield{width:42px;height:42px;border-radius:12px;background:#eaf8f3;color:#087d60;display:grid;place-items:center;font-size:19px;margin-bottom:10px;}
+#view-creditos .credits-trust strong{font-size:14px;color:var(--navy);display:block;margin-bottom:5px;}
+#view-creditos .credits-trust p{font-size:11.8px;color:var(--muted);line-height:1.5;margin:0;}
+
+#view-creditos .purchase-panel{padding:0;overflow:hidden;}
+#view-creditos .credits-balance{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 20px;border-bottom:1px solid var(--line);background:#fbfcfd;}
+#view-creditos .balance-label{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.35px;font-weight:800;}
+#view-creditos .balance-value{font-family:'Space Grotesk';font-size:30px;font-weight:750;color:var(--navy);line-height:1.08;margin-top:3px;}
+#view-creditos .balance-help{display:inline-flex;gap:7px;align-items:center;padding:8px 11px;border-radius:10px;background:#eaf8f3;color:#176b58;font-size:11.5px;font-weight:650;}
+#view-creditos .purchase-body{padding:20px;}
+#view-creditos .purchase-title{margin:0 0 5px;color:var(--navy);font-size:15px;}
+#view-creditos .purchase-sub{margin:0 0 14px;color:var(--muted);font-size:12px;}
+
+#view-creditos .credit-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+#view-creditos .qtd-opt.credit-plan{position:relative;display:block;width:100%;text-align:left;padding:16px;border-radius:13px;background:#fff;border:1.5px solid var(--line);min-height:122px;transition:.18s ease;box-shadow:0 5px 16px rgba(16,32,59,.035);}
+#view-creditos .qtd-opt.credit-plan:hover{transform:translateY(-1px);border-color:#a7dcd0;box-shadow:0 10px 24px rgba(16,32,59,.07);}
+#view-creditos .qtd-opt.credit-plan.sel{border-color:var(--teal);background:linear-gradient(180deg,#f3fcf9,#fff);box-shadow:0 0 0 2px rgba(18,165,148,.08),0 10px 24px rgba(16,32,59,.06);color:var(--navy);}
+#view-creditos .plan-check{position:absolute;right:12px;top:12px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:1px solid #d6e1e4;color:transparent;background:#fff;font-size:12px;font-weight:900;}
+#view-creditos .qtd-opt.credit-plan.sel .plan-check{background:var(--teal);border-color:var(--teal);color:#062c25;}
+#view-creditos .plan-qty{font-size:11px;color:var(--muted);font-weight:750;text-transform:uppercase;letter-spacing:.3px;}
+#view-creditos .plan-price{font-family:'Space Grotesk';font-size:24px;font-weight:750;color:var(--navy);margin:5px 0 3px;}
+#view-creditos .plan-desc{font-size:11.3px;color:var(--muted);line-height:1.35;}
+#view-creditos .plan-unit{font-size:10.5px;color:#087457;font-weight:750;margin-top:8px;}
+
+#view-creditos .checkout-summary{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;background:#fbfcfd;padding:13px 14px;margin-bottom:13px;}
+#view-creditos .checkout-summary .label{font-size:11px;color:var(--muted);font-weight:750;text-transform:uppercase;letter-spacing:.3px;}
+#view-creditos .checkout-summary .value{font-family:'Space Grotesk';font-size:20px;color:var(--navy);font-weight:750;}
+#view-creditos .checkout-summary .detail{font-size:11.2px;color:var(--muted);margin-top:2px;}
+#view-creditos .payment-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+#view-creditos .payment-btn{min-height:47px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;font-weight:750;}
+#view-creditos .payment-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;}
+#view-creditos .payment-note{border:1px solid #dce6e8;border-radius:10px;padding:10px;background:#fff;color:var(--muted);font-size:10.8px;line-height:1.4;display:flex;gap:7px;align-items:flex-start;}
+#view-creditos .payment-note b{color:#087457;}
+
+#view-creditos .credits-section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:26px 0 10px;}
+#view-creditos .credits-section-head h2{margin:0;color:var(--navy);font-size:21px;}
+#view-creditos .credits-section-head p{margin:3px 0 0;color:var(--muted);font-size:11.8px;}
+#view-creditos .history-panel-v2{padding:12px;}
+#view-creditos .history-list-v2{display:grid;gap:8px;}
+#view-creditos .history-item{margin:0;display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:11px;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:#fff;}
+#view-creditos .history-icon{width:36px;height:36px;border-radius:10px;background:#eaf8f3;color:#087d60;display:grid;place-items:center;font-size:15px;}
+#view-creditos .history-main strong{display:block;color:var(--navy);font-size:12.5px;margin-bottom:2px;}
+#view-creditos .history-main .entry{display:block;color:#475b72;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:720px;}
+#view-creditos .history-meta{text-align:right;}
+#view-creditos .history-meta .kind{display:inline-flex;padding:4px 7px;border-radius:999px;background:#eef3f5;color:#526272;font-size:9.5px;font-weight:800;text-transform:uppercase;}
+#view-creditos .history-meta .date{display:block;color:var(--muted);font-size:10.5px;margin-top:4px;}
+
+#view-creditos .institutional-mini{margin-top:25px;border:1px solid var(--line);border-radius:14px;background:#fff;padding:15px 17px;display:flex;justify-content:space-between;gap:20px;align-items:center;box-shadow:0 7px 22px rgba(16,32,59,.035);}
+#view-creditos .institutional-mini h3{margin:0 0 4px;color:var(--navy);font-size:13.5px;}
+#view-creditos .institutional-mini p{margin:0;color:var(--muted);font-size:11.5px;line-height:1.45;}
+#view-creditos .institutional-contact{white-space:nowrap;padding:8px 10px;border-radius:9px;background:#f5f7f8;color:var(--navy);font-family:'IBM Plex Mono';font-size:11px;font-weight:650;}
+
+#pixModal .modal-box{max-width:430px;}
+#pixModal .pix-security{display:flex;gap:8px;align-items:flex-start;text-align:left;border:1px solid #cce9e1;background:#eefaf6;border-radius:10px;padding:9px 10px;margin:12px 0;color:#37665a;font-size:10.8px;line-height:1.4;}
+
+@media(max-width:850px){
+  #view-creditos .credits-hero{grid-template-columns:1fr;}
+  #view-creditos .credit-plans{grid-template-columns:1fr;}
+  #view-creditos .qtd-opt.credit-plan{min-height:0;}
+  #view-creditos .payment-notes{grid-template-columns:1fr;}
+}
+@media(max-width:620px){
+  #view-creditos .credits-intro h2{font-size:25px;}
+  #view-creditos .payment-actions{grid-template-columns:1fr;}
+  #view-creditos .history-item{grid-template-columns:36px minmax(0,1fr);}
+  #view-creditos .history-meta{grid-column:2;text-align:left;}
+  #view-creditos .institutional-mini{flex-direction:column;align-items:flex-start;}
+  #view-creditos .institutional-contact{white-space:normal;word-break:break-word;}
+}
+
 </style>
 </head>
 <body>
@@ -1534,49 +1617,113 @@
     </div>
   </section>
 
-  <!-- ======================= CRÉDITOS / PAGAMENTO ======================= -->
+  
+<!-- ======================= CRÉDITOS / PAGAMENTO ======================= -->
   <section class="view" id="view-creditos">
-    <div class="section-head" style="margin-top:0;">
-      <h2>Comprar créditos</h2>
-      <p>Cada crédito vale 1 consulta de CNPJ ou 1 análise de mensagem. R$ 5,00 por crédito.</p>
+    <div class="credits-hero">
+      <div class="credits-intro">
+        <span class="credits-kicker">💳 Créditos Sentinela</span>
+        <h2>Compre somente o que pretende usar.</h2>
+        <p>Use créditos para consultar CNPJ ou fazer uma análise aprofundada de mensagem suspeita. O Simulador “É Golpe?” continua gratuito e não consome créditos.</p>
+        <div class="credits-points">
+          <span class="credits-point">✓ R$ 5,00 por crédito</span>
+          <span class="credits-point">✓ Pix ou cartão</span>
+          <span class="credits-point">✓ Saldo disponível na sua conta</span>
+        </div>
+      </div>
+      <div class="credits-trust">
+        <div class="shield">🛡</div>
+        <strong>Pagamento processado pelo Mercado Pago</strong>
+        <p>O Sentinela não recebe nem armazena os dados completos do seu cartão. Os créditos são atualizados após a confirmação do pagamento.</p>
+      </div>
     </div>
 
     <div class="panel" id="loggedOutCreditsMsg" style="display:none;">
       <p style="color:var(--muted);font-size:14px;">Você precisa <button class="linklike" onclick="abrirAuthModal('login')" style="color:var(--teal);">entrar ou criar uma conta</button> antes de comprar créditos.</p>
     </div>
 
-    <div class="panel" id="loggedInCredits" style="display:none;">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;">
+    <div class="panel purchase-panel" id="loggedInCredits" style="display:none;">
+      <div class="credits-balance">
         <div>
-          <div style="font-size:13px;color:var(--muted);">Seu saldo atual</div>
-          <div style="font-family:'Space Grotesk';font-size:28px;font-weight:700;color:var(--navy);" id="saldoCreditos">0 créditos</div>
+          <div class="balance-label">Seu saldo atual</div>
+          <div class="balance-value" id="saldoCreditos">0 créditos</div>
         </div>
+        <div class="balance-help">✓ 1 crédito = 1 consulta de CNPJ ou 1 análise de mensagem</div>
       </div>
-      <hr style="border:none;border-top:1px solid var(--line);margin:20px 0;">
-      <label>Quantidade de créditos</label>
-      <div class="qtd-opts" id="qtdOpts">
-        <button class="qtd-opt sel" data-qtd="1" onclick="selecionarQtd(1)">1 (R$ 5)</button>
-        <button class="qtd-opt" data-qtd="5" onclick="selecionarQtd(5)">5 (R$ 25)</button>
-        <button class="qtd-opt" data-qtd="10" onclick="selecionarQtd(10)">10 (R$ 50)</button>
+
+      <div class="purchase-body">
+        <h3 class="purchase-title">Escolha a quantidade de créditos</h3>
+        <p class="purchase-sub">O valor unitário permanece R$ 5,00 em todas as opções.</p>
+
+        <div class="credit-plans qtd-opts" id="qtdOpts">
+          <button class="qtd-opt credit-plan sel" data-qtd="1" onclick="selecionarQtd(1)" type="button">
+            <span class="plan-check">✓</span>
+            <div class="plan-qty">1 crédito</div>
+            <div class="plan-price">R$ 5,00</div>
+            <div class="plan-desc">Ideal para uma verificação pontual.</div>
+            <div class="plan-unit">R$ 5,00 por crédito</div>
+          </button>
+          <button class="qtd-opt credit-plan" data-qtd="5" onclick="selecionarQtd(5)" type="button">
+            <span class="plan-check">✓</span>
+            <div class="plan-qty">5 créditos</div>
+            <div class="plan-price">R$ 25,00</div>
+            <div class="plan-desc">Para várias consultas e análises.</div>
+            <div class="plan-unit">R$ 5,00 por crédito</div>
+          </button>
+          <button class="qtd-opt credit-plan" data-qtd="10" onclick="selecionarQtd(10)" type="button">
+            <span class="plan-check">✓</span>
+            <div class="plan-qty">10 créditos</div>
+            <div class="plan-price">R$ 50,00</div>
+            <div class="plan-desc">Para uso mais frequente do Sentinela.</div>
+            <div class="plan-unit">R$ 5,00 por crédito</div>
+          </button>
+        </div>
+
+        <div class="checkout-summary">
+          <div>
+            <div class="label">Sua escolha</div>
+            <div class="detail" id="creditChoiceText">1 crédito para utilizar nas consultas pagas</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="label">Total</div>
+            <div class="value" id="creditTotalText">R$ 5,00</div>
+          </div>
+        </div>
+
+        <div class="payment-actions">
+          <button class="btn btn-primary payment-btn" onclick="comprarPix()">▦ Pagar com Pix</button>
+          <button class="btn btn-ghost payment-btn" style="color:var(--navy);border-color:var(--line);" onclick="comprarCartao()">▣ Pagar com cartão</button>
+        </div>
+
+        <div class="payment-notes">
+          <div class="payment-note"><b>✓</b><span>O Pix é acompanhado automaticamente e o saldo é atualizado após a confirmação.</span></div>
+          <div class="payment-note"><b>✓</b><span>No cartão, o checkout é aberto no ambiente de pagamento do Mercado Pago.</span></div>
+          <div class="payment-note"><b>✓</b><span>Você pode acompanhar seu saldo no topo do site e nesta página.</span></div>
+        </div>
+
+        <div class="error-box" id="creditosError"></div>
       </div>
-      <div class="row" style="margin-top:18px;">
-        <button class="btn btn-primary" onclick="comprarPix()">Pagar com Pix</button>
-        <button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" onclick="comprarCartao()">Pagar com cartão</button>
-      </div>
-      <div class="error-box" id="creditosError"></div>
     </div>
 
-    <div class="section-head"><h2>Seu histórico</h2></div>
-    <div class="panel" id="historyPanel">
-      <div id="historyList"><p style="color:var(--muted);font-size:13.5px;">Entre na sua conta para ver o histórico.</p></div>
+    <div class="credits-section-head">
+      <div>
+        <h2>Histórico de utilização</h2>
+        <p>Consultas de CNPJ e análises de mensagem realizadas pela sua conta.</p>
+      </div>
+    </div>
+    <div class="panel history-panel-v2" id="historyPanel">
+      <div id="historyList" class="history-list-v2"><p style="color:var(--muted);font-size:13.5px;">Entre na sua conta para ver o histórico.</p></div>
     </div>
 
-    <div class="section-head"><h2>Institucional</h2></div>
-    <div class="panel">
-      <p style="font-size:14px;color:var(--muted);">Bancos, fintechs, sindicatos ou PROCON interessados em licenciar a ferramenta (white-label, API própria): fale por e-mail antes de qualquer pagamento.</p>
-      <p class="mono" style="margin-top:10px;font-size:14px;">fsantosdantas@hotmail.com</p>
+    <div class="institutional-mini">
+      <div>
+        <h3>Soluções para instituições</h3>
+        <p>Bancos, fintechs, sindicatos ou PROCON interessados em licenciamento, white-label ou API própria podem entrar em contato antes de qualquer pagamento.</p>
+      </div>
+      <div class="institutional-contact">fsantosdantas@hotmail.com</div>
     </div>
   </section>
+
 
 </main>
 
@@ -1617,6 +1764,7 @@
     <div class="pix-copia" id="pixCopiaCola">—</div>
     <button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);margin-top:10px;" onclick="copiarPix()">Copiar código</button>
     <div style="margin-top:16px;"><span class="status-pill" id="pixStatusPill"><span class="dot"></span> Aguardando pagamento...</span></div>
+    <div class="pix-security"><span>🛡</span><span>Após a confirmação do Mercado Pago, o Sentinela consulta novamente sua conta e atualiza o saldo automaticamente.</span></div>
     <button class="linklike" style="margin-top:16px;" onclick="fecharPixModal()">Fechar</button>
   </div>
 </div>
@@ -2014,6 +2162,7 @@ function atualizarTelaCreditos(){
   document.getElementById('loggedInCredits').style.display = logged ? 'block' : 'none';
   if(logged){
     document.getElementById('saldoCreditos').textContent = currentUser.creditos + ' crédito(s)';
+    selecionarQtd(qtdSelecionada || 1);
     carregarHistorico();
   } else {
     document.getElementById('historyList').innerHTML = '<p style="color:var(--muted);font-size:13.5px;">Entre na sua conta para ver o histórico.</p>';
@@ -2022,7 +2171,16 @@ function atualizarTelaCreditos(){
 
 function selecionarQtd(q){
   qtdSelecionada = q;
-  document.querySelectorAll('.qtd-opt').forEach(b=>b.classList.toggle('sel', Number(b.dataset.qtd)===q));
+  document.querySelectorAll('.qtd-opt').forEach(b=>{
+    const selected = Number(b.dataset.qtd) === q;
+    b.classList.toggle('sel', selected);
+    b.setAttribute('aria-pressed', selected ? 'true' : 'false');
+  });
+  const total = q * 5;
+  const totalEl = document.getElementById('creditTotalText');
+  const choiceEl = document.getElementById('creditChoiceText');
+  if(totalEl) totalEl.textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
+  if(choiceEl) choiceEl.textContent = `${q} ${q === 1 ? 'crédito' : 'créditos'} para utilizar nas consultas pagas`;
 }
 
 async function comprarPix(){
@@ -2083,16 +2241,42 @@ async function carregarHistorico(){
   try{
     const { historico } = await api('/conta/historico');
     if(!historico.length){
-      list.innerHTML = '<p style="color:var(--muted);font-size:13.5px;">Nenhuma consulta ainda.</p>';
+      list.innerHTML = '<p style="color:var(--muted);font-size:13.5px;padding:8px;">Nenhuma consulta realizada ainda.</p>';
       return;
     }
-    list.innerHTML = historico.map(h=>`
-      <div class="history-item">
-        <div><strong>${h.tipo === 'cnpj' ? 'CNPJ: '+h.entrada : 'Mensagem: '+ (h.entrada||'').slice(0,40)}</strong>
-        <div class="d">${new Date(h.criado_em).toLocaleString('pt-BR')}</div></div>
-      </div>`).join('');
+
+    const formatarCNPJHistorico = (valor)=>{
+      const d = String(valor || '').replace(/\D/g,'');
+      return d.length === 14
+        ? d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+        : (valor || '—');
+    };
+
+    list.innerHTML = historico.map(h=>{
+      const isCnpj = h.tipo === 'cnpj';
+      const titulo = isCnpj ? 'Consulta de CNPJ' : 'Análise de mensagem';
+      const entrada = isCnpj
+        ? formatarCNPJHistorico(h.entrada)
+        : `“${(h.entrada || '').trim().slice(0,72)}${(h.entrada || '').length > 72 ? '…' : ''}”`;
+      const icone = isCnpj ? '🏢' : '💬';
+      const tipo = isCnpj ? 'CNPJ' : 'Mensagem';
+      const data = new Date(h.criado_em).toLocaleString('pt-BR', {dateStyle:'short', timeStyle:'short'});
+
+      return `
+        <div class="history-item">
+          <div class="history-icon">${icone}</div>
+          <div class="history-main">
+            <strong>${titulo}</strong>
+            <span class="entry">${entrada}</span>
+          </div>
+          <div class="history-meta">
+            <span class="kind">${tipo}</span>
+            <span class="date">${data}</span>
+          </div>
+        </div>`;
+    }).join('');
   }catch(e){
-    list.innerHTML = '<p style="color:var(--muted);font-size:13.5px;">Não foi possível carregar o histórico.</p>';
+    list.innerHTML = '<p style="color:var(--muted);font-size:13.5px;padding:8px;">Não foi possível carregar o histórico.</p>';
   }
 }
 
