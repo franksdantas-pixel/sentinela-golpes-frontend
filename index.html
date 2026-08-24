@@ -1113,13 +1113,32 @@
         <hr style="border:none;border-top:1px solid var(--line);margin:26px 0;">
         <div class="grid-2">
           <div class="gauge-wrap">
-            <div class="gauge" id="msgGauge"><div class="gauge-inner"><div class="pct" id="msgPct">0%</div><div class="pct-lbl">risco</div></div></div>
+            <div class="gauge" id="msgGauge"><div class="gauge-inner"><div class="pct" id="msgPct">0</div><div class="pct-lbl">ÍNDICE DE RISCO / 100</div></div></div>
             <div class="verdict-title" id="msgVerdictTitle">—</div>
+            <p id="msgConclusion" style="font-size:13.5px;color:var(--muted);line-height:1.6;margin-top:10px;"></p>
+            <div id="msgAlert" style="display:none;margin-top:14px;padding:12px;border-radius:10px;background:#fff1ef;border:1px solid #f3c0b9;color:#a9362b;font-size:13px;line-height:1.55;"></div>
           </div>
           <div>
             <h3 style="font-size:15px;">Sinais identificados no texto</h3>
             <ul class="flag-list" id="msgFlags"></ul>
           </div>
+        </div>
+        <div style="margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;">
+          <div class="panel" style="background:#fbfcfd;padding:16px;">
+            <h3 style="font-size:15px;margin-bottom:10px;">O que fazer agora</h3>
+            <div id="msgActions" style="font-size:13px;color:var(--muted);line-height:1.65;"></div>
+          </div>
+          <div class="panel" style="background:#fbfcfd;padding:16px;">
+            <h3 style="font-size:15px;margin-bottom:10px;">Como interpretar</h3>
+            <p style="font-size:13px;color:var(--muted);line-height:1.65;">O índice de 0 a 100 é preventivo e combina a quantidade e a gravidade dos padrões detectados. <strong>Não representa probabilidade estatística nem certifica fraude ou legitimidade.</strong></p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;font-size:11.5px;">
+              <span class="badge badge-green">0–24 baixo</span><span class="badge">25–49 atenção</span><span class="badge" style="background:#fff3d9;color:#8a5a00;">50–74 alto</span><span class="badge" style="background:#ffe4df;color:#a9362b;">75–100 crítico</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+          <button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" onclick="goTo('guia')">Ver Guia de Ação →</button>
+          <button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" onclick="goTo('cnpj')">Consultar CNPJ →</button>
         </div>
       </div>
     </div>
@@ -1528,20 +1547,51 @@ async function analisarMensagem(){
     currentUser.creditos = resp.creditosRestantes;
     renderAccountBox();
 
-    document.getElementById('msgPct').textContent = resp.score + '%';
-    document.getElementById('msgVerdictTitle').textContent = resp.verdict;
-    const cor = resp.score >= 55 ? 'var(--red)' : resp.score >= 25 ? 'var(--amber)' : 'var(--green)';
-    document.getElementById('msgGauge').style.background = `conic-gradient(${cor} ${resp.score*3.6}deg, #EEF1F4 0deg)`;
+    const score = Math.max(0, Math.min(100, Number(resp.score) || 0));
+    document.getElementById('msgPct').textContent = score;
+    document.getElementById('msgVerdictTitle').textContent = resp.verdict || (score >= 75 ? 'Risco crítico' : score >= 50 ? 'Risco alto' : score >= 25 ? 'Atenção' : 'Risco baixo');
+    const cor = score >= 75 ? 'var(--red)' : score >= 50 ? 'var(--amber)' : score >= 25 ? '#d6a52d' : 'var(--green)';
+    document.getElementById('msgGauge').style.background = `conic-gradient(${cor} ${score*3.6}deg, #EEF1F4 0deg)`;
 
+    const conclusion = document.getElementById('msgConclusion');
+    conclusion.textContent = score >= 75
+      ? 'Há sinais fortes associados a abordagens fraudulentas. Interrompa a operação e confirme a situação por um canal oficial independente.'
+      : score >= 50
+      ? 'Foram encontrados sinais relevantes de risco. Não prossiga com pagamento, instalação de aplicativo ou envio de dados antes de confirmar a solicitação.'
+      : score >= 25
+      ? 'Há elementos que merecem verificação. Confirme remetente, links, beneficiário e contexto antes de agir.'
+      : 'Poucos sinais de risco foram detectados no texto, mas isso não comprova que a abordagem seja legítima. Confirme informações sensíveis por canais oficiais.';
+
+    const flags = Array.isArray(resp.flags) ? resp.flags : [];
     const flagsUl = document.getElementById('msgFlags');
     flagsUl.innerHTML = '';
-    (resp.flags.length ? resp.flags : [{title:'Nenhum padrão específico encontrado', desc:'Mantenha cautela mesmo assim.', level:'amber'}]).forEach(f=>{
+    (flags.length ? flags : [{title:'Nenhum padrão específico encontrado', desc:'O texto não acionou os padrões principais do motor. Ainda assim, confirme identidade, links e pagamentos por canais oficiais.', level:'amber'}]).forEach(f=>{
       const li = document.createElement('li');
       li.className = 'flag-item';
-      li.innerHTML = `<div class="dot ${f.level}"></div><div class="txt"><strong>${f.title}</strong><p>${f.desc}</p></div>`;
+      const levelLabel = f.level === 'red' ? 'CRÍTICO' : f.level === 'amber' ? 'ATENÇÃO' : 'SINAL';
+      li.innerHTML = `<div class="dot ${f.level || 'amber'}"></div><div class="txt"><strong>${f.title || 'Sinal identificado'} <span style="font-size:10px;padding:3px 6px;border-radius:999px;background:#f2f4f6;color:#5b6572;margin-left:5px;">${levelLabel}</span></strong><p>${f.desc || ''}</p></div>`;
       flagsUl.appendChild(li);
     });
+
+    const actions = [];
+    const hay = flags.map(f => ((f.title||'')+' '+(f.desc||'')).toLowerCase()).join(' ');
+    if(/acesso remoto|anydesk|teamviewer|rustdesk/.test(hay)) actions.push('Não instale nem mantenha aplicativo de acesso remoto. Se já instalou, encerre o acesso e remova o aplicativo.');
+    if(/senha|código|token|sms|whatsapp|credencial/.test(hay)) actions.push('Não forneça senha, token ou código de confirmação. Se já forneceu, altere as credenciais e comunique a instituição envolvida.');
+    if(/pix|transfer|pagamento|taxa|boleto/.test(hay)) actions.push('Não faça Pix, transferência, pagamento ou taxa para “liberar”, “testar”, “regularizar” ou “cancelar” uma operação.');
+    if(/link|phishing|site|url/.test(hay)) actions.push('Não abra o link recebido. Acesse o serviço digitando o endereço conhecido ou usando o aplicativo oficial.');
+    if(/portabilidade|consignado|empréstimo/.test(hay)) actions.push('Confirme qualquer portabilidade, refinanciamento ou empréstimo diretamente com as instituições envolvidas antes de autorizar movimentações.');
+    actions.push('Encerre o contato e confirme a situação por um canal oficial obtido por você, sem usar telefone ou link enviado na própria abordagem.');
+    if(score >= 50) actions.push('Se já houve pagamento, acesso ao aparelho ou entrega de dados, consulte imediatamente o Guia de Ação do Sentinela.');
+    document.getElementById('msgActions').innerHTML = actions.map((a,i)=>`<div style="display:flex;gap:9px;margin:8px 0;"><strong style="color:var(--navy);">${i+1}.</strong><span>${a}</span></div>`).join('');
+
+    const alert = document.getElementById('msgAlert');
+    if(score >= 75){
+      alert.style.display = 'block';
+      alert.innerHTML = '<strong>⚠ Atenção:</strong> não prossiga com a operação enquanto houver dúvida. Não faça Pix, não instale aplicativos e não compartilhe códigos de segurança.';
+    } else { alert.style.display = 'none'; alert.innerHTML = ''; }
+
     resultBox.classList.add('show');
+    resultBox.scrollIntoView({behavior:'smooth', block:'start'});
   }catch(e){
     if(e.status === 402){
       errBox.innerHTML = 'Você não tem créditos. <button class="linklike" onclick="goTo(\'creditos\')">Comprar créditos →</button>';
