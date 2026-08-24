@@ -790,27 +790,96 @@ function formatCNPJ(digits){ return digits.replace(/^(\d{2})(\d{3})(\d{3})(\d{4}
 
 function renderCNPJResult(data, avaliacao, raw){
   const resultBox = document.getElementById('cnpjResult');
-  document.getElementById('cnpjRazaoSocial').textContent = data.razao_social || '—';
-  document.getElementById('cnpjNumeroFormatado').textContent = formatCNPJ(raw);
-  document.getElementById('cnpjNomeFantasia').textContent = data.nome_fantasia || '—';
-  document.getElementById('cnpjDataAbertura').textContent = data.data_inicio_atividade || '—';
-  document.getElementById('cnpjAtividade').textContent = data.cnae_fiscal_descricao || '—';
-  document.getElementById('cnpjNatureza').textContent = data.natureza_juridica || '—';
-  document.getElementById('cnpjMunicipio').textContent = (data.municipio ? data.municipio+' / '+data.uf : '—');
-  document.getElementById('cnpjPorte').textContent = data.porte || '—';
 
-  const statusBadge = document.getElementById('cnpjStatusBadge');
-  statusBadge.textContent = data.descricao_situacao_cadastral || 'Situação desconhecida';
-  statusBadge.className = 'badge ' + (avaliacao.ativo ? 'badge-green' : 'badge-red');
+  document.getElementById('cnpjRazaoSocial').textContent =
+    data.razao_social || '—';
 
-  const flagsUl = document.getElementById('cnpjFlags');
+  document.getElementById('cnpjNumeroFormatado').textContent =
+    formatCNPJ(raw);
+
+  document.getElementById('cnpjNomeFantasia').textContent =
+    data.nome_fantasia || '—';
+
+  // Formata a data de abertura para dia/mês/ano
+  const dataAberturaRaw = data.data_inicio_atividade;
+
+  let dataAberturaFormatada = '—';
+
+  if (dataAberturaRaw) {
+    const valorData = String(dataAberturaRaw).trim();
+
+    // Formato normalmente retornado pela BrasilAPI: AAAA-MM-DD
+    const match = valorData.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+    if (match) {
+      const ano = match[1];
+      const mes = match[2];
+      const dia = match[3];
+
+      dataAberturaFormatada = `${dia}/${mes}/${ano}`;
+    } else {
+      // Caso a API retorne a data em outro formato
+      const dataObj = new Date(valorData);
+
+      if (!isNaN(dataObj.getTime())) {
+        dataAberturaFormatada = dataObj.toLocaleDateString('pt-BR', {
+          timeZone: 'UTC'
+        });
+      } else {
+        dataAberturaFormatada = valorData;
+      }
+    }
+  }
+
+  document.getElementById('cnpjDataAbertura').textContent =
+    dataAberturaFormatada;
+
+  document.getElementById('cnpjAtividade').textContent =
+    data.cnae_fiscal_descricao || '—';
+
+  document.getElementById('cnpjNatureza').textContent =
+    data.natureza_juridica || '—';
+
+  document.getElementById('cnpjMunicipio').textContent =
+    data.municipio
+      ? data.municipio + ' / ' + data.uf
+      : '—';
+
+  document.getElementById('cnpjPorte').textContent =
+    data.porte || '—';
+
+  const statusBadge =
+    document.getElementById('cnpjStatusBadge');
+
+  statusBadge.textContent =
+    data.descricao_situacao_cadastral ||
+    'Situação desconhecida';
+
+  statusBadge.className =
+    'badge ' +
+    (avaliacao.ativo ? 'badge-green' : 'badge-red');
+
+  const flagsUl =
+    document.getElementById('cnpjFlags');
+
   flagsUl.innerHTML = '';
-  avaliacao.flags.forEach(f=>{
+
+  avaliacao.flags.forEach(f => {
     const li = document.createElement('li');
+
     li.className = 'flag-item';
-    li.innerHTML = `<div class="dot ${f.level}"></div><div class="txt"><strong>${f.title}</strong><p>${f.desc}</p></div>`;
+
+    li.innerHTML = `
+      <div class="dot ${f.level}"></div>
+      <div class="txt">
+        <strong>${f.title}</strong>
+        <p>${f.desc}</p>
+      </div>
+    `;
+
     flagsUl.appendChild(li);
   });
+
   resultBox.classList.add('show');
 }
 
