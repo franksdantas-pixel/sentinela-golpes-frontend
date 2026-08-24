@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinela Golpes — Verificação de CNPJ e Análise de Mensagens Suspeitas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0F1B2D;
+    --navy-2:#16273F;
+    --navy-3:#1E3350;
+    --teal:#12A594;
+    --teal-light:#5FD7C7;
+    --red:#D6483F;
+    --red-bg:#FBEAE8;
+    --amber:#E8963D;
+    --amber-bg:#FCF1DF;
+    --green:#2E9E6D;
+    --green-bg:#E7F4EE;
+    --paper:#F5F6F8;
+    --card:#FFFFFF;
+    --ink:#101820;
+    --muted:#5B6B7B;
+    --line:rgba(16,24,32,0.10);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:var(--teal);}
+  button{font-family:inherit;cursor:pointer;}
+  :focus-visible{outline:3px solid var(--teal-light);outline-offset:2px;}
+
+  /* ---------- HEADER / NAV ---------- */
+  header.top{
+    background:var(--navy);
+    color:#fff;
+    position:sticky;top:0;z-index:50;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .top-inner{
+    max-width:1180px;margin:0 auto;padding:14px 20px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{
+    width:34px;height:34px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--teal-light), var(--teal) 60%, #0b7a6d 100%);
+    box-shadow:0 0 0 3px rgba(95,215,199,0.15);
+    position:relative;flex:none;
+  }
+  .brand-mark::after{
+    content:"";position:absolute;inset:8px;border:2px solid rgba(255,255,255,0.55);border-radius:50%;
+  }
+  .brand-name{font-family:'Space Grotesk';font-weight:700;font-size:19px;}
+  .brand-tag{font-size:12px;color:#9FB2C4;font-weight:500;}
+  nav.tabs{display:flex;gap:4px;flex-wrap:wrap;}
+  nav.tabs button{
+    background:transparent;border:1px solid transparent;color:#C9D6E2;
+    padding:9px 14px;border-radius:999px;font-size:14px;font-weight:600;
+    transition:all .15s ease;
+  }
+  nav.tabs button:hover{color:#fff;background:rgba(255,255,255,0.06);}
+  nav.tabs button.active{background:var(--teal);color:#04211D;border-color:var(--teal);}
+
+  main{max-width:1180px;margin:0 auto;padding:28px 20px 80px;}
+  section.view{display:none;animation:fade .25s ease;}
+  section.view.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ---------- HERO / INÍCIO ---------- */
+  .hero{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 55%,var(--navy-3) 100%);
+    color:#fff;border-radius:20px;padding:44px 36px;
+    display:grid;grid-template-columns:1.2fr 0.8fr;gap:28px;align-items:center;
+    position:relative;overflow:hidden;
+  }
+  @media(max-width:820px){.hero{grid-template-columns:1fr;padding:32px 22px;}}
+  .hero h1{font-size:clamp(28px,4vw,42px);font-weight:700;max-width:620px;}
+  .hero p.lead{color:#B9C8D6;font-size:16px;max-width:560px;margin-top:14px;}
+  .hero-actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;}
+  .btn{
+    padding:12px 20px;border-radius:10px;border:1px solid transparent;font-weight:600;font-size:14px;
+    display:inline-flex;align-items:center;gap:8px;transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--teal);color:#04211D;}
+  .btn-primary:hover{box-shadow:0 6px 20px rgba(18,165,148,0.35);}
+  .btn-ghost{background:rgba(255,255,255,0.06);color:#fff;border-color:rgba(255,255,255,0.18);}
+  .btn-ghost:hover{background:rgba(255,255,255,0.12);}
+
+  .radar-wrap{position:relative;height:230px;display:flex;align-items:center;justify-content:center;}
+  .radar{position:relative;width:210px;height:210px;border-radius:50%;
+    background:repeating-radial-gradient(circle,rgba(95,215,199,0.12) 0 1px,transparent 1px 34px);
+    border:1px solid rgba(95,215,199,0.35);}
+  .radar::before{content:"";position:absolute;inset:0;border-radius:50%;
+    background:conic-gradient(from 0deg, rgba(95,215,199,0.55), transparent 32%);
+    animation:spin 3.4s linear infinite;}
+  .radar::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;
+    background:var(--teal-light);border-radius:50%;box-shadow:0 0 14px 4px rgba(95,215,199,0.7);}
+  @media (prefers-reduced-motion: reduce){.radar::before{animation:none;}}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .radar-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:#F2B15A;box-shadow:0 0 8px 2px rgba(242,177,90,0.7);}
+
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px;}
+  @media(max-width:700px){.stat-row{grid-template-columns:1fr;}}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;}
+  .stat .num{font-family:'Space Grotesk';font-size:26px;font-weight:700;color:var(--navy);}
+  .stat .lbl{color:var(--muted);font-size:13px;margin-top:4px;}
+
+  .scam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:16px;}
+  .scam-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;}
+  .scam-card .eyebrow{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);}
+  .scam-card h3{font-size:16px;margin-top:6px;}
+  .scam-card p{font-size:13.5px;color:var(--muted);margin-top:8px;}
+
+  .section-head{margin:44px 0 16px;}
+  .section-head h2{font-size:22px;}
+  .section-head p{color:var(--muted);font-size:14.5px;margin-top:6px;max-width:680px;}
+
+  /* ---------- CARDS / PANELS GERAIS ---------- */
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px;}
+  .grid-2{display:grid;grid-template-columns:1.1fr 0.9fr;gap:22px;}
+  @media(max-width:900px){.grid-2{grid-template-columns:1fr;}}
+
+  label{font-size:13px;font-weight:600;color:var(--navy);display:block;margin-bottom:6px;}
+  input[type=text], textarea{
+    width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:14.5px;
+    font-family:inherit;background:#fbfcfd;color:var(--ink);
+  }
+  input[type=text]:focus, textarea:focus{border-color:var(--teal);}
+  textarea{resize:vertical;min-height:150px;}
+  .field{margin-bottom:16px;}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:5px;}
+  .row{display:flex;gap:10px;flex-wrap:wrap;}
+
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:700;}
+  .badge-red{background:var(--red-bg);color:var(--red);}
+  .badge-amber{background:var(--amber-bg);color:var(--amber);}
+  .badge-green{background:var(--green-bg);color:var(--green);}
+  .badge-neutral{background:#EEF1F4;color:var(--muted);}
+
+  .result-box{margin-top:20px;display:none;}
+  .result-box.show{display:block;animation:fade .25s ease;}
+
+  .flag-list{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;}
+  .flag-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:#fbfcfd;}
+  .flag-item .dot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex:none;}
+  .flag-item .dot.red{background:var(--red);}
+  .flag-item .dot.amber{background:var(--amber);}
+  .flag-item .txt strong{font-size:13.5px;}
+  .flag-item .txt p{font-size:13px;color:var(--muted);margin:3px 0 0;}
+
+  /* gauge */
+  .gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .gauge{
+    width:172px;height:172px;border-radius:50%;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    transition:background 0.6s ease;
+  }
+  .gauge-inner{
+    width:132px;height:132px;border-radius:50%;background:var(--card);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    box-shadow:inset 0 0 0 1px var(--line);
+  }
+  .gauge-inner .pct{font-family:'Space Grotesk';font-size:34px;font-weight:700;}
+  .gauge-inner .pct-lbl{font-size:11.5px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase;}
+  .verdict-title{font-size:17px;font-weight:700;text-align:center;}
+  .verdict-sub{font-size:13px;color:var(--muted);text-align:center;max-width:220px;}
+
+  /* CNPJ result */
+  .cnpj-header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;}
+  .cnpj-header h3{font-size:19px;}
+  .data-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:18px;}
+  .data-cell{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fbfcfd;}
+  .data-cell .k{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:700;}
+  .data-cell .v{font-size:14.5px;margin-top:4px;font-weight:600;}
+
+  .loading{display:none;align-items:center;gap:10px;color:var(--muted);font-size:14px;margin-top:14px;}
+  .loading.show{display:flex;}
+  .spinner{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--line);border-top-color:var(--teal);animation:spin .7s linear infinite;}
+
+  .error-box{display:none;background:var(--red-bg);color:var(--red);border-radius:10px;padding:12px 14px;font-size:13.5px;margin-top:14px;font-weight:600;}
+  .error-box.show{display:block;}
+
+  /* quiz */
+  .quiz-progress{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:22px;}
+  .quiz-progress > div{height:100%;background:var(--teal);transition:width .3s ease;}
+  .quiz-q{font-size:18px;font-weight:600;margin-bottom:4px;}
+  .quiz-tag{font-size:12px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+  .quiz-opts{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  .qopt{padding:11px 20px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:600;font-size:14px;transition:all .12s ease;}
+  .qopt:hover{border-color:var(--teal);}
+  .qopt.sim{color:var(--red);} .qopt.sim:hover{background:var(--red-bg);}
+  .qopt.nao{color:var(--green);} .qopt.nao:hover{background:var(--green-bg);}
+  .qopt.naosei{color:var(--muted);}
+  .quiz-nav{display:flex;justify-content:space-between;margin-top:20px;}
+  .linklike{background:none;border:none;color:var(--muted);font-size:13px;font-weight:600;text-decoration:underline;}
+
+  /* guia de ação */
+  .steps{counter-reset:step;display:flex;flex-direction:column;gap:0;}
+  .step{display:grid;grid-template-columns:36px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);}
+  .step:last-child{border-bottom:none;}
+  .step .num{counter-increment:step;width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:14px;}
+  .step .num::before{content:counter(step);}
+  .step h4{font-size:15px;margin-bottom:4px;}
+  .step p{font-size:13.5px;color:var(--muted);margin:0;}
+
+  .link-card{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fbfcfd;margin-top:10px;
+    text-decoration:none;color:var(--ink);
+  }
+  .link-card:hover{border-color:var(--teal);}
+  .link-card .t{font-weight:700;font-size:14px;}
+  .link-card .d{font-size:12.5px;color:var(--muted);margin-top:2px;}
+  .link-card .arrow{color:var(--teal);font-size:18px;flex:none;}
+
+  .accent-note{background:var(--amber-bg);border:1px solid rgba(232,150,61,0.35);border-radius:10px;
+    padding:14px 16px;font-size:13.5px;color:#7A4E12;margin-top:16px;}
+
+  footer{max-width:1180px;margin:0 auto;padding:0 20px 50px;color:var(--muted);font-size:12.5px;}
+  footer .disclaimer{border-top:1px solid var(--line);padding-top:18px;margin-top:20px;}
+
+  .tabline{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .tabline button{background:#EEF1F4;border:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:600;color:var(--muted);}
+  .tabline button.active{background:var(--navy);color:#fff;}
+
+  /* ---------- PLANOS / PAYWALL ---------- */
+  .pro-pill{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#F2B15A,#E8963D);color:#3A2405;
+    font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;}
+  .plan-banner{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    background:var(--navy);color:#fff;border-radius:12px;padding:12px 18px;margin-bottom:22px;}
+  .plan-banner.pro{background:linear-gradient(120deg,#0F1B2D,#1E3350);}
+  .plan-banner .l{font-size:13.5px;color:#C9D6E2;}
+  .plan-banner .l strong{color:#fff;}
+  .usage-note{font-size:12.5px;color:var(--muted);margin-top:8px;}
+  .paywall-card{background:linear-gradient(160deg,var(--navy),var(--navy-2));color:#fff;border-radius:14px;padding:26px;margin-top:20px;text-align:center;}
+  .paywall-card h3{font-size:19px;}
+  .paywall-card p{color:#B9C8D6;font-size:14px;margin-top:8px;max-width:480px;margin-left:auto;margin-right:auto;}
+  .plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px;}
+  @media(max-width:860px){.plans-grid{grid-template-columns:1fr;}}
+  .plan-card{border:1.5px solid var(--line);border-radius:14px;padding:24px;background:var(--card);display:flex;flex-direction:column;}
+  .plan-card.featured{border-color:var(--teal);box-shadow:0 8px 30px rgba(18,165,148,0.15);position:relative;}
+  .plan-card.featured::before{content:"Mais escolhido";position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+    background:var(--teal);color:#04211D;font-size:11px;font-weight:800;padding:4px 12px;border-radius:999px;}
+  .plan-name{font-size:15px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+  .plan-price{font-family:'Space Grotesk';font-size:32px;font-weight:700;margin-top:8px;}
+  .plan-price span{font-size:13px;color:var(--muted);font-weight:500;}
+  .plan-feats{list-style:none;padding:0;margin:18px 0;flex:1;display:flex;flex-direction:column;gap:10px;}
+  .plan-feats li{font-size:13.5px;color:var(--ink);display:flex;gap:8px;align-items:flex-start;}
+  .plan-feats li::before{content:"✓";color:var(--teal);font-weight:700;}
+  .plan-feats li.no::before{content:"–";color:var(--muted);}
+  .plan-feats li.no{color:var(--muted);}
+  .modal-overlay{position:fixed;inset:0;background:rgba(15,27,45,0.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+  .modal-overlay.show{display:flex;}
+  .modal-box{background:#fff;border-radius:16px;padding:28px;max-width:400px;width:100%;text-align:center;}
+  .modal-box h3{font-size:18px;}
+  .modal-box p{font-size:13.5px;color:var(--muted);margin-top:8px;}
+  .history-item{border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px;margin-top:8px;background:#fbfcfd;display:flex;justify-content:space-between;gap:10px;}
+  .history-item .d{color:var(--muted);font-size:11.5px;}
+  .locked-blur{filter:blur(4px);pointer-events:none;user-select:none;}
+
+  /* ---------- AUTENTICAÇÃO / CONTA / CRÉDITOS ---------- */
+  .account-box{display:flex;align-items:center;gap:10px;}
+  .credit-chip{background:rgba(95,215,199,0.15);color:var(--teal-light);border:1px solid rgba(95,215,199,0.35);
+    padding:6px 12px;border-radius:999px;font-size:12.5px;font-weight:700;white-space:nowrap;}
+  .auth-form{display:flex;flex-direction:column;gap:12px;text-align:left;}
+  .auth-switch{font-size:13px;color:var(--muted);text-align:center;margin-top:6px;}
+  .auth-switch button{background:none;border:none;color:var(--teal);font-weight:700;text-decoration:underline;padding:0;}
+  .api-warning{display:none;background:var(--red-bg);color:var(--red);border-radius:10px;padding:12px 16px;font-size:13px;font-weight:600;margin-bottom:18px;}
+  .api-warning.show{display:block;}
+  .qtd-opts{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+  .qtd-opt{border:1.5px solid var(--line);border-radius:10px;padding:10px 16px;font-weight:700;font-size:14px;background:#fff;color:var(--navy);}
+  .qtd-opt.sel{border-color:var(--teal);background:var(--green-bg);color:var(--green);}
+  .pix-qr{width:190px;height:190px;border-radius:10px;border:1px solid var(--line);margin:14px auto;display:block;}
+  .pix-copia{font-family:'IBM Plex Mono';font-size:11.5px;background:#F5F6F8;border:1px solid var(--line);border-radius:8px;
+    padding:10px;word-break:break-all;max-height:80px;overflow-y:auto;text-align:left;}
+  .status-pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--muted);}
+  .status-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--amber);animation:pulse 1.2s infinite;}
+  @keyframes pulse{50%{opacity:.3;}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div>
+        <div class="brand-name">Sentinela Golpes</div>
+        <div class="brand-tag">Verificação de CNPJ &amp; análise de mensagens suspeitas</div>
+      </div>
+    </div>
+    <nav class="tabs" id="mainTabs">
+      <button data-view="inicio" class="active">Início</button>
+      <button data-view="cnpj">Consultar CNPJ</button>
+      <button data-view="mensagem">Analisar Mensagem</button>
+      <button data-view="simulador">Simulador "É Golpe?"</button>
+      <button data-view="guia">Guia de Ação</button>
+      <button data-view="creditos">Créditos</button>
+    </nav>
+    <div class="account-box" id="accountBox"></div>
+  </div>
+</header>
+
+<main>
+
+  <div class="api-warning" id="apiWarning">
+    Não foi possível conectar ao servidor da API. Verifique se o backend está no ar e se o endereço configurado está correto (procure <span class="mono">API_BASE</span> no código deste arquivo).
+  </div>
+
+  <!-- ======================= INÍCIO ======================= -->
+  <section class="view active" id="view-inicio">
+    <div class="hero">
+      <div>
+        <span class="badge badge-neutral" style="background:rgba(255,255,255,0.08);color:#C9D6E2;">R$ 5,00 por consulta</span>
+        <h1 style="margin-top:14px;">Antes de pagar, transferir ou assinar qualquer coisa: confirme.</h1>
+        <p class="lead">Consulte a situação real de um CNPJ na Receita Federal ou cole a mensagem que você recebeu para identificar sinais de golpe. Cada consulta (CNPJ ou mensagem) custa R$ 5,00, pago via Pix ou cartão, com liberação automática.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="goTo('cnpj')">Consultar CNPJ agora →</button>
+          <button class="btn btn-ghost" onclick="goTo('mensagem')">Analisar uma mensagem</button>
+        </div>
+      </div>
+      <div class="radar-wrap">
+        <div class="radar">
+          <div class="radar-dot" style="left:34%;top:60%;"></div>
+          <div class="radar-dot" style="left:68%;top:32%;"></div>
+          <div class="radar-dot" style="left:52%;top:78%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">R$ 5</div><div class="lbl">Por consulta de CNPJ ou análise de mensagem</div></div>
+      <div class="stat"><div class="num">.gov.br</div><div class="lbl">Único domínio oficial de órgãos do Governo Federal</div></div>
+      <div class="stat"><div class="num">24h</div><div class="lbl">MED — prazo para o banco analisar o pedido de devolução de Pix golpe</div></div>
+    </div>
+
+    <div class="section-head">
+      <h2>Os 8 golpes mais comuns hoje no Brasil</h2>
+      <p>Este aplicativo foi treinado para reconhecer sinais destes padrões específicos.</p>
+    </div>
+    <div class="scam-grid" id="scamGrid"></div>
+  </section>
+
+  <!-- ======================= CONSULTA CNPJ ======================= -->
+  <section class="view" id="view-cnpj">
+    <div class="section-head" style="margin-top:0;">
+      <h2>Consultar situação cadastral de um CNPJ</h2>
+      <p>Antes de pagar um boleto ou fazer um Pix para "a empresa", confirme se ela existe de fato, está ativa, e se a atividade declarada bate com o que foi anunciado. <strong>Custo: R$ 5,00 por consulta.</strong></p>
+    </div>
+
+    <div class="panel">
+      <div class="grid-2">
+        <div>
+          <div class="field">
+            <label for="cnpjInput">CNPJ da empresa</label>
+            <input type="text" id="cnpjInput" placeholder="00.000.000/0000-00" maxlength="18" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="atividadeAnunciada">O que essa empresa disse que vende ou faz? (opcional, mas recomendado)</label>
+            <input type="text" id="atividadeAnunciada" placeholder="Ex.: empréstimo consignado, loja de roupas, curso online...">
+          </div>
+          <div class="field">
+            <label for="nomeDestinatario">Nome que aparece no Pix, boleto ou comprovante (opcional)</label>
+            <input type="text" id="nomeDestinatario" placeholder="Ex.: João da Silva Ferreira / Loja Tal Comércio LTDA">
+          </div>
+          <button class="btn btn-primary" onclick="consultarCNPJ()">Consultar (R$ 5,00)</button>
+          <div class="loading" id="cnpjLoading"><div class="spinner"></div> Consultando base pública da Receita Federal...</div>
+          <div class="error-box" id="cnpjError"></div>
+        </div>
+        <div class="panel" style="background:#fbfcfd;">
+          <h3 style="font-size:14.5px;color:var(--navy);">Regras de validação aplicadas</h3>
+          <ul style="font-size:13px;color:var(--muted);padding-left:18px;margin-top:10px;line-height:1.7;">
+            <li><strong>Situação cadastral</strong> — precisa constar como <strong>ATIVA</strong>.</li>
+            <li><strong>Data de abertura</strong> — empresas com menos de 12 meses recebem alerta.</li>
+            <li><strong>Atividade econômica (CNAE)</strong> — comparamos com o que foi anunciado a você.</li>
+            <li><strong>Destinatário do pagamento</strong> — verificamos se o nome do Pix/boleto bate com a empresa.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-box" id="cnpjResult">
+        <hr style="border:none;border-top:1px solid var(--line);margin:26px 0;">
+        <div class="cnpj-header">
+          <div>
+            <h3 id="cnpjRazaoSocial">—</h3>
+            <div class="mono" id="cnpjNumeroFormatado" style="color:var(--muted);font-size:13px;margin-top:4px;"></div>
+          </div>
+          <span class="badge" id="cnpjStatusBadge">—</span>
+        </div>
+        <div class="data-grid">
+          <div class="data-cell"><div class="k">Nome fantasia</div><div class="v" id="cnpjNomeFantasia">—</div></div>
+          <div class="data-cell"><div class="k">Data de abertura</div><div class="v" id="cnpjDataAbertura">—</div></div>
+          <div class="data-cell"><div class="k">Atividade principal</div><div class="v" id="cnpjAtividade">—</div></div>
+          <div class="data-cell"><div class="k">Natureza jurídica</div><div class="v" id="cnpjNatureza">—</div></div>
+          <div class="data-cell"><div class="k">Município / UF</div><div class="v" id="cnpjMunicipio">—</div></div>
+          <div class="data-cell"><div class="k">Porte</div><div class="v" id="cnpjPorte">—</div></div>
+        </div>
+        <ul class="flag-list" id="cnpjFlags"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= ANALISAR MENSAGEM ======================= -->
+  <section class="view" id="view-mensagem">
+    <div class="section-head" style="margin-top:0;">
+      <h2>Analisar mensagem, ligação ou anúncio suspeito</h2>
+      <p>Cole abaixo o texto exato que você recebeu. <strong>Custo: R$ 5,00 por análise.</strong></p>
+    </div>
+
+    <div class="panel">
+      <div class="grid-2">
+        <div>
+          <div class="field">
+            <label for="mensagemInput">Texto da mensagem recebida</label>
+            <textarea id="mensagemInput" placeholder="Cole aqui a mensagem, e-mail, print transcrito ou o resumo da ligação..."></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="analisarMensagem()">Analisar (R$ 5,00)</button>
+          <div class="loading" id="msgLoading"><div class="spinner"></div> Analisando...</div>
+          <div class="error-box" id="msgError"></div>
+        </div>
+        <div class="panel" style="background:#fbfcfd;">
+          <h3 style="font-size:14.5px;color:var(--navy);">O que o motor procura</h3>
+          <ul style="font-size:13px;color:var(--muted);padding-left:18px;margin-top:10px;line-height:1.7;">
+            <li>Urgência e pressão, pedido de pagamento antecipado</li>
+            <li>Pedido de acesso remoto ou "teste de transferência"</li>
+            <li>Portabilidade de consignado não solicitada</li>
+            <li>Links suspeitos, oferta de renda fácil, clonagem de WhatsApp</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="result-box" id="mensagemResult">
+        <hr style="border:none;border-top:1px solid var(--line);margin:26px 0;">
+        <div class="grid-2">
+          <div class="gauge-wrap">
+            <div class="gauge" id="msgGauge"><div class="gauge-inner"><div class="pct" id="msgPct">0%</div><div class="pct-lbl">risco</div></div></div>
+            <div class="verdict-title" id="msgVerdictTitle">—</div>
+          </div>
+          <div>
+            <h3 style="font-size:15px;">Sinais identificados no texto</h3>
+            <ul class="flag-list" id="msgFlags"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= SIMULADOR (gratuito) ======================= -->
+  <section class="view" id="view-simulador">
+    <div class="section-head" style="margin-top:0;">
+      <h2>Simulador "É Golpe?" <span class="badge badge-green">Gratuito</span></h2>
+      <p>Responda o que aconteceu na conversa. Este simulador não tem custo.</p>
+    </div>
+    <div class="panel"><div id="quizContainer"></div></div>
+  </section>
+
+  <!-- ======================= GUIA DE AÇÃO ======================= -->
+  <section class="view" id="view-guia">
+    <div class="section-head" style="margin-top:0;">
+      <h2>Caí no golpe (ou desconfio que caí). O que fazer agora?</h2>
+      <p>Velocidade é o fator mais importante nas primeiras horas.</p>
+    </div>
+    <div class="panel">
+      <div class="steps">
+        <div class="step"><div class="num"></div><div><h4>Acione o MED (Mecanismo Especial de Devolução) no app do seu banco</h4>
+          <p>Procure "Fui vítima de golpe" ou "Solicitar MED" no app do banco. Ele tem até 24h úteis para analisar e pode bloquear preventivamente os valores ainda não repassados.</p></div></div>
+        <div class="step"><div class="num"></div><div><h4>Registre um Boletim de Ocorrência digital imediatamente</h4>
+          <p>Tenha em mãos prints da conversa, comprovante e dados da chave Pix recebedora.</p></div></div>
+        <div class="step"><div class="num"></div><div><h4>Formalize a reclamação em consumidor.gov.br e no Banco Central</h4>
+          <p>Registre em <strong>consumidor.gov.br</strong> e abra manifestação no <strong>Banco Central (Registrato/RDR)</strong>.</p></div></div>
+        <div class="step"><div class="num"></div><div><h4>Peça o bloqueio preventivo da chave Pix golpista</h4>
+          <p>Peça ao seu banco que solicite ao banco recebedor o bloqueio cautelar dos valores ainda disponíveis.</p></div></div>
+        <div class="step"><div class="num"></div><div><h4>Avalie entrar com ação nos Juizados Especiais (sem advogado)</h4>
+          <p>Para causas de até 20 salários mínimos, a <strong>atermação online</strong> pode ser feita direto no site do Tribunal de Justiça do seu estado.</p></div></div>
+        <div class="step"><div class="num"></div><div><h4>Proteja o que ainda não foi comprometido</h4>
+          <p>Desinstale apps de acesso remoto, troque senhas e ative autenticação em duas etapas.</p></div></div>
+      </div>
+    </div>
+    <div class="section-head"><h2>Onde denunciar — links diretos</h2></div>
+    <div class="panel">
+      <a class="link-card" href="https://www.bcb.gov.br/cidadaniafinanceira/registrato" target="_blank" rel="noopener">
+        <div><div class="t">Banco Central — Registrato / RDR</div><div class="d">Consulta e registro de reclamação sobre a instituição financeira e a conta recebedora.</div></div><div class="arrow">↗</div>
+      </a>
+      <a class="link-card" href="https://www.consumidor.gov.br" target="_blank" rel="noopener">
+        <div><div class="t">consumidor.gov.br</div><div class="d">Reclame diretamente com bancos e empresas, com prazo de resposta.</div></div><div class="arrow">↗</div>
+      </a>
+      <a class="link-card" href="https://delegaciavirtual.sinesp.gov.br/portal/" target="_blank" rel="noopener">
+        <div><div class="t">Boletim de Ocorrência digital</div><div class="d">Delegacia Virtual (atende 12 estados). Se o seu não constar, busque "delegacia eletrônica" + seu estado.</div></div><div class="arrow">↗</div>
+      </a>
+      <a class="link-card" href="https://www.cnj.jus.br/programas-e-acoes/juizados-especiais/" target="_blank" rel="noopener">
+        <div><div class="t">Juizados Especiais / Atermação online</div><div class="d">Página do CNJ. Busque o Tribunal de Justiça do seu estado + "atermação online".</div></div><div class="arrow">↗</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ======================= CRÉDITOS / PAGAMENTO ======================= -->
+  <section class="view" id="view-creditos">
+    <div class="section-head" style="margin-top:0;">
+      <h2>Comprar créditos</h2>
+      <p>Cada crédito vale 1 consulta de CNPJ ou 1 análise de mensagem. R$ 5,00 por crédito.</p>
+    </div>
+
+    <div class="panel" id="loggedOutCreditsMsg" style="display:none;">
+      <p style="color:var(--muted);font-size:14px;">Você precisa <button class="linklike" onclick="abrirAuthModal('login')" style="color:var(--teal);">entrar ou criar uma conta</button> antes de comprar créditos.</p>
+    </div>
+
+    <div class="panel" id="loggedInCredits" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;">
+        <div>
+          <div style="font-size:13px;color:var(--muted);">Seu saldo atual</div>
+          <div style="font-family:'Space Grotesk';font-size:28px;font-weight:700;color:var(--navy);" id="saldoCreditos">0 créditos</div>
+        </div>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--line);margin:20px 0;">
+      <label>Quantidade de créditos</label>
+      <div class="qtd-opts" id="qtdOpts">
+        <button class="qtd-opt sel" data-qtd="1" onclick="selecionarQtd(1)">1 (R$ 5)</button>
+        <button class="qtd-opt" data-qtd="5" onclick="selecionarQtd(5)">5 (R$ 25)</button>
+        <button class="qtd-opt" data-qtd="10" onclick="selecionarQtd(10)">10 (R$ 50)</button>
+      </div>
+      <div class="row" style="margin-top:18px;">
+        <button class="btn btn-primary" onclick="comprarPix()">Pagar com Pix</button>
+        <button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" onclick="comprarCartao()">Pagar com cartão</button>
+      </div>
+      <div class="error-box" id="creditosError"></div>
+    </div>
+
+    <div class="section-head"><h2>Seu histórico</h2></div>
+    <div class="panel" id="historyPanel">
+      <div id="historyList"><p style="color:var(--muted);font-size:13.5px;">Entre na sua conta para ver o histórico.</p></div>
+    </div>
+
+    <div class="section-head"><h2>Institucional</h2></div>
+    <div class="panel">
+      <p style="font-size:14px;color:var(--muted);">Bancos, fintechs, sindicatos ou PROCON interessados em licenciar a ferramenta (white-label, API própria): fale por e-mail antes de qualquer pagamento.</p>
+      <p class="mono" style="margin-top:10px;font-size:14px;">fsantosdantas@hotmail.com</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ======================= MODAL: LOGIN / CADASTRO ======================= -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal-box">
+    <h3 id="authModalTitle">Entrar</h3>
+    <div class="auth-form" style="margin-top:16px;">
+      <div class="field" id="campoNome" style="display:none;margin-bottom:0;">
+        <label>Nome</label>
+        <input type="text" id="authNome" placeholder="Seu nome">
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>E-mail</label>
+        <input type="text" id="authEmail" placeholder="voce@email.com">
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Senha</label>
+        <input type="text" id="authSenha" placeholder="mínimo 6 caracteres">
+      </div>
+      <div class="error-box" id="authError"></div>
+      <button class="btn btn-primary" id="authSubmitBtn" onclick="submitAuth()">Entrar</button>
+      <div class="auth-switch" id="authSwitch">
+        Não tem conta? <button onclick="alternarAuthModo()">Criar conta</button>
+      </div>
+    </div>
+    <button class="linklike" style="margin-top:14px;" onclick="fecharAuthModal()">Fechar</button>
+  </div>
+</div>
+
+<!-- ======================= MODAL: PAGAMENTO PIX ======================= -->
+<div class="modal-overlay" id="pixModal">
+  <div class="modal-box">
+    <h3>Pague com Pix</h3>
+    <p style="font-size:13.5px;color:var(--muted);margin-top:6px;" id="pixValorTexto">—</p>
+    <img class="pix-qr" id="pixQrImg" src="" alt="QR Code Pix">
+    <div style="font-size:11.5px;color:var(--muted);text-transform:uppercase;font-weight:700;margin-top:10px;">Pix copia e cola</div>
+    <div class="pix-copia" id="pixCopiaCola">—</div>
+    <button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);margin-top:10px;" onclick="copiarPix()">Copiar código</button>
+    <div style="margin-top:16px;"><span class="status-pill" id="pixStatusPill"><span class="dot"></span> Aguardando pagamento...</span></div>
+    <button class="linklike" style="margin-top:16px;" onclick="fecharPixModal()">Fechar</button>
+  </div>
+</div>
+
+<footer>
+  <div class="disclaimer">
+    Sentinela Golpes é uma ferramenta informativa e educativa. A consulta de CNPJ utiliza a base pública de dados abertos da Receita Federal (via BrasilAPI). A análise de mensagens roda no servidor com base em um motor de regras especializado nos padrões de golpe mais comuns — não substitui orientação jurídica, contábil ou financeira profissional. Pagamentos processados pelo Mercado Pago.
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   CONFIGURAÇÃO — troque pela URL real do seu backend hospedado
+========================================================= */
+const params = new URLSearchParams(window.location.search);
+const API_BASE = params.get('api') || 'https://sentinela-golpes-backend.onrender.com';
+
+/* =========================================================
+   ESTADO
+========================================================= */
+let authToken = localStorage.getItem('sg_token') || null;
+let currentUser = null; // { id, nome, email, creditos }
+let authMode = 'login';
+let qtdSelecionada = 1;
+let pixPollInterval = null;
+
+/* =========================================================
+   NAVEGAÇÃO
+========================================================= */
+function goTo(view){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  document.querySelectorAll('#mainTabs button').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(view === 'creditos') atualizarTelaCreditos();
+}
+document.getElementById('mainTabs').addEventListener('click', e=>{
+  const btn = e.target.closest('button[data-view]');
+  if(btn) goTo(btn.dataset.view);
+});
+
+function norm(str){ return (str||'').toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+
+/* =========================================================
+   CHAMADA GENÉRICA À API
+========================================================= */
+async function api(path, { method='GET', body=null, auth=true } = {}){
+  const headers = { 'Content-Type': 'application/json' };
+  if(auth && authToken) headers['Authorization'] = 'Bearer ' + authToken;
+  let resp;
+  try{
+    resp = await fetch(API_BASE + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
+  }catch(e){
+    document.getElementById('apiWarning').classList.add('show');
+    throw new Error('Não foi possível conectar ao servidor.');
+  }
+  document.getElementById('apiWarning').classList.remove('show');
+  const data = await resp.json().catch(()=>({}));
+  if(!resp.ok){
+    const err = new Error(data.erro || 'Erro na requisição.');
+    err.status = resp.status;
+    err.data = data;
+    throw err;
+  }
+  return data;
+}
+
+/* =========================================================
+   CONTA / SESSÃO
+========================================================= */
+async function carregarSessao(){
+  if(!authToken){ renderAccountBox(); return; }
+  try{
+    const { usuario } = await api('/conta/me');
+    currentUser = usuario;
+  }catch(e){
+    authToken = null; currentUser = null;
+    localStorage.removeItem('sg_token');
+  }
+  renderAccountBox();
+}
+
+function renderAccountBox(){
+  const box = document.getElementById('accountBox');
+  if(currentUser){
+    box.innerHTML = `
+      <span class="credit-chip">${currentUser.creditos} crédito(s)</span>
+      <button class="btn btn-ghost" style="padding:8px 14px;" onclick="logout()">Sair</button>`;
+  } else {
+    box.innerHTML = `<button class="btn btn-primary" style="padding:8px 16px;" onclick="abrirAuthModal('login')">Entrar / Criar conta</button>`;
+  }
+}
+
+function logout(){
+  authToken = null; currentUser = null;
+  localStorage.removeItem('sg_token');
+  renderAccountBox();
+  atualizarTelaCreditos();
+}
+
+/* =========================================================
+   MODAL DE LOGIN / CADASTRO
+========================================================= */
+function abrirAuthModal(modo){
+  authMode = modo;
+  document.getElementById('authError').textContent = '';
+  document.getElementById('authModalTitle').textContent = modo === 'login' ? 'Entrar' : 'Criar conta';
+  document.getElementById('campoNome').style.display = modo === 'login' ? 'none' : 'block';
+  document.getElementById('authSubmitBtn').textContent = modo === 'login' ? 'Entrar' : 'Criar conta';
+  document.getElementById('authSwitch').innerHTML = modo === 'login'
+    ? 'Não tem conta? <button onclick="alternarAuthModo()">Criar conta</button>'
+    : 'Já tem conta? <button onclick="alternarAuthModo()">Entrar</button>';
+  document.getElementById('authModal').classList.add('show');
+}
+function alternarAuthModo(){ abrirAuthModal(authMode === 'login' ? 'cadastro' : 'login'); }
+function fecharAuthModal(){ document.getElementById('authModal').classList.remove('show'); }
+
+async function submitAuth(){
+  const email = document.getElementById('authEmail').value.trim();
+  const senha = document.getElementById('authSenha').value;
+  const nome = document.getElementById('authNome').value.trim();
+  const errBox = document.getElementById('authError');
+  errBox.textContent = '';
+  try{
+    const rota = authMode === 'login' ? '/auth/login' : '/auth/registrar';
+    const body = authMode === 'login' ? { email, senha } : { email, senha, nome };
+    const data = await api(rota, { method:'POST', body, auth:false });
+    authToken = data.token;
+    currentUser = data.usuario;
+    localStorage.setItem('sg_token', authToken);
+    fecharAuthModal();
+    renderAccountBox();
+    atualizarTelaCreditos();
+  }catch(e){
+    errBox.textContent = e.message;
+  }
+}
+
+/* =========================================================
+   CONSULTA DE CNPJ
+========================================================= */
+const cnpjInputEl = document.getElementById('cnpjInput');
+cnpjInputEl.addEventListener('input', (e)=>{
+  let v = e.target.value.replace(/\D/g,'').slice(0,14);
+  let out = v;
+  if(v.length > 2) out = v.slice(0,2)+'.'+v.slice(2);
+  if(v.length > 5) out = out.slice(0,6)+'.'+out.slice(6);
+  if(v.length > 8) out = out.slice(0,10)+'/'+out.slice(10);
+  if(v.length > 12) out = out.slice(0,15)+'-'+out.slice(15);
+  e.target.value = out;
+});
+
+async function consultarCNPJ(){
+  const errBox = document.getElementById('cnpjError');
+  const loading = document.getElementById('cnpjLoading');
+  const resultBox = document.getElementById('cnpjResult');
+  errBox.classList.remove('show'); errBox.textContent='';
+  resultBox.classList.remove('show');
+
+  if(!authToken){ abrirAuthModal('login'); return; }
+
+  const raw = cnpjInputEl.value.replace(/\D/g,'');
+  if(raw.length !== 14){
+    errBox.textContent = 'Digite um CNPJ completo com 14 dígitos.';
+    errBox.classList.add('show');
+    return;
+  }
+
+  loading.classList.add('show');
+  try{
+    const resp = await api('/cnpj/consultar', { method:'POST', body: {
+      cnpj: raw,
+      atividadeAnunciada: document.getElementById('atividadeAnunciada').value,
+      nomeDestinatario: document.getElementById('nomeDestinatario').value,
+    }});
+    currentUser.creditos = resp.creditosRestantes;
+    renderAccountBox();
+    renderCNPJResult(resp.dados, resp.avaliacao, raw);
+  }catch(e){
+    if(e.status === 402){
+      errBox.textContent = 'Você não tem créditos. ';
+      errBox.innerHTML += '<button class="linklike" onclick="goTo(\'creditos\')">Comprar créditos →</button>';
+    } else {
+      errBox.textContent = e.message;
+    }
+    errBox.classList.add('show');
+  }finally{
+    loading.classList.remove('show');
+  }
+}
+
+function formatCNPJ(digits){ return digits.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5"); }
+
+function renderCNPJResult(data, avaliacao, raw){
+  const resultBox = document.getElementById('cnpjResult');
+  document.getElementById('cnpjRazaoSocial').textContent = data.razao_social || '—';
+  document.getElementById('cnpjNumeroFormatado').textContent = formatCNPJ(raw);
+  document.getElementById('cnpjNomeFantasia').textContent = data.nome_fantasia || '—';
+  document.getElementById('cnpjDataAbertura').textContent = data.data_inicio_atividade || '—';
+  document.getElementById('cnpjAtividade').textContent = data.cnae_fiscal_descricao || '—';
+  document.getElementById('cnpjNatureza').textContent = data.natureza_juridica || '—';
+  document.getElementById('cnpjMunicipio').textContent = (data.municipio ? data.municipio+' / '+data.uf : '—');
+  document.getElementById('cnpjPorte').textContent = data.porte || '—';
+
+  const statusBadge = document.getElementById('cnpjStatusBadge');
+  statusBadge.textContent = data.descricao_situacao_cadastral || 'Situação desconhecida';
+  statusBadge.className = 'badge ' + (avaliacao.ativo ? 'badge-green' : 'badge-red');
+
+  const flagsUl = document.getElementById('cnpjFlags');
+  flagsUl.innerHTML = '';
+  avaliacao.flags.forEach(f=>{
+    const li = document.createElement('li');
+    li.className = 'flag-item';
+    li.innerHTML = `<div class="dot ${f.level}"></div><div class="txt"><strong>${f.title}</strong><p>${f.desc}</p></div>`;
+    flagsUl.appendChild(li);
+  });
+  resultBox.classList.add('show');
+}
+
+/* =========================================================
+   ANÁLISE DE MENSAGEM
+========================================================= */
+async function analisarMensagem(){
+  const errBox = document.getElementById('msgError');
+  const loading = document.getElementById('msgLoading');
+  const resultBox = document.getElementById('mensagemResult');
+  errBox.classList.remove('show'); errBox.textContent='';
+  resultBox.classList.remove('show');
+
+  if(!authToken){ abrirAuthModal('login'); return; }
+
+  const texto = document.getElementById('mensagemInput').value;
+  if(!texto.trim()) return;
+
+  loading.classList.add('show');
+  try{
+    const resp = await api('/mensagem/analisar', { method:'POST', body: { texto } });
+    currentUser.creditos = resp.creditosRestantes;
+    renderAccountBox();
+
+    document.getElementById('msgPct').textContent = resp.score + '%';
+    document.getElementById('msgVerdictTitle').textContent = resp.verdict;
+    const cor = resp.score >= 55 ? 'var(--red)' : resp.score >= 25 ? 'var(--amber)' : 'var(--green)';
+    document.getElementById('msgGauge').style.background = `conic-gradient(${cor} ${resp.score*3.6}deg, #EEF1F4 0deg)`;
+
+    const flagsUl = document.getElementById('msgFlags');
+    flagsUl.innerHTML = '';
+    (resp.flags.length ? resp.flags : [{title:'Nenhum padrão específico encontrado', desc:'Mantenha cautela mesmo assim.', level:'amber'}]).forEach(f=>{
+      const li = document.createElement('li');
+      li.className = 'flag-item';
+      li.innerHTML = `<div class="dot ${f.level}"></div><div class="txt"><strong>${f.title}</strong><p>${f.desc}</p></div>`;
+      flagsUl.appendChild(li);
+    });
+    resultBox.classList.add('show');
+  }catch(e){
+    if(e.status === 402){
+      errBox.innerHTML = 'Você não tem créditos. <button class="linklike" onclick="goTo(\'creditos\')">Comprar créditos →</button>';
+    } else {
+      errBox.textContent = e.message;
+    }
+    errBox.classList.add('show');
+  }finally{
+    loading.classList.remove('show');
+  }
+}
+
+/* =========================================================
+   CRÉDITOS E PAGAMENTO
+========================================================= */
+function atualizarTelaCreditos(){
+  const logged = !!currentUser;
+  document.getElementById('loggedOutCreditsMsg').style.display = logged ? 'none' : 'block';
+  document.getElementById('loggedInCredits').style.display = logged ? 'block' : 'none';
+  if(logged){
+    document.getElementById('saldoCreditos').textContent = currentUser.creditos + ' crédito(s)';
+    carregarHistorico();
+  } else {
+    document.getElementById('historyList').innerHTML = '<p style="color:var(--muted);font-size:13.5px;">Entre na sua conta para ver o histórico.</p>';
+  }
+}
+
+function selecionarQtd(q){
+  qtdSelecionada = q;
+  document.querySelectorAll('.qtd-opt').forEach(b=>b.classList.toggle('sel', Number(b.dataset.qtd)===q));
+}
+
+async function comprarPix(){
+  const errBox = document.getElementById('creditosError');
+  errBox.classList.remove('show');
+  try{
+    const cobranca = await api('/pagamentos/pix', { method:'POST', body:{ quantidade: qtdSelecionada } });
+    abrirPixModal(cobranca);
+  }catch(e){
+    errBox.textContent = e.message; errBox.classList.add('show');
+  }
+}
+
+async function comprarCartao(){
+  const errBox = document.getElementById('creditosError');
+  errBox.classList.remove('show');
+  try{
+    const cobranca = await api('/pagamentos/cartao', { method:'POST', body:{ quantidade: qtdSelecionada } });
+    window.open(cobranca.checkoutUrl, '_blank');
+  }catch(e){
+    errBox.textContent = e.message; errBox.classList.add('show');
+  }
+}
+
+function abrirPixModal(cobranca){
+  document.getElementById('pixValorTexto').textContent = `Valor: R$ ${cobranca.valor.toFixed(2).replace('.',',')}`;
+  document.getElementById('pixQrImg').src = 'data:image/png;base64,' + cobranca.qrCodeBase64;
+  document.getElementById('pixCopiaCola').textContent = cobranca.qrCode;
+  document.getElementById('pixStatusPill').innerHTML = '<span class="dot"></span> Aguardando pagamento...';
+  document.getElementById('pixModal').classList.add('show');
+
+  clearInterval(pixPollInterval);
+  pixPollInterval = setInterval(async ()=>{
+    try{
+      const { status } = await api(`/pagamentos/status/${cobranca.transacaoId}`);
+      if(status === 'aprovado'){
+        clearInterval(pixPollInterval);
+        document.getElementById('pixStatusPill').innerHTML = '✅ Pagamento confirmado!';
+        const { usuario } = await api('/conta/me');
+        currentUser = usuario;
+        renderAccountBox();
+        atualizarTelaCreditos();
+        setTimeout(fecharPixModal, 1800);
+      }
+    }catch(e){ /* mantém tentando */ }
+  }, 4000);
+}
+function fecharPixModal(){
+  document.getElementById('pixModal').classList.remove('show');
+  clearInterval(pixPollInterval);
+}
+function copiarPix(){
+  navigator.clipboard.writeText(document.getElementById('pixCopiaCola').textContent);
+}
+
+async function carregarHistorico(){
+  const list = document.getElementById('historyList');
+  try{
+    const { historico } = await api('/conta/historico');
+    if(!historico.length){
+      list.innerHTML = '<p style="color:var(--muted);font-size:13.5px;">Nenhuma consulta ainda.</p>';
+      return;
+    }
+    list.innerHTML = historico.map(h=>`
+      <div class="history-item">
+        <div><strong>${h.tipo === 'cnpj' ? 'CNPJ: '+h.entrada : 'Mensagem: '+ (h.entrada||'').slice(0,40)}</strong>
+        <div class="d">${new Date(h.criado_em).toLocaleString('pt-BR')}</div></div>
+      </div>`).join('');
+  }catch(e){
+    list.innerHTML = '<p style="color:var(--muted);font-size:13.5px;">Não foi possível carregar o histórico.</p>';
+  }
+}
+
+/* =========================================================
+   DADOS: 8 CENÁRIOS DE GOLPE
+========================================================= */
+const SCAMS = [
+  {tag:"Falsa central", title:"Falsa Central de Atendimento / Falso Funcionário", desc:"Ligam ou mandam mensagem dizendo ser do banco, INSS ou de um tribunal, alarmando sobre uma fraude."},
+  {tag:"Falso gerente", title:"Falsa Portabilidade de Crédito Consignado", desc:"Foco em servidores públicos e aposentados, com assinatura de documentos não solicitados."},
+  {tag:"Taxa antecipada", title:"Empréstimo Facilitado com Taxa Antecipada", desc:"Prometem crédito imediato mas exigem Pix prévio para 'seguro', 'cartório' ou 'liberação de TED'."},
+  {tag:"Deepfake / extorsão", title:"Falsos Órgãos Governamentais e Golpe do Pix", desc:"Vídeos, áudios ou sites clonados dizem que seu CPF ou chave Pix será bloqueada em poucas horas."},
+  {tag:"Comprovante falso", title:"Golpe do Pix / Falso Comprovante", desc:"Envio de comprovante falso ou o 'golpe do 1 centavo' para capturar seus dados."},
+  {tag:"Phishing", title:"Phishing e Links Falsos", desc:"SMS ou e-mail falso de 'taxas da Receita Federal' que levam a sites clonados."},
+  {tag:"Emprego falso", title:"Falsa Oportunidade / Emprego Falso", desc:"Renda extra fácil mediante pagamento de uma taxa inicial 'reembolsável'."},
+  {tag:"Clonagem WhatsApp", title:"Perfil Falso / Clonagem de WhatsApp", desc:"Criminosos se passam por parentes com número novo, inventando emergência."},
+];
+const grid = document.getElementById('scamGrid');
+SCAMS.forEach(s=>{
+  const el = document.createElement('div');
+  el.className='scam-card';
+  el.innerHTML = `<div class="eyebrow">${s.tag}</div><h3>${s.title}</h3><p>${s.desc}</p>`;
+  grid.appendChild(el);
+});
+
+/* =========================================================
+   SIMULADOR "É GOLPE?" (gratuito, sem backend)
+========================================================= */
+const QUIZ = [
+  {tag:'Central falsa', q:'Alguém entrou em contato dizendo ser do banco, INSS ou de um tribunal, alarmando sobre uma fraude na sua conta?', weight:20},
+  {tag:'Ação remota', q:'Pediram para você instalar um aplicativo de acesso remoto (AnyDesk, TeamViewer) ou "compartilhar a tela"?', weight:32, hard:true},
+  {tag:'Taxa antecipada', q:'Pediram um Pix ou pagamento antecipado para liberar um empréstimo, prêmio ou portabilidade?', weight:26},
+  {tag:'Extorsão / deepfake', q:'Disseram que seu CPF ou sua chave Pix seria bloqueada em poucas horas?', weight:22},
+  {tag:'Phishing', q:'Enviaram um link de Receita Federal ou Banco Central que não termina em ".gov.br"?', weight:18},
+  {tag:'Portabilidade', q:'Pediram para você assinar documento ou autorizar portabilidade de consignado não solicitada?', weight:20},
+  {tag:'Clonagem WhatsApp', q:'Um "parente" pediu dinheiro emergencial usando número novo?', weight:20},
+  {tag:'Emprego falso', q:'Prometeram renda fácil mediante algum pagamento inicial seu?', weight:20},
+  {tag:'Comprovante falso', q:'Você recebeu um comprovante de Pix que não confirma no extrato do seu banco?', weight:16},
+];
+let quizIndex = 0, quizScore = 0, quizHard = false, quizAnswers = [];
+
+function renderQuiz(){
+  const c = document.getElementById('quizContainer');
+  if(quizIndex >= QUIZ.length){ renderQuizResult(); return; }
+  const item = QUIZ[quizIndex];
+  const pct = Math.round((quizIndex/QUIZ.length)*100);
+  c.innerHTML = `
+    <div class="quiz-progress"><div style="width:${pct}%;"></div></div>
+    <div class="quiz-tag">${item.tag} · pergunta ${quizIndex+1} de ${QUIZ.length}</div>
+    <div class="quiz-q">${item.q}</div>
+    <div class="quiz-opts">
+      <button class="qopt sim" onclick="responderQuiz(true)">Sim</button>
+      <button class="qopt nao" onclick="responderQuiz(false)">Não</button>
+    </div>
+    <div class="quiz-nav">
+      <button class="linklike" onclick="reiniciarQuiz()">Reiniciar simulação</button>
+      ${quizIndex>0 ? '<button class="linklike" onclick="voltarQuiz()">← Voltar</button>' : '<span></span>'}
+    </div>`;
+}
+function responderQuiz(sim){
+  quizAnswers[quizIndex] = sim;
+  if(sim){ quizScore += QUIZ[quizIndex].weight; if(QUIZ[quizIndex].hard) quizHard = true; }
+  quizIndex++; renderQuiz();
+}
+function voltarQuiz(){ quizIndex = Math.max(0, quizIndex-1); recomputeQuizScore(); renderQuiz(); }
+function recomputeQuizScore(){
+  quizScore = 0; quizHard = false;
+  quizAnswers.slice(0, quizIndex).forEach((ans,i)=>{ if(ans){ quizScore += QUIZ[i].weight; if(QUIZ[i].hard) quizHard = true; } });
+}
+function reiniciarQuiz(){ quizIndex=0; quizScore=0; quizHard=false; quizAnswers=[]; renderQuiz(); }
+function renderQuizResult(){
+  let score = Math.min(100, quizScore);
+  if(quizHard) score = Math.max(score, 75);
+  let verdictTitle, corVar;
+  if(score>=55){ verdictTitle='Alto risco — isto tem forte cara de golpe'; corVar='var(--red)'; }
+  else if(score>=25){ verdictTitle='Atenção — vários sinais de alerta presentes'; corVar='var(--amber)'; }
+  else { verdictTitle='Poucos sinais de risco nas suas respostas'; corVar='var(--green)'; }
+  const respostasSim = QUIZ.filter((q,i)=>quizAnswers[i]).map(q=>q.tag);
+  document.getElementById('quizContainer').innerHTML = `
+    <div class="grid-2">
+      <div class="gauge-wrap">
+        <div class="gauge" style="background:conic-gradient(${corVar} ${score*3.6}deg, #EEF1F4 0deg);">
+          <div class="gauge-inner"><div class="pct">${score}%</div><div class="pct-lbl">risco</div></div>
+        </div>
+        <div class="verdict-title">${verdictTitle}</div>
+      </div>
+      <div>
+        <h3 style="font-size:15px;">Padrões identificados</h3>
+        ${respostasSim.length ? '<ul class="flag-list">' + respostasSim.map(t=>`<li class="flag-item"><div class="dot ${quizHard?'red':'amber'}"></div><div class="txt"><strong>${t}</strong></div></li>`).join('') + '</ul>' : '<p style="color:var(--muted);font-size:13.5px;">Nenhum sinal marcado.</p>'}
+        <button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);margin-top:18px;" onclick="reiniciarQuiz()">Refazer simulação</button>
+      </div>
+    </div>`;
+}
+
+renderQuiz();
+carregarSessao();
+</script>
+</body>
+</html>
