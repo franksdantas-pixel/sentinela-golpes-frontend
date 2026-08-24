@@ -971,6 +971,140 @@
   .cnpj-partial{margin-top:12px;padding:10px 12px;border-radius:10px;background:#FFF9E8;border:1px solid rgba(233,150,61,.24);font-size:11.5px;line-height:1.5;color:#775716;display:none;}
   @media(max-width:820px){.cnpj-risk-grid{grid-template-columns:1fr;}.cnpj-gauge{width:142px;height:142px}.cnpj-gauge-inner{width:106px;height:106px}}
 
+
+
+/* =========================================================
+   GUIA DE AÇÃO 2.7 — refinamento visual isolado
+========================================================= */
+#view-guia .guide-hero{
+  display:grid;grid-template-columns:1fr 310px;gap:18px;align-items:start;margin-bottom:18px;
+}
+#view-guia .guide-kicker{
+  display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;
+  background:#eaf8f3;color:#067457;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.35px;
+}
+#view-guia .guide-hero h2{margin:12px 0 6px;font-size:30px;line-height:1.12;color:var(--navy);}
+#view-guia .guide-hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.55;}
+#view-guia .guide-disclaimer{
+  border:1px solid #d9e5e2;border-radius:14px;background:#fff;padding:15px;display:flex;gap:12px;
+  box-shadow:0 10px 28px rgba(16,32,59,.05);
+}
+#view-guia .guide-disclaimer .ico{
+  width:40px;height:40px;border-radius:12px;background:#eaf8f3;display:grid;place-items:center;
+  color:#07966f;font-size:20px;flex:0 0 auto;
+}
+#view-guia .guide-disclaimer strong{display:block;color:var(--navy);font-size:13px;margin-bottom:4px;}
+#view-guia .guide-disclaimer span{display:block;color:var(--muted);font-size:12px;line-height:1.45;}
+
+#view-guia .guide-tabs{
+  display:flex;gap:9px;flex-wrap:wrap;margin:2px 0 18px;
+}
+#view-guia .guide-tab{
+  display:inline-flex;align-items:center;gap:7px;border:1px solid #d9e1e7;background:#fff;color:var(--navy);
+  padding:10px 13px;border-radius:10px;text-decoration:none;font-weight:750;font-size:12px;
+  transition:.18s ease;box-shadow:0 3px 10px rgba(16,32,59,.03);
+}
+#view-guia .guide-tab:hover{border-color:#9ddfd0;transform:translateY(-1px);box-shadow:0 8px 20px rgba(16,32,59,.07);}
+#view-guia .guide-tab.primary{background:var(--teal);border-color:var(--teal);color:#05231d;}
+
+#view-guia .guide-layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.75fr);gap:18px;align-items:start;}
+#view-guia .guide-card{
+  border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 10px 28px rgba(16,32,59,.05);
+  overflow:hidden;
+}
+#view-guia .guide-card-head{
+  padding:15px 17px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;
+}
+#view-guia .guide-card-head h3{margin:0;color:var(--navy);font-size:16px;}
+#view-guia .guide-card-head span{color:var(--muted);font-size:11px;}
+#view-guia .guide-action-list{padding:0 17px;}
+#view-guia .guide-action{
+  display:grid;grid-template-columns:36px 46px 1fr auto;gap:12px;align-items:start;padding:15px 0;border-bottom:1px solid var(--line);
+}
+#view-guia .guide-action:last-child{border-bottom:0;}
+#view-guia .guide-num{
+  width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;
+  font-weight:800;font-size:12px;margin-top:2px;
+}
+#view-guia .guide-icon{
+  width:42px;height:42px;border-radius:11px;background:#eaf8f3;color:#087d60;display:grid;place-items:center;font-size:19px;
+}
+#view-guia .guide-action h4{margin:0 0 4px;color:var(--navy);font-size:13.5px;line-height:1.35;}
+#view-guia .guide-action p{margin:0;color:var(--muted);font-size:12.3px;line-height:1.5;}
+#view-guia .guide-time{
+  display:inline-flex;align-items:center;white-space:nowrap;padding:5px 8px;border-radius:999px;
+  background:#eaf8f3;color:#087457;font-weight:800;font-size:10px;margin-top:2px;
+}
+#view-guia .guide-time.warn{background:#fff2d9;color:#9a5f00;}
+
+#view-guia .guide-danger{
+  border:1px solid #f3c7c2;background:#fff4f2;border-radius:14px;padding:16px;margin-bottom:15px;
+}
+#view-guia .guide-danger h3{margin:0 0 10px;color:#c73c32;font-size:14px;}
+#view-guia .guide-danger ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;}
+#view-guia .guide-danger li{position:relative;padding-left:20px;color:#7c403b;font-size:12.2px;line-height:1.4;}
+#view-guia .guide-danger li:before{content:"×";position:absolute;left:0;top:-1px;color:#db4036;font-weight:900;font-size:17px;}
+#view-guia .guide-danger .emergency{margin-top:11px;font-weight:800;color:#b72e27;font-size:12px;}
+
+#view-guia .guide-tip{
+  border:1px solid #c9eadf;background:#eefaf6;border-radius:14px;padding:14px;color:#285d50;font-size:12px;line-height:1.5;
+}
+#view-guia .guide-tip strong{display:block;color:#087457;margin-bottom:3px;}
+
+#view-guia .guide-cases-title{margin:25px 0 11px;}
+#view-guia .guide-cases-title h3{margin:0 0 4px;color:var(--navy);font-size:19px;}
+#view-guia .guide-cases-title p{margin:0;color:var(--muted);font-size:12.5px;}
+#view-guia .guide-cases{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+}
+#view-guia .guide-case{
+  border:1px solid var(--line);background:#fff;border-radius:13px;padding:14px;
+  box-shadow:0 6px 18px rgba(16,32,59,.04);
+}
+#view-guia .guide-case .case-top{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+#view-guia .guide-case .case-ico{
+  width:34px;height:34px;border-radius:10px;background:#eaf8f3;color:#087d60;display:grid;place-items:center;font-size:16px;
+}
+#view-guia .guide-case h4{margin:0;color:var(--navy);font-size:13px;line-height:1.25;}
+#view-guia .guide-case ul{margin:0;padding-left:18px;color:var(--muted);font-size:11.8px;line-height:1.55;}
+
+#view-guia .guide-links-title{margin:26px 0 10px;}
+#view-guia .guide-links-title h3{margin:0 0 4px;color:var(--navy);font-size:20px;}
+#view-guia .guide-links-title p{margin:0;color:var(--muted);font-size:12.5px;}
+#view-guia .guide-links-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+#view-guia .guide-links-grid .link-card{margin:0;height:100%;}
+
+#view-guia .guide-evidence{
+  margin-top:14px;border:1px solid #c9eadf;background:#eefaf6;border-radius:14px;padding:14px 16px;
+  display:flex;gap:12px;align-items:flex-start;
+}
+#view-guia .guide-evidence .doc{
+  width:38px;height:38px;border-radius:10px;background:#d9f4ea;color:#087d60;display:grid;place-items:center;font-size:18px;flex:0 0 auto;
+}
+#view-guia .guide-evidence strong{display:block;color:#087457;font-size:13px;margin-bottom:3px;}
+#view-guia .guide-evidence span{display:block;color:#45655d;font-size:12px;line-height:1.45;}
+
+#view-guia .guide-bottom-note{
+  margin-top:16px;border:1px solid #f2d99b;background:#fff9e8;border-radius:12px;padding:11px 13px;
+  color:#7d6117;font-size:12px;line-height:1.45;
+}
+
+@media(max-width:900px){
+  #view-guia .guide-hero{grid-template-columns:1fr;}
+  #view-guia .guide-layout{grid-template-columns:1fr;}
+  #view-guia .guide-cases{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:620px){
+  #view-guia .guide-hero h2{font-size:25px;}
+  #view-guia .guide-tabs{display:grid;grid-template-columns:1fr 1fr;}
+  #view-guia .guide-tab{justify-content:center;text-align:center;}
+  #view-guia .guide-action{grid-template-columns:30px 38px 1fr;}
+  #view-guia .guide-time{grid-column:3;margin-top:5px;justify-self:start;}
+  #view-guia .guide-icon{width:36px;height:36px;}
+  #view-guia .guide-cases{grid-template-columns:1fr;}
+  #view-guia .guide-links-grid{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -1215,30 +1349,164 @@
 </div>
   </section>
 
-  <!-- ======================= GUIA DE AÇÃO ======================= -->
+  
+<!-- ======================= GUIA DE AÇÃO ======================= -->
   <section class="view" id="view-guia">
-    <div class="section-head" style="margin-top:0;">
-      <h2>Caí no golpe (ou desconfio que caí). O que fazer agora?</h2>
-      <p>Velocidade é o fator mais importante nas primeiras horas.</p>
-    </div>
-    <div class="panel">
-      <div class="steps">
-        <div class="step"><div class="num"></div><div><h4>Acione o MED (Mecanismo Especial de Devolução) no app do seu banco</h4>
-          <p>Procure "Fui vítima de golpe" ou "Solicitar MED" no app do banco. Ele tem até 24h úteis para analisar e pode bloquear preventivamente os valores ainda não repassados.</p></div></div>
-        <div class="step"><div class="num"></div><div><h4>Registre um Boletim de Ocorrência digital imediatamente</h4>
-          <p>Tenha em mãos prints da conversa, comprovante e dados da chave Pix recebedora.</p></div></div>
-        <div class="step"><div class="num"></div><div><h4>Formalize a reclamação em consumidor.gov.br e no Banco Central</h4>
-          <p>Registre em <strong>consumidor.gov.br</strong> e abra manifestação no <strong>Banco Central (Registrato/RDR)</strong>.</p></div></div>
-        <div class="step"><div class="num"></div><div><h4>Peça o bloqueio preventivo da chave Pix golpista</h4>
-          <p>Peça ao seu banco que solicite ao banco recebedor o bloqueio cautelar dos valores ainda disponíveis.</p></div></div>
-        <div class="step"><div class="num"></div><div><h4>Avalie entrar com ação nos Juizados Especiais (sem advogado)</h4>
-          <p>Para causas de até 20 salários mínimos, a <strong>atermação online</strong> pode ser feita direto no site do Tribunal de Justiça do seu estado.</p></div></div>
-        <div class="step"><div class="num"></div><div><h4>Proteja o que ainda não foi comprometido</h4>
-          <p>Desinstale apps de acesso remoto, troque senhas e ative autenticação em duas etapas.</p></div></div>
+    <div class="guide-hero">
+      <div>
+        <span class="guide-kicker">🛡️ Guia de resposta rápida</span>
+        <h2>Caí no golpe (ou desconfio que caí). O que fazer agora?</h2>
+        <p>Velocidade é o fator mais importante nas primeiras horas. Siga primeiro as ações imediatas e depois consulte a orientação específica para o que aconteceu.</p>
+      </div>
+      <div class="guide-disclaimer">
+        <div class="ico">🛡</div>
+        <div>
+          <strong>Este guia é informativo e educativo.</strong>
+          <span>Não substitui orientação jurídica, contábil ou financeira profissional.</span>
+        </div>
       </div>
     </div>
-    <div class="section-head"><h2>Onde denunciar — links diretos</h2></div>
-    <div class="panel">
+
+    <div class="guide-tabs">
+      <a class="guide-tab primary" href="#guia-imediato">⚡ Ação imediata</a>
+      <a class="guide-tab" href="#guia-pix">⇄ Fiz Pix / transferência</a>
+      <a class="guide-tab" href="#guia-senha">🔒 Passei dados / senha</a>
+      <a class="guide-tab" href="#guia-remoto">💻 Instalei acesso remoto</a>
+      <a class="guide-tab" href="#guia-consignado">🏦 Consignado / portabilidade</a>
+      <a class="guide-tab" href="#guia-denunciar">↗ Onde denunciar</a>
+    </div>
+
+    <div class="guide-layout" id="guia-imediato">
+      <div class="guide-card">
+        <div class="guide-card-head">
+          <h3>Ação imediata — todos os casos</h3>
+          <span>Priorize o que pode reduzir o prejuízo</span>
+        </div>
+        <div class="guide-action-list">
+          <div class="guide-action">
+            <div class="guide-num">1</div><div class="guide-icon">🏦</div>
+            <div><h4>Acione o MED (Mecanismo Especial de Devolução) no app do seu banco</h4>
+              <p>Procure "Fui vítima de golpe" ou "Solicitar MED" no app do banco. Ele tem até 24h úteis para analisar e pode bloquear preventivamente os valores ainda não repassados.</p></div>
+            <span class="guide-time">Imediato</span>
+          </div>
+          <div class="guide-action">
+            <div class="guide-num">2</div><div class="guide-icon">📄</div>
+            <div><h4>Registre um Boletim de Ocorrência digital imediatamente</h4>
+              <p>Tenha em mãos prints da conversa, comprovante e dados da chave Pix recebedora.</p></div>
+            <span class="guide-time">Imediato</span>
+          </div>
+          <div class="guide-action">
+            <div class="guide-num">3</div><div class="guide-icon">📣</div>
+            <div><h4>Formalize a reclamação em consumidor.gov.br e no Banco Central</h4>
+              <p>Registre em <strong>consumidor.gov.br</strong> e abra manifestação no <strong>Banco Central (Registrato/RDR)</strong>.</p></div>
+            <span class="guide-time warn">Até 3 dias</span>
+          </div>
+          <div class="guide-action">
+            <div class="guide-num">4</div><div class="guide-icon">🛡</div>
+            <div><h4>Peça o bloqueio preventivo da chave Pix golpista</h4>
+              <p>Peça ao seu banco que solicite ao banco recebedor o bloqueio cautelar dos valores ainda disponíveis.</p></div>
+            <span class="guide-time warn">Até 3 dias</span>
+          </div>
+          <div class="guide-action">
+            <div class="guide-num">5</div><div class="guide-icon">⚖️</div>
+            <div><h4>Avalie entrar com ação nos Juizados Especiais (sem advogado)</h4>
+              <p>Para causas de até 20 salários mínimos, a <strong>atermação online</strong> pode ser feita direto no site do Tribunal de Justiça do seu estado.</p></div>
+            <span class="guide-time">Se necessário</span>
+          </div>
+          <div class="guide-action">
+            <div class="guide-num">6</div><div class="guide-icon">🔐</div>
+            <div><h4>Proteja o que ainda não foi comprometido</h4>
+              <p>Desinstale apps de acesso remoto, troque senhas e ative autenticação em duas etapas.</p></div>
+            <span class="guide-time">Imediato</span>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="guide-danger">
+          <h3>🚨 Se o golpe ainda está em andamento</h3>
+          <ul>
+            <li>Não realize novos pagamentos ou transferências.</li>
+            <li>Não instale aplicativos nem conceda acesso remoto.</li>
+            <li>Não compartilhe senhas, códigos, tokens ou dados pessoais.</li>
+            <li>Encerre o contato e procure o banco ou a instituição por um canal oficial obtido por você.</li>
+          </ul>
+          <div class="emergency">Em caso de ameaça ou coação, procure imediatamente a autoridade policial competente.</div>
+        </div>
+        <div class="guide-tip">
+          <strong>Dica Sentinela</strong>
+          Em dúvida? Confirme sempre diretamente com a instituição financeira, órgão público ou empresa usando site, aplicativo ou telefone oficial encontrado por você.
+        </div>
+      </aside>
+    </div>
+
+    <div class="guide-cases-title">
+      <h3>O que fazer conforme o ocorrido</h3>
+      <p>Use estas orientações como checklist complementar às ações imediatas acima.</p>
+    </div>
+
+    <div class="guide-cases">
+      <div class="guide-case" id="guia-pix">
+        <div class="case-top"><div class="case-ico">⇄</div><h4>Se fez Pix ou transferência</h4></div>
+        <ul>
+          <li>Acione o banco imediatamente e solicite as medidas cabíveis, inclusive MED quando aplicável.</li>
+          <li>Peça o bloqueio preventivo dos valores ainda disponíveis.</li>
+          <li>Guarde comprovantes, chave Pix, nomes e dados da conta recebedora.</li>
+        </ul>
+      </div>
+
+      <div class="guide-case" id="guia-senha">
+        <div class="case-top"><div class="case-ico">🔒</div><h4>Se passou senha, código ou dados</h4></div>
+        <ul>
+          <li>Troque imediatamente as senhas dos serviços afetados.</li>
+          <li>Ative autenticação em duas etapas sempre que disponível.</li>
+          <li>Avise a instituição envolvida e monitore movimentações e acessos.</li>
+        </ul>
+      </div>
+
+      <div class="guide-case" id="guia-remoto">
+        <div class="case-top"><div class="case-ico">💻</div><h4>Se instalou acesso remoto</h4></div>
+        <ul>
+          <li>Desinstale o aplicativo de acesso remoto.</li>
+          <li>Troque senhas, preferencialmente a partir de outro dispositivo confiável.</li>
+          <li>Avise seu banco e revise transações, autorizações e dispositivos conectados.</li>
+        </ul>
+      </div>
+
+      <div class="guide-case">
+        <div class="case-top"><div class="case-ico">📄</div><h4>Se enviou documentos ou dados pessoais</h4></div>
+        <ul>
+          <li>Guarde as provas do envio e do contato.</li>
+          <li>Monitore uso indevido de seus dados e novas tentativas de fraude.</li>
+          <li>Registre ocorrência se houver indício de uso indevido ou prejuízo.</li>
+        </ul>
+      </div>
+
+      <div class="guide-case">
+        <div class="case-top"><div class="case-ico">💬</div><h4>Se teve WhatsApp clonado ou perfil falso</h4></div>
+        <ul>
+          <li>Avise seus contatos por outro canal.</li>
+          <li>Tente recuperar e proteger a conta, ativando verificação em duas etapas.</li>
+          <li>Peça que ninguém faça pagamentos com base em mensagens suspeitas.</li>
+        </ul>
+      </div>
+
+      <div class="guide-case" id="guia-consignado">
+        <div class="case-top"><div class="case-ico">🏦</div><h4>Se foi golpe de consignado ou portabilidade</h4></div>
+        <ul>
+          <li>Contate diretamente o banco envolvido e registre a contestação.</li>
+          <li>Guarde propostas, contratos, prints, gravações e comprovantes.</li>
+          <li>Formalize reclamações e, se necessário, avalie a via judicial.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="guide-links-title" id="guia-denunciar">
+      <h3>Onde denunciar — links diretos</h3>
+      <p>Os mesmos canais oficiais já disponíveis no Sentinela, agora organizados para acesso rápido.</p>
+    </div>
+
+    <div class="guide-links-grid">
       <a class="link-card" href="https://www.bcb.gov.br/cidadaniafinanceira/registrato" target="_blank" rel="noopener">
         <div><div class="t">Banco Central — Registrato / RDR</div><div class="d">Consulta e registro de reclamação sobre a instituição financeira e a conta recebedora.</div></div><div class="arrow">↗</div>
       </a>
@@ -1251,6 +1519,18 @@
       <a class="link-card" href="https://www.cnj.jus.br/programas-e-acoes/juizados-especiais/" target="_blank" rel="noopener">
         <div><div class="t">Juizados Especiais / Atermação online</div><div class="d">Página do CNJ. Busque o Tribunal de Justiça do seu estado + "atermação online".</div></div><div class="arrow">↗</div>
       </a>
+    </div>
+
+    <div class="guide-evidence">
+      <div class="doc">📑</div>
+      <div>
+        <strong>Guarde todas as provas</strong>
+        <span>Preserve prints, comprovantes, números de telefone, links, anúncios, documentos, contratos, nomes utilizados na abordagem e qualquer registro de pagamento ou comunicação.</span>
+      </div>
+    </div>
+
+    <div class="guide-bottom-note">
+      <strong>Cada minuto conta.</strong> Quanto mais rápido você interromper a fraude, avisar as instituições envolvidas e preservar as provas, maiores são as chances de reduzir prejuízos.
     </div>
   </section>
 
