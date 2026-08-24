@@ -1188,6 +1188,40 @@
   #view-creditos .institutional-contact{white-space:normal;word-break:break-word;}
 }
 
+
+
+/* =========================================================
+   2.9 — HISTÓRICO + EXPERIÊNCIA PÓS-PAGAMENTO
+========================================================= */
+#view-creditos .history-controls{
+  display:flex;justify-content:center;gap:9px;padding:12px 0 2px;
+}
+#view-creditos .history-more{
+  min-width:170px;border:1px solid var(--line);background:#fff;color:var(--navy);
+  border-radius:10px;padding:10px 14px;font-weight:750;cursor:pointer;
+}
+#view-creditos .history-more:hover{border-color:#9fd8cd;background:#f5fbf9;}
+#view-creditos .history-count{
+  display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;
+  background:#eef4f5;color:#536678;font-size:10.5px;font-weight:750;
+}
+#view-creditos .institutional-contact{
+  text-decoration:none;border:1px solid transparent;transition:.15s ease;
+}
+#view-creditos .institutional-contact:hover{
+  border-color:#b8ded6;background:#eef9f6;color:#087457;
+}
+#view-creditos .payment-btn .pay-icon{
+  width:24px;height:24px;border-radius:7px;display:grid;place-items:center;
+  font-size:13px;background:rgba(255,255,255,.18);
+}
+#view-creditos .btn-ghost .pay-icon{background:#eef4f5;}
+.payment-success-box{
+  display:none;margin:12px 0 0;border:1px solid #bde6d9;background:#effaf6;
+  border-radius:11px;padding:11px 12px;color:#176b58;font-size:11.5px;line-height:1.45;
+}
+.payment-success-box.show{display:block;}
+
 </style>
 </head>
 <body>
@@ -1691,8 +1725,8 @@
         </div>
 
         <div class="payment-actions">
-          <button class="btn btn-primary payment-btn" onclick="comprarPix()">▦ Pagar com Pix</button>
-          <button class="btn btn-ghost payment-btn" style="color:var(--navy);border-color:var(--line);" onclick="comprarCartao()">▣ Pagar com cartão</button>
+          <button class="btn btn-primary payment-btn" onclick="comprarPix()"><span class="pay-icon">◇</span> Pagar com Pix</button>
+          <button class="btn btn-ghost payment-btn" style="color:var(--navy);border-color:var(--line);" onclick="comprarCartao()"><span class="pay-icon">▭</span> Pagar com cartão</button>
         </div>
 
         <div class="payment-notes">
@@ -1702,6 +1736,9 @@
         </div>
 
         <div class="error-box" id="creditosError"></div>
+        <div class="payment-success-box" id="paymentSuccessBox">
+          <strong>Pagamento confirmado.</strong> Seu saldo foi atualizado e os créditos já podem ser usados.
+        </div>
       </div>
     </div>
 
@@ -1710,6 +1747,7 @@
         <h2>Histórico de utilização</h2>
         <p>Consultas de CNPJ e análises de mensagem realizadas pela sua conta.</p>
       </div>
+      <span class="history-count" id="historyCount" style="display:none;"></span>
     </div>
     <div class="panel history-panel-v2" id="historyPanel">
       <div id="historyList" class="history-list-v2"><p style="color:var(--muted);font-size:13.5px;">Entre na sua conta para ver o histórico.</p></div>
@@ -1720,7 +1758,7 @@
         <h3>Soluções para instituições</h3>
         <p>Bancos, fintechs, sindicatos ou PROCON interessados em licenciamento, white-label ou API própria podem entrar em contato antes de qualquer pagamento.</p>
       </div>
-      <div class="institutional-contact">fsantosdantas@hotmail.com</div>
+      <a class="institutional-contact" href="mailto:fsantosdantas@hotmail.com" aria-label="Enviar e-mail para o Sentinela Golpes">fsantosdantas@hotmail.com</a>
     </div>
   </section>
 
@@ -1789,6 +1827,8 @@ let authToken = localStorage.getItem('sg_token') || null;
 let currentUser = null; // { id, nome, email, creditos }
 let authMode = 'login';
 let qtdSelecionada = 1;
+let historicoCache = [];
+let historicoVisiveis = 8;
 let pixPollInterval = null;
 
 /* =========================================================
@@ -2156,6 +2196,13 @@ async function analisarMensagem(){
 /* =========================================================
    CRÉDITOS E PAGAMENTO
 ========================================================= */
+function mostrarPagamentoConfirmado(){
+  const box = document.getElementById('paymentSuccessBox');
+  if(!box) return;
+  box.classList.add('show');
+  setTimeout(()=>box.classList.remove('show'), 8000);
+}
+
 function atualizarTelaCreditos(){
   const logged = !!currentUser;
   document.getElementById('loggedOutCreditsMsg').style.display = logged ? 'none' : 'block';
@@ -2236,46 +2283,85 @@ function copiarPix(){
   navigator.clipboard.writeText(document.getElementById('pixCopiaCola').textContent);
 }
 
+function formatarCNPJHistorico(valor){
+  const d = String(valor || '').replace(/\D/g,'');
+  return d.length === 14
+    ? d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+    : (valor || '—');
+}
+
+function renderizarHistorico(){
+  const list = document.getElementById('historyList');
+  const count = document.getElementById('historyCount');
+
+  if(!historicoCache.length){
+    if(count) count.style.display = 'none';
+    list.innerHTML = '<p style="color:var(--muted);font-size:13.5px;padding:8px;">Nenhuma consulta realizada ainda.</p>';
+    return;
+  }
+
+  if(count){
+    count.style.display = 'inline-flex';
+    count.textContent = `${historicoCache.length} ${historicoCache.length === 1 ? 'registro' : 'registros'}`;
+  }
+
+  const visiveis = historicoCache.slice(0, historicoVisiveis);
+  const itens = visiveis.map(h=>{
+    const isCnpj = h.tipo === 'cnpj';
+    const titulo = isCnpj ? 'Consulta de CNPJ' : 'Análise de mensagem';
+    const entrada = isCnpj
+      ? formatarCNPJHistorico(h.entrada)
+      : `“${(h.entrada || '').trim().slice(0,72)}${(h.entrada || '').length > 72 ? '…' : ''}”`;
+    const icone = isCnpj ? '🏢' : '💬';
+    const tipo = isCnpj ? 'CNPJ' : 'Mensagem';
+    const data = new Date(h.criado_em).toLocaleString('pt-BR', {dateStyle:'short', timeStyle:'short'});
+
+    return `
+      <div class="history-item">
+        <div class="history-icon">${icone}</div>
+        <div class="history-main">
+          <strong>${titulo}</strong>
+          <span class="entry">${entrada}</span>
+        </div>
+        <div class="history-meta">
+          <span class="kind">${tipo}</span>
+          <span class="date">${data}</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  const faltam = historicoCache.length - visiveis.length;
+  const controle = faltam > 0
+    ? `<div class="history-controls"><button type="button" class="history-more" onclick="carregarMaisHistorico()">Ver mais ${Math.min(8, faltam)} registros</button></div>`
+    : (historicoCache.length > 8
+      ? `<div class="history-controls"><button type="button" class="history-more" onclick="recolherHistorico()">Recolher histórico</button></div>`
+      : '');
+
+  list.innerHTML = itens + controle;
+}
+
+function carregarMaisHistorico(){
+  historicoVisiveis += 8;
+  renderizarHistorico();
+}
+
+function recolherHistorico(){
+  historicoVisiveis = 8;
+  renderizarHistorico();
+  document.getElementById('historyPanel')?.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 async function carregarHistorico(){
   const list = document.getElementById('historyList');
   try{
     const { historico } = await api('/conta/historico');
-    if(!historico.length){
-      list.innerHTML = '<p style="color:var(--muted);font-size:13.5px;padding:8px;">Nenhuma consulta realizada ainda.</p>';
-      return;
-    }
-
-    const formatarCNPJHistorico = (valor)=>{
-      const d = String(valor || '').replace(/\D/g,'');
-      return d.length === 14
-        ? d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
-        : (valor || '—');
-    };
-
-    list.innerHTML = historico.map(h=>{
-      const isCnpj = h.tipo === 'cnpj';
-      const titulo = isCnpj ? 'Consulta de CNPJ' : 'Análise de mensagem';
-      const entrada = isCnpj
-        ? formatarCNPJHistorico(h.entrada)
-        : `“${(h.entrada || '').trim().slice(0,72)}${(h.entrada || '').length > 72 ? '…' : ''}”`;
-      const icone = isCnpj ? '🏢' : '💬';
-      const tipo = isCnpj ? 'CNPJ' : 'Mensagem';
-      const data = new Date(h.criado_em).toLocaleString('pt-BR', {dateStyle:'short', timeStyle:'short'});
-
-      return `
-        <div class="history-item">
-          <div class="history-icon">${icone}</div>
-          <div class="history-main">
-            <strong>${titulo}</strong>
-            <span class="entry">${entrada}</span>
-          </div>
-          <div class="history-meta">
-            <span class="kind">${tipo}</span>
-            <span class="date">${data}</span>
-          </div>
-        </div>`;
-    }).join('');
+    historicoCache = Array.isArray(historico) ? historico : [];
+    historicoVisiveis = 8;
+    renderizarHistorico();
   }catch(e){
+    historicoCache = [];
+    const count = document.getElementById('historyCount');
+    if(count) count.style.display = 'none';
     list.innerHTML = '<p style="color:var(--muted);font-size:13.5px;padding:8px;">Não foi possível carregar o histórico.</p>';
   }
 }
