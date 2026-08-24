@@ -1222,6 +1222,21 @@
 }
 .payment-success-box.show{display:block;}
 
+
+
+/* =========================================================
+   MOTOR DE ANÁLISE 2.9 — calibração preventiva
+========================================================= */
+#view-mensagem .msg-engine-note{
+  margin:12px 0 0;padding:11px 13px;border:1px solid #dce6e8;border-radius:11px;
+  background:#fbfcfd;color:var(--muted);font-size:11.5px;line-height:1.45;
+}
+#view-mensagem .msg-engine-note strong{color:var(--navy);}
+#view-mensagem .flag-item .engine-badge{
+  display:inline-flex;align-items:center;margin-left:5px;padding:3px 6px;border-radius:999px;
+  background:#eef8f5;color:#087457;font-size:9px;font-weight:800;vertical-align:middle;
+}
+
 </style>
 </head>
 <body>
@@ -1419,6 +1434,9 @@
             <div class="gauge" id="msgGauge"><div class="gauge-inner"><div class="pct" id="msgPct">0</div><div class="pct-lbl">ÍNDICE DE RISCO / 100</div></div></div>
             <div class="verdict-title" id="msgVerdictTitle">—</div>
             <p id="msgConclusion" style="font-size:13.5px;color:var(--muted);line-height:1.6;margin-top:10px;"></p>
+            <div class="msg-engine-note">
+              <strong>Como o índice é calculado:</strong> o resultado é um índice preventivo de 0 a 100, não uma probabilidade estatística. O motor considera sinais isolados e também combinações de maior gravidade, como pagamento antecipado associado a portabilidade/consignado, acesso remoto, pedido de senha/código e Pix para terceiros.
+            </div>
             <div id="msgAlert" style="display:none;margin-top:14px;padding:12px;border-radius:10px;background:#fff1ef;border:1px solid #f3c0b9;color:#a9362b;font-size:13px;line-height:1.55;"></div>
           </div>
           <div>
@@ -1809,7 +1827,7 @@
 
 <footer>
   <div class="disclaimer">
-    Sentinela Golpes é uma ferramenta informativa e educativa. A consulta de CNPJ utiliza a base pública de dados abertos da Receita Federal (via BrasilAPI). A análise de mensagens roda no servidor com base em um motor de regras especializado nos padrões de golpe mais comuns — não substitui orientação jurídica, contábil ou financeira profissional. Pagamentos processados pelo Mercado Pago.
+    Sentinela Golpes é uma ferramenta informativa e educativa. A consulta de CNPJ utiliza a base pública de dados abertos da Receita Federal (via BrasilAPI). A análise de mensagens combina o motor de regras do servidor com validações preventivas de padrões e combinações de risco — não substitui orientação jurídica, contábil ou financeira profissional. Pagamentos processados pelo Mercado Pago.
   </div>
 </footer>
 
@@ -2118,6 +2136,245 @@ function renderCNPJResult(data, avaliacao, raw){
 /* =========================================================
    ANÁLISE DE MENSAGEM
 ========================================================= */
+
+function normalizarTextoMotor(texto){
+  return String(texto || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase()
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+function detectarMotorComplementar(texto, flagsBackend=[]){
+  const t = normalizarTextoMotor(texto);
+  const sinais = [];
+  const add = (id, title, desc, level='amber', peso=0, hard=false)=>{
+    if(!sinais.some(s=>s.id===id)) sinais.push({id,title,desc,level,peso,hard,source:'motor'});
+  };
+
+  const tem = (re)=>re.test(t);
+
+  const taxaAntecipada =
+    tem(/\b(dinheiro|valor|pagamento|taxa|pix|deposito|boleto|transferencia)\b.{0,45}\b(antecipad|adiantad|antes|previo|liberar|liberacao)\b/) ||
+    tem(/\b(antecipad|adiantad|taxa previa|pagamento previo|dinheiro antecipado)\b/);
+
+  const portabilidade =
+    tem(/\bportabilidad/) || tem(/\bconsignad/) ||
+    tem(/\b(refinanciamento|refinanciar|troco do consignado|reduzir parcela)\b/);
+
+  const acessoRemoto =
+    tem(/\b(anydesk|teamviewer|quicksupport|rustdesk|acesso remoto|compartilh(?:e|ar) a tela|espelhar a tela)\b/);
+
+  const senhaCodigo =
+    tem(/\b(senha|token|codigo de seguranca|codigo sms|codigo do whatsapp|cvv|codigo de autenticacao)\b/);
+
+  const urgencia =
+    tem(/\b(urgente|agora|imediatamente|hoje|prazo|bloquead|cancelad|perder|ultima chance|nao desligue)\b/);
+
+  const falsaCentral =
+    tem(/\b(central de seguranca|central do banco|sou do banco|funcionario do banco|gerente do banco|inss|tribunal)\b/);
+
+  const pixTerceiro =
+    tem(/\b(pix|transferencia|pagamento)\b.{0,60}\b(terceiro|outra pessoa|outra conta|nome diferente|cpf diferente|conta diferente)\b/);
+
+  const link =
+    tem(/\bhttps?:\/\/|www\.|clique no link|acesse o link|link para\b/);
+
+  const whatsappNovo =
+    tem(/\b(numero novo|troquei de numero|whatsapp novo|meu celular quebrou)\b/) &&
+    tem(/\b(pix|dinheiro|transferencia|pagar|ajuda)\b/);
+
+  const falsoAdvogado =
+    tem(/\b(advogad|escritorio juridico|precatorio|alvara|processo ganho|indenizacao)\b/) &&
+    tem(/\b(taxa|pix|pagamento|deposito|liberar)\b/);
+
+  const rendaFacil =
+    tem(/\b(renda facil|lucro garantido|retorno garantido|ganhe dinheiro|investimento garantido)\b/);
+
+  const segredo =
+    tem(/\b(nao conte|nao fale|mantenha segredo|nao avise|sigilo absoluto)\b/);
+
+  if(taxaAntecipada){
+    add(
+      'taxa-antecipada',
+      'Cobrança antecipada para liberar dinheiro',
+      'Pedido de pagamento antecipado para liberar crédito, benefício, portabilidade ou valor prometido é um sinal relevante de fraude.',
+      'red', 34, true
+    );
+  }
+  if(portabilidade){
+    add(
+      'portabilidade',
+      'Possível falsa portabilidade ou consignado',
+      'Portabilidade, refinanciamento ou consignado devem ser confirmados diretamente com as instituições envolvidas antes de qualquer movimentação.',
+      'amber', 24
+    );
+  }
+  if(acessoRemoto){
+    add(
+      'acesso-remoto',
+      'Pedido de acesso remoto ao aparelho',
+      'Aplicativos de acesso remoto podem permitir que terceiros acompanhem senhas, autorizações e movimentações.',
+      'red', 48, true
+    );
+  }
+  if(senhaCodigo){
+    add(
+      'senha-codigo',
+      'Pedido de senha, token ou código de segurança',
+      'Senhas e códigos de autenticação não devem ser informados a atendentes por mensagem ou ligação.',
+      'red', 44, true
+    );
+  }
+  if(urgencia){
+    add(
+      'urgencia',
+      'Pressão, urgência ou ameaça',
+      'Pressão para agir rapidamente reduz o tempo de conferência e é comum em abordagens fraudulentas.',
+      'amber', 18
+    );
+  }
+  if(falsaCentral){
+    add(
+      'falsa-central',
+      'Possível falsa central ou falso funcionário',
+      'Golpistas podem usar nomes de bancos, órgãos e instituições para criar confiança antes de pedir alguma ação.',
+      'amber', 22
+    );
+  }
+  if(pixTerceiro){
+    add(
+      'pix-terceiro',
+      'Pagamento para terceiro ou beneficiário diferente',
+      'Pagamento destinado a pessoa ou conta diferente da esperada exige confirmação independente antes de continuar.',
+      'red', 32, true
+    );
+  }
+  if(link){
+    add(
+      'link',
+      'Link recebido na própria abordagem',
+      'Links inesperados podem levar a páginas clonadas. Prefira o aplicativo oficial ou um endereço digitado por você.',
+      'amber', 17
+    );
+  }
+  if(whatsappNovo){
+    add(
+      'whatsapp',
+      'Possível clonagem ou perfil falso no WhatsApp',
+      'Número novo associado a pedido de dinheiro deve ser confirmado por outro canal já conhecido.',
+      'red', 30, true
+    );
+  }
+  if(falsoAdvogado){
+    add(
+      'falso-advogado',
+      'Possível golpe do falso advogado',
+      'Cobrança para liberar precatório, alvará, processo ou indenização exige confirmação direta com o profissional e o tribunal.',
+      'red', 34, true
+    );
+  }
+  if(rendaFacil){
+    add(
+      'renda-facil',
+      'Promessa de renda ou retorno garantido',
+      'Promessas de ganho fácil ou retorno garantido são sinais clássicos de oferta de alto risco.',
+      'amber', 22
+    );
+  }
+  if(segredo){
+    add(
+      'segredo',
+      'Pressão para manter segredo',
+      'Isolar a vítima reduz a chance de alguém perceber a fraude e interromper a operação.',
+      'red', 24, true
+    );
+  }
+
+  // Texto do backend também entra no contexto para não perder sinais que ele detectou.
+  const hayBackend = normalizarTextoMotor(
+    (flagsBackend || []).map(f => `${f.title || ''} ${f.desc || ''}`).join(' ')
+  );
+
+  const backendTaxa = /antecipad|liberar dinheiro|pagamento previo|taxa/.test(hayBackend);
+  const backendPortabilidade = /portabilidad|consignad|refinanci/.test(hayBackend);
+  const backendRemoto = /acesso remoto|anydesk|teamviewer|rustdesk/.test(hayBackend);
+  const backendSenha = /senha|token|codigo|credencial/.test(hayBackend);
+
+  const ids = new Set(sinais.map(s=>s.id));
+  const hasTaxa = ids.has('taxa-antecipada') || backendTaxa;
+  const hasPortabilidade = ids.has('portabilidade') || backendPortabilidade;
+  const hasRemoto = ids.has('acesso-remoto') || backendRemoto;
+  const hasSenha = ids.has('senha-codigo') || backendSenha;
+
+  return {
+    sinais,
+    combos: {
+      taxaPortabilidade: hasTaxa && hasPortabilidade,
+      remoto: hasRemoto,
+      senha: hasSenha,
+      falsaUrgencia: (ids.has('falsa-central') && ids.has('urgencia')),
+      terceiro: ids.has('pix-terceiro'),
+      falsoAdvogado: ids.has('falso-advogado'),
+      whatsapp: ids.has('whatsapp')
+    }
+  };
+}
+
+function calibrarScoreMensagem(scoreBackend, texto, flagsBackend=[]){
+  let score = Math.max(0, Math.min(98, Number(scoreBackend) || 0));
+  const motor = detectarMotorComplementar(texto, flagsBackend);
+  const pesos = motor.sinais.map(s=>s.peso || 0);
+  const soma = pesos.reduce((a,b)=>a+b,0);
+
+  // Curva preventiva: sinais adicionais elevam, mas não produzem "100%".
+  if(soma > 0){
+    const local = Math.round(100 * (1 - Math.exp(-soma / 82)));
+    score = Math.max(score, Math.min(94, local));
+  }
+
+  // Pisos de risco para combinações e sinais de alta gravidade.
+  if(motor.combos.taxaPortabilidade) score = Math.max(score, 68);
+  if(motor.combos.falsaUrgencia) score = Math.max(score, 58);
+  if(motor.combos.terceiro) score = Math.max(score, 62);
+  if(motor.combos.falsoAdvogado) score = Math.max(score, 72);
+  if(motor.combos.whatsapp) score = Math.max(score, 66);
+  if(motor.combos.remoto) score = Math.max(score, 86);
+  if(motor.combos.senha) score = Math.max(score, 82);
+
+  // Dois ou mais sinais explícitos, sendo pelo menos um de alta gravidade.
+  const hardCount = motor.sinais.filter(s=>s.hard).length;
+  if(motor.sinais.length >= 2 && hardCount >= 1) score = Math.max(score, 64);
+
+  return {score: Math.max(0, Math.min(98, score)), motor};
+}
+
+function mesclarFlagsMensagem(flagsBackend, sinaisMotor){
+  const saida = [];
+  const chave = (s)=>normalizarTextoMotor(`${s.title || ''} ${s.desc || ''}`);
+
+  (flagsBackend || []).forEach(f=>{
+    if(f && (f.title || f.desc)) saida.push({...f, source:'backend'});
+  });
+
+  (sinaisMotor || []).forEach(s=>{
+    const ks = chave(s);
+    const duplicado = saida.some(f=>{
+      const kf = chave(f);
+      return (
+        (ks.includes('portabilidad') && kf.includes('portabilidad')) ||
+        (ks.includes('antecipad') && (kf.includes('antecipad') || kf.includes('liberar dinheiro'))) ||
+        (ks.includes('acesso remoto') && kf.includes('acesso remoto')) ||
+        (ks.includes('senha') && (kf.includes('senha') || kf.includes('codigo')))
+      );
+    });
+    if(!duplicado) saida.push(s);
+  });
+
+  return saida;
+}
+
 async function analisarMensagem(){
   const errBox = document.getElementById('msgError');
   const loading = document.getElementById('msgLoading');
@@ -2136,45 +2393,71 @@ async function analisarMensagem(){
     currentUser.creditos = resp.creditosRestantes;
     renderAccountBox();
 
-    const score = Math.max(0, Math.min(100, Number(resp.score) || 0));
+    const flagsBackend = Array.isArray(resp.flags) ? resp.flags : [];
+    const calibrado = calibrarScoreMensagem(resp.score, texto, flagsBackend);
+    const score = calibrado.score;
+    const flags = mesclarFlagsMensagem(flagsBackend, calibrado.motor.sinais);
+
     document.getElementById('msgPct').textContent = score;
-    document.getElementById('msgVerdictTitle').textContent = resp.verdict || (score >= 75 ? 'Risco crítico' : score >= 50 ? 'Risco alto' : score >= 25 ? 'Atenção' : 'Risco baixo');
-    const cor = score >= 75 ? 'var(--red)' : score >= 50 ? 'var(--amber)' : score >= 25 ? '#d6a52d' : 'var(--green)';
-    document.getElementById('msgGauge').style.background = `conic-gradient(${cor} ${score*3.6}deg, #EEF1F4 0deg)`;
+
+    const verdict =
+      score >= 82 ? 'Risco crítico — interrompa a operação' :
+      score >= 60 ? 'Risco alto — fortes sinais de fraude' :
+      score >= 35 ? 'Risco moderado — confirme antes de agir' :
+      score >= 15 ? 'Atenção — há pontos para verificar' :
+      'Risco baixo na análise';
+
+    document.getElementById('msgVerdictTitle').textContent = verdict;
+
+    const cor = score >= 82
+      ? 'var(--red)'
+      : score >= 60
+      ? '#e96642'
+      : score >= 35
+      ? 'var(--amber)'
+      : score >= 15
+      ? '#d6a52d'
+      : 'var(--green)';
+
+    document.getElementById('msgGauge').style.background =
+      `conic-gradient(${cor} ${score*3.6}deg, #EEF1F4 0deg)`;
 
     const conclusion = document.getElementById('msgConclusion');
-    conclusion.textContent = score >= 75
-      ? 'Há sinais fortes associados a abordagens fraudulentas. Interrompa a operação e confirme a situação por um canal oficial independente.'
-      : score >= 50
-      ? 'Foram encontrados sinais relevantes de risco. Não prossiga com pagamento, instalação de aplicativo ou envio de dados antes de confirmar a solicitação.'
-      : score >= 25
-      ? 'Há elementos que merecem verificação. Confirme remetente, links, beneficiário e contexto antes de agir.'
-      : 'Poucos sinais de risco foram detectados no texto, mas isso não comprova que a abordagem seja legítima. Confirme informações sensíveis por canais oficiais.';
-
-    const flags = Array.isArray(resp.flags) ? resp.flags : [];
+    conclusion.textContent = score >= 82
+      ? 'Os sinais encontrados são fortemente compatíveis com padrões usados em golpes. Interrompa a operação e confirme tudo por um canal oficial independente.'
+      : score >= 60
+      ? 'Foram encontrados sinais importantes de risco. Não prossiga com pagamento, portabilidade, instalação de aplicativo ou envio de dados antes de confirmar a solicitação.'
+      : score >= 35
+      ? 'Há sinais que exigem verificação independente. Confirme remetente, beneficiário, instituição, links e contexto antes de agir.'
+      : score >= 15
+      ? 'Há alguns pontos de atenção. Não use a própria mensagem como fonte de confirmação; procure o canal oficial por conta própria.'
+      : 'Poucos sinais específicos foram detectados, mas isso não certifica legitimidade. Confirme informações sensíveis e pagamentos por canais oficiais.';
     const flagsUl = document.getElementById('msgFlags');
     flagsUl.innerHTML = '';
     (flags.length ? flags : [{title:'Nenhum padrão específico encontrado', desc:'O texto não acionou os padrões principais do motor. Ainda assim, confirme identidade, links e pagamentos por canais oficiais.', level:'amber'}]).forEach(f=>{
       const li = document.createElement('li');
       li.className = 'flag-item';
       const levelLabel = f.level === 'red' ? 'CRÍTICO' : f.level === 'amber' ? 'ATENÇÃO' : 'SINAL';
-      li.innerHTML = `<div class="dot ${f.level || 'amber'}"></div><div class="txt"><strong>${f.title || 'Sinal identificado'} <span style="font-size:10px;padding:3px 6px;border-radius:999px;background:#f2f4f6;color:#5b6572;margin-left:5px;">${levelLabel}</span></strong><p>${f.desc || ''}</p></div>`;
+      const motorBadge = f.source === 'motor' ? '<span class="engine-badge">COMBINAÇÃO</span>' : '';
+      li.innerHTML = `<div class="dot ${f.level || 'amber'}"></div><div class="txt"><strong>${f.title || 'Sinal identificado'} <span style="font-size:10px;padding:3px 6px;border-radius:999px;background:#f2f4f6;color:#5b6572;margin-left:5px;">${levelLabel}</span>${motorBadge}</strong><p>${f.desc || ''}</p></div>`;
       flagsUl.appendChild(li);
     });
 
     const actions = [];
-    const hay = flags.map(f => ((f.title||'')+' '+(f.desc||'')).toLowerCase()).join(' ');
+    const hay = normalizarTextoMotor(
+      texto + ' ' + flags.map(f => ((f.title||'')+' '+(f.desc||'')).toLowerCase()).join(' ')
+    );
     if(/acesso remoto|anydesk|teamviewer|rustdesk/.test(hay)) actions.push('Não instale nem mantenha aplicativo de acesso remoto. Se já instalou, encerre o acesso e remova o aplicativo.');
     if(/senha|código|token|sms|whatsapp|credencial/.test(hay)) actions.push('Não forneça senha, token ou código de confirmação. Se já forneceu, altere as credenciais e comunique a instituição envolvida.');
     if(/pix|transfer|pagamento|taxa|boleto/.test(hay)) actions.push('Não faça Pix, transferência, pagamento ou taxa para “liberar”, “testar”, “regularizar” ou “cancelar” uma operação.');
     if(/link|phishing|site|url/.test(hay)) actions.push('Não abra o link recebido. Acesse o serviço digitando o endereço conhecido ou usando o aplicativo oficial.');
     if(/portabilidade|consignado|empréstimo/.test(hay)) actions.push('Confirme qualquer portabilidade, refinanciamento ou empréstimo diretamente com as instituições envolvidas antes de autorizar movimentações.');
     actions.push('Encerre o contato e confirme a situação por um canal oficial obtido por você, sem usar telefone ou link enviado na própria abordagem.');
-    if(score >= 50) actions.push('Se já houve pagamento, acesso ao aparelho ou entrega de dados, consulte imediatamente o Guia de Ação do Sentinela.');
+    if(score >= 60) actions.push('Se já houve pagamento, acesso ao aparelho ou entrega de dados, consulte imediatamente o Guia de Ação do Sentinela.');
     document.getElementById('msgActions').innerHTML = actions.map((a,i)=>`<div style="display:flex;gap:9px;margin:8px 0;"><strong style="color:var(--navy);">${i+1}.</strong><span>${a}</span></div>`).join('');
 
     const alert = document.getElementById('msgAlert');
-    if(score >= 75){
+    if(score >= 82){
       alert.style.display = 'block';
       alert.innerHTML = '<strong>⚠ Atenção:</strong> não prossiga com a operação enquanto houver dúvida. Não faça Pix, não instale aplicativos e não compartilhe códigos de segurança.';
     } else { alert.style.display = 'none'; alert.innerHTML = ''; }
