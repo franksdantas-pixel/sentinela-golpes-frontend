@@ -501,6 +501,341 @@
     .hero h1{font-size:34px;}
   }
 
+
+  /* ---------- SIMULADOR APROFUNDADO ---------- */
+  .quiz-intro{
+    display:grid;
+    grid-template-columns:1.2fr .8fr;
+    gap:18px;
+    align-items:stretch;
+  }
+  .quiz-intro-main{
+    padding:24px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:linear-gradient(145deg,#FFFFFF,#F7FBFA);
+  }
+  .quiz-intro-main h3{
+    font-size:21px;
+    color:var(--navy);
+  }
+  .quiz-intro-main p{
+    margin:8px 0 0;
+    font-size:13.5px;
+    color:var(--muted);
+    line-height:1.65;
+  }
+  .quiz-intro-side{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .quiz-mini-card{
+    flex:1;
+    padding:14px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:#fbfcfd;
+  }
+  .quiz-mini-card strong{
+    display:block;
+    font-size:12.5px;
+    color:var(--navy);
+  }
+  .quiz-mini-card span{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:11.8px;
+    line-height:1.45;
+  }
+  .quiz-start-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+  .quiz-privacy{
+    margin-top:14px;
+    padding:10px 12px;
+    border-radius:10px;
+    background:#F5F7F9;
+    color:var(--muted);
+    font-size:11.8px;
+  }
+  .quiz-context{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin:8px 0 16px;
+  }
+  .quiz-context span{
+    padding:5px 9px;
+    border-radius:999px;
+    background:#EEF4F3;
+    color:#47645F;
+    font-size:10.5px;
+    font-weight:700;
+  }
+  .quiz-explain{
+    margin-top:13px;
+    padding:11px 13px;
+    border-left:3px solid var(--teal);
+    border-radius:8px;
+    background:#F7FBFA;
+    color:var(--muted);
+    font-size:12.3px;
+    line-height:1.55;
+  }
+  .risk-summary{
+    display:grid;
+    grid-template-columns:.8fr 1.2fr;
+    gap:20px;
+    align-items:start;
+  }
+  .risk-card{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px;
+    background:#fbfcfd;
+  }
+  .risk-level{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .risk-level.low{background:var(--green-bg);color:var(--green);}
+  .risk-level.watch{background:#EEF1F4;color:#536577;}
+  .risk-level.medium{background:var(--amber-bg);color:#9A5D15;}
+  .risk-level.high{background:var(--red-bg);color:var(--red);}
+  .risk-level.critical{background:#F7DAD7;color:#A52E27;}
+  .risk-message{
+    margin-top:10px;
+    font-size:14px;
+    font-weight:700;
+    color:var(--navy);
+  }
+  .risk-detail{
+    margin-top:7px;
+    color:var(--muted);
+    font-size:12.7px;
+    line-height:1.55;
+  }
+  .risk-actions{
+    margin-top:14px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .risk-action{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    padding:10px 11px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:#fff;
+  }
+  .risk-action .n{
+    width:23px;
+    height:23px;
+    flex:none;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--navy);
+    color:#fff;
+    font-size:10px;
+    font-weight:800;
+  }
+  .risk-action div:last-child{
+    font-size:12px;
+    color:var(--ink);
+    line-height:1.45;
+  }
+  .risk-found{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    margin-top:12px;
+  }
+  .risk-found-item{
+    padding:11px 12px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:#fff;
+  }
+  .risk-found-item strong{
+    display:block;
+    font-size:12.5px;
+    color:var(--navy);
+  }
+  .risk-found-item span{
+    display:block;
+    margin-top:3px;
+    color:var(--muted);
+    font-size:11.8px;
+    line-height:1.45;
+  }
+  .quiz-result-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+  .confidence-note{
+    margin-top:14px;
+    font-size:11.5px;
+    color:var(--muted);
+    line-height:1.5;
+  }
+  @media(max-width:820px){
+    .quiz-intro,.risk-summary{grid-template-columns:1fr;}
+  }
+
+
+  /* ---------- DESAFIO "É GOLPE OU É SEGURO?" ---------- */
+  .challenge-wrap{
+    margin-top:22px;
+    border-top:1px solid var(--line);
+    padding-top:22px;
+  }
+  .challenge-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .challenge-head h3{
+    font-size:18px;
+    color:var(--navy);
+  }
+  .challenge-head p{
+    margin:5px 0 0;
+    color:var(--muted);
+    font-size:12.8px;
+    max-width:700px;
+    line-height:1.55;
+  }
+  .challenge-card{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px;
+    background:linear-gradient(145deg,#fff,#fbfcfd);
+  }
+  .challenge-label{
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    font-weight:800;
+    color:var(--teal);
+  }
+  .challenge-text{
+    margin-top:8px;
+    font-size:14px;
+    line-height:1.6;
+    color:var(--ink);
+  }
+  .challenge-tips{
+    margin-top:14px;
+    padding:12px 14px;
+    border-radius:10px;
+    background:#F5F8F8;
+    border:1px solid var(--line);
+  }
+  .challenge-tips strong{
+    display:block;
+    font-size:12.3px;
+    color:var(--navy);
+  }
+  .challenge-tips ul{
+    margin:7px 0 0;
+    padding-left:18px;
+    color:var(--muted);
+    font-size:11.8px;
+    line-height:1.55;
+  }
+  .challenge-choice-title{
+    margin-top:16px;
+    font-size:13px;
+    font-weight:800;
+    color:var(--navy);
+  }
+  .challenge-choices{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .challenge-btn{
+    padding:11px 18px;
+    border-radius:10px;
+    border:1.5px solid var(--line);
+    background:#fff;
+    font-weight:800;
+    font-size:13px;
+  }
+  .challenge-btn.golpe{color:var(--red);}
+  .challenge-btn.seguro{color:var(--green);}
+  .challenge-btn:hover{border-color:var(--teal);}
+  .challenge-feedback{
+    margin-top:14px;
+    padding:14px;
+    border-radius:11px;
+    border:1px solid var(--line);
+    display:none;
+  }
+  .challenge-feedback.show{display:block;}
+  .challenge-feedback.ok{
+    background:var(--green-bg);
+    border-color:rgba(46,158,109,.25);
+  }
+  .challenge-feedback.erro{
+    background:var(--amber-bg);
+    border-color:rgba(232,150,61,.30);
+  }
+  .challenge-feedback strong{
+    display:block;
+    font-size:13px;
+  }
+  .challenge-feedback p{
+    margin:5px 0 0;
+    font-size:12.3px;
+    line-height:1.55;
+    color:var(--muted);
+  }
+  .challenge-redflags{
+    margin-top:10px;
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+  }
+  .challenge-redflags span{
+    padding:5px 8px;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid var(--line);
+    color:var(--muted);
+    font-size:10.5px;
+    font-weight:700;
+  }
+  .challenge-nav{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:14px;
+    flex-wrap:wrap;
+  }
+
 </style>
 </head>
 <body>
@@ -689,17 +1024,28 @@
     <div class="section-head" style="margin-top:0;">
       <span class="free-badge">100% gratuito</span>
       <h2 style="margin-top:10px;">Simulador “É Golpe?”</h2>
-      <p>Faça uma triagem rápida sem criar conta, sem fazer login e sem consumir créditos. Responda o que aconteceu e veja o nível de risco.</p>
+      <p>Uma triagem educativa para identificar sinais de engenharia social, fraude financeira e perfis falsos antes que você pague, compartilhe dados ou instale qualquer aplicativo.</p>
     </div>
     <div class="panel">
       <div class="sim-free-banner">
         <div>
-          <strong>Acesso livre para qualquer pessoa</strong><br>
-          <span>O simulador roda diretamente no navegador e não cobra nenhuma consulta.</span>
+          <strong>Sem cadastro, sem login e sem consumir créditos</strong><br>
+          <span>As respostas ficam somente no seu navegador. O simulador não pede CPF, senha, telefone ou dados bancários.</span>
         </div>
-        <span class="badge badge-green">Sem login · Sem crédito · Gratuito</span>
+        <span class="badge badge-green">Triagem gratuita</span>
       </div>
       <div id="quizContainer"></div>
+
+      <div class="challenge-wrap">
+        <div class="challenge-head">
+          <div>
+            <h3>Desafio rápido: “É golpe ou é seguro?”</h3>
+            <p>Leia o cenário, observe as dicas da própria tela e escolha uma opção. O resultado aparece imediatamente, com a explicação do acerto ou erro e os sinais vermelhos identificados.</p>
+          </div>
+          <span class="badge badge-green">Gratuito</span>
+        </div>
+        <div id="challengeContainer"></div>
+      </div>
     </div>
   </section>
 
@@ -1231,72 +1577,470 @@ SCAMS.forEach(s=>{
    Toda a lógica abaixo roda localmente no navegador.
 ========================================================= */
 const QUIZ = [
-  {tag:'Central falsa', q:'Alguém entrou em contato dizendo ser do banco, INSS ou de um tribunal, alarmando sobre uma fraude na sua conta?', weight:20},
-  {tag:'Ação remota', q:'Pediram para você instalar um aplicativo de acesso remoto (AnyDesk, TeamViewer) ou "compartilhar a tela"?', weight:32, hard:true},
-  {tag:'Taxa antecipada', q:'Pediram um Pix ou pagamento antecipado para liberar um empréstimo, prêmio ou portabilidade?', weight:26},
-  {tag:'Extorsão / deepfake', q:'Disseram que seu CPF ou sua chave Pix seria bloqueada em poucas horas?', weight:22},
-  {tag:'Phishing', q:'Enviaram um link de Receita Federal ou Banco Central que não termina em ".gov.br"?', weight:18},
-  {tag:'Portabilidade', q:'Pediram para você assinar documento ou autorizar portabilidade de consignado não solicitada?', weight:20},
-  {tag:'Clonagem WhatsApp', q:'Um "parente" pediu dinheiro emergencial usando número novo?', weight:20},
-  {tag:'Emprego falso', q:'Prometeram renda fácil mediante algum pagamento inicial seu?', weight:20},
-  {tag:'Comprovante falso', q:'Você recebeu um comprovante de Pix que não confirma no extrato do seu banco?', weight:16},
+  {
+    tag:'Falsa central',
+    q:'O contato disse ser do seu banco, INSS, tribunal, órgão público ou empresa conhecida e afirmou que havia um problema urgente?',
+    weight:18,
+    explain:'Golpistas usam nomes conhecidos para criar confiança e medo antes de pedir alguma ação.'
+  },
+  {
+    tag:'Urgência / ameaça',
+    q:'Disseram que sua conta, CPF, chave Pix, benefício ou cartão seria bloqueado se você não agisse imediatamente?',
+    weight:18,
+    explain:'Prazos muito curtos e ameaças são usados para impedir que você confirme a informação por outro canal.'
+  },
+  {
+    tag:'Acesso remoto',
+    q:'Pediram para instalar AnyDesk, TeamViewer, QuickSupport, RustDesk ou compartilhar/espelhar a tela do celular ou computador?',
+    weight:40,
+    hard:true,
+    critical:true,
+    explain:'Acesso remoto permite ao criminoso acompanhar senhas, autorizações e movimentações. É um dos sinais mais graves.'
+  },
+  {
+    tag:'Senha / código',
+    q:'Pediram senha, token, código recebido por SMS, código do WhatsApp, CVV ou outro código de segurança?',
+    weight:38,
+    hard:true,
+    critical:true,
+    explain:'Senhas e códigos de autenticação não devem ser informados a atendentes por mensagem ou ligação.'
+  },
+  {
+    tag:'Taxa antecipada',
+    q:'Pediram Pix, depósito ou taxa antecipada para liberar empréstimo, prêmio, benefício, indenização ou portabilidade?',
+    weight:30,
+    hard:true,
+    explain:'Pagamento antecipado para “liberar” dinheiro é um padrão recorrente de fraude.'
+  },
+  {
+    tag:'Portabilidade / consignado',
+    q:'Ofereceram redução de parcela, quitação, troco ou portabilidade de consignado que você não solicitou?',
+    weight:22,
+    explain:'Portabilidades não solicitadas podem esconder novos contratos, refinanciamentos ou transferências indevidas.'
+  },
+  {
+    tag:'Pix para terceiro',
+    q:'A empresa ou pessoa pediu que o pagamento fosse feito para uma conta, chave Pix ou nome diferente do que você esperava?',
+    weight:26,
+    explain:'Mudança de beneficiário ou pagamento para terceiro sem explicação verificável exige confirmação independente.'
+  },
+  {
+    tag:'Link suspeito',
+    q:'Mandaram um link para atualizar cadastro, desbloquear conta, receber dinheiro, confirmar dados ou fazer login?',
+    weight:20,
+    explain:'Links inesperados podem levar a páginas clonadas. Prefira abrir o aplicativo oficial ou digitar o endereço conhecido.'
+  },
+  {
+    tag:'WhatsApp / parente',
+    q:'Alguém dizendo ser parente, amigo ou conhecido apareceu com número novo e pediu dinheiro ou ajuda urgente?',
+    weight:24,
+    explain:'Perfis falsos exploram vínculos pessoais e pressão emocional. Confirme por ligação ou vídeo no contato antigo.'
+  },
+  {
+    tag:'Falso advogado',
+    q:'Disseram que você ganhou processo, precatório, alvará ou indenização e pediram pagamento para liberar o valor?',
+    weight:28,
+    hard:true,
+    explain:'Golpes de falso advogado usam processos reais ou dados públicos para cobrar falsas custas e taxas.'
+  },
+  {
+    tag:'Emprego / renda fácil',
+    q:'Prometeram emprego, renda extra, tarefas remuneradas ou ganhos rápidos e pediram algum pagamento inicial?',
+    weight:22,
+    explain:'Vagas legítimas normalmente não cobram para a pessoa começar a trabalhar ou receber tarefas.'
+  },
+  {
+    tag:'Investimento',
+    q:'Prometeram lucro garantido, rendimento muito alto, retorno rápido ou “oportunidade exclusiva” de investimento?',
+    weight:20,
+    explain:'Investimentos legítimos têm risco. Promessas de retorno garantido ou excepcional merecem verificação rigorosa.'
+  },
+  {
+    tag:'Comprovante falso',
+    q:'A outra pessoa enviou comprovante de Pix/transferência, mas o dinheiro não aparece no extrato oficial da sua conta?',
+    weight:22,
+    explain:'Comprovantes podem ser editados ou falsificados. Só considere pago quando o valor constar no seu próprio extrato.'
+  },
+  {
+    tag:'Pressão para segredo',
+    q:'Pediram para você não contar a familiares, gerente, banco, advogado ou outra pessoa até concluir a operação?',
+    weight:24,
+    hard:true,
+    explain:'Isolar a vítima reduz a chance de alguém perceber a fraude e interromper a operação.'
+  }
 ];
-let quizIndex = 0, quizScore = 0, quizHard = false, quizAnswers = [];
+
+let quizIndex = -1;
+let quizAnswers = [];
+
+function iniciarQuiz(){
+  quizIndex = 0;
+  quizAnswers = [];
+  renderQuiz();
+}
+
+function renderQuizIntro(){
+  const c = document.getElementById('quizContainer');
+  c.innerHTML = `
+    <div class="quiz-intro">
+      <div class="quiz-intro-main">
+        <span class="free-badge">Triagem preventiva</span>
+        <h3 style="margin-top:12px;">Antes de pagar ou fornecer dados, confira os sinais.</h3>
+        <p>Você responderá ${QUIZ.length} perguntas objetivas. No final, o Sentinela calcula um percentual de risco, classifica a triagem e mostra o que fazer a seguir.</p>
+        <div class="quiz-context">
+          <span>Banco e falsa central</span>
+          <span>Pix e pagamentos</span>
+          <span>Consignado</span>
+          <span>WhatsApp</span>
+          <span>Links e phishing</span>
+          <span>Falso advogado</span>
+          <span>Emprego e investimento</span>
+        </div>
+        <div class="quiz-start-actions">
+          <button class="btn btn-primary" onclick="iniciarQuiz()">Começar triagem gratuita →</button>
+        </div>
+        <div class="quiz-privacy">🔒 Não informe CPF, senha, código de segurança ou dados bancários. Esta triagem é educativa e não substitui a confirmação por canais oficiais.</div>
+      </div>
+      <div class="quiz-intro-side">
+        <div class="quiz-mini-card"><strong>1. Responda</strong><span>Marque somente o que realmente aconteceu na abordagem.</span></div>
+        <div class="quiz-mini-card"><strong>2. Veja o percentual</strong><span>O resultado considera a quantidade e a gravidade dos sinais.</span></div>
+        <div class="quiz-mini-card"><strong>3. Saiba o que fazer</strong><span>Receba orientações claras para interromper a fraude e confirmar a situação.</span></div>
+      </div>
+    </div>`;
+}
 
 function renderQuiz(){
   const c = document.getElementById('quizContainer');
-  if(quizIndex >= QUIZ.length){ renderQuizResult(); return; }
+
+  if(quizIndex < 0){
+    renderQuizIntro();
+    return;
+  }
+
+  if(quizIndex >= QUIZ.length){
+    renderQuizResult();
+    return;
+  }
+
   const item = QUIZ[quizIndex];
-  const pct = Math.round((quizIndex/QUIZ.length)*100);
+  const pct = Math.round((quizIndex / QUIZ.length) * 100);
+
   c.innerHTML = `
     <div class="quiz-progress"><div style="width:${pct}%;"></div></div>
-    <div class="quiz-tag">${item.tag} · pergunta ${quizIndex+1} de ${QUIZ.length}</div>
+    <div class="quiz-tag">${item.tag} · pergunta ${quizIndex + 1} de ${QUIZ.length}</div>
     <div class="quiz-q">${item.q}</div>
+    <div class="quiz-explain"><strong>Por que perguntamos isso?</strong><br>${item.explain}</div>
     <div class="quiz-opts">
-      <button class="qopt sim" onclick="responderQuiz(true)">Sim</button>
+      <button class="qopt sim" onclick="responderQuiz(true)">Sim, aconteceu</button>
       <button class="qopt nao" onclick="responderQuiz(false)">Não</button>
     </div>
     <div class="quiz-nav">
-      <button class="linklike" onclick="reiniciarQuiz()">Reiniciar simulação</button>
-      ${quizIndex>0 ? '<button class="linklike" onclick="voltarQuiz()">← Voltar</button>' : '<span></span>'}
-    </div>`;
-}
-function responderQuiz(sim){
-  quizAnswers[quizIndex] = sim;
-  if(sim){ quizScore += QUIZ[quizIndex].weight; if(QUIZ[quizIndex].hard) quizHard = true; }
-  quizIndex++; renderQuiz();
-}
-function voltarQuiz(){ quizIndex = Math.max(0, quizIndex-1); recomputeQuizScore(); renderQuiz(); }
-function recomputeQuizScore(){
-  quizScore = 0; quizHard = false;
-  quizAnswers.slice(0, quizIndex).forEach((ans,i)=>{ if(ans){ quizScore += QUIZ[i].weight; if(QUIZ[i].hard) quizHard = true; } });
-}
-function reiniciarQuiz(){ quizIndex=0; quizScore=0; quizHard=false; quizAnswers=[]; renderQuiz(); }
-function renderQuizResult(){
-  let score = Math.min(100, quizScore);
-  if(quizHard) score = Math.max(score, 75);
-  let verdictTitle, corVar;
-  if(score>=55){ verdictTitle='Alto risco — isto tem forte cara de golpe'; corVar='var(--red)'; }
-  else if(score>=25){ verdictTitle='Atenção — vários sinais de alerta presentes'; corVar='var(--amber)'; }
-  else { verdictTitle='Poucos sinais de risco nas suas respostas'; corVar='var(--green)'; }
-  const respostasSim = QUIZ.filter((q,i)=>quizAnswers[i]).map(q=>q.tag);
-  document.getElementById('quizContainer').innerHTML = `
-    <div class="grid-2">
-      <div class="gauge-wrap">
-        <div class="gauge" style="background:conic-gradient(${corVar} ${score*3.6}deg, #EEF1F4 0deg);">
-          <div class="gauge-inner"><div class="pct">${score}%</div><div class="pct-lbl">risco</div></div>
-        </div>
-        <div class="verdict-title">${verdictTitle}</div>
-      </div>
-      <div>
-        <h3 style="font-size:15px;">Padrões identificados</h3>
-        ${respostasSim.length ? '<ul class="flag-list">' + respostasSim.map(t=>`<li class="flag-item"><div class="dot ${quizHard?'red':'amber'}"></div><div class="txt"><strong>${t}</strong></div></li>`).join('') + '</ul>' : '<p style="color:var(--muted);font-size:13.5px;">Nenhum sinal marcado.</p>'}
-        <button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);margin-top:18px;" onclick="reiniciarQuiz()">Refazer simulação</button>
-      </div>
+      <button class="linklike" onclick="reiniciarQuiz()">Recomeçar</button>
+      ${quizIndex > 0 ? '<button class="linklike" onclick="voltarQuiz()">← Voltar</button>' : '<span></span>'}
     </div>`;
 }
 
+function responderQuiz(sim){
+  quizAnswers[quizIndex] = sim;
+  quizIndex++;
+  renderQuiz();
+}
+
+function voltarQuiz(){
+  quizIndex = Math.max(0, quizIndex - 1);
+  renderQuiz();
+}
+
+function reiniciarQuiz(){
+  quizIndex = -1;
+  quizAnswers = [];
+  renderQuiz();
+}
+
+function calcularQuiz(){
+  const maxBase = QUIZ.reduce((s,q)=>s+q.weight,0);
+  let pontos = 0;
+  let hard = false;
+  let critical = false;
+  const detectados = [];
+
+  QUIZ.forEach((q,i)=>{
+    if(quizAnswers[i] === true){
+      pontos += q.weight;
+      if(q.hard) hard = true;
+      if(q.critical) critical = true;
+      detectados.push(q);
+    }
+  });
+
+  let score = Math.round((pontos / maxBase) * 100);
+
+  // Combinações típicas elevam o risco.
+  const tags = detectados.map(x=>x.tag);
+  const tem = (t)=>tags.includes(t);
+
+  if(tem('Falsa central') && tem('Urgência / ameaça')) score += 8;
+  if(tem('Falsa central') && tem('Senha / código')) score += 16;
+  if(tem('Acesso remoto')) score = Math.max(score, 82);
+  if(tem('Senha / código')) score = Math.max(score, 78);
+  if(tem('Taxa antecipada') && tem('Portabilidade / consignado')) score += 14;
+  if(tem('WhatsApp / parente') && tem('Pix para terceiro')) score += 12;
+  if(tem('Falso advogado') && tem('Taxa antecipada')) score += 12;
+  if(tem('Pressão para segredo')) score += 8;
+
+  if(critical) score = Math.max(score, 80);
+  else if(hard) score = Math.max(score, 62);
+
+  score = Math.max(0, Math.min(100, score));
+
+  let nivel, classe, titulo, detalhe, cor;
+
+  if(score >= 80){
+    nivel = 'Risco crítico';
+    classe = 'critical';
+    titulo = 'Interrompa a operação e confirme tudo por outro canal.';
+    detalhe = 'Há sinais muito fortes associados a golpes. Não transfira dinheiro, não informe códigos e não permita acesso ao aparelho.';
+    cor = 'var(--red)';
+  }else if(score >= 55){
+    nivel = 'Risco alto';
+    classe = 'high';
+    titulo = 'Há fortes sinais de fraude.';
+    detalhe = 'Não prossiga antes de confirmar a identidade, o beneficiário e a solicitação diretamente com a instituição ou pessoa envolvida.';
+    cor = 'var(--red)';
+  }else if(score >= 30){
+    nivel = 'Risco moderado';
+    classe = 'medium';
+    titulo = 'Existem sinais que exigem verificação.';
+    detalhe = 'Pare a conversa por alguns minutos e confirme as informações por um canal oficial ou contato já conhecido.';
+    cor = 'var(--amber)';
+  }else if(score >= 12){
+    nivel = 'Atenção';
+    classe = 'watch';
+    titulo = 'Poucos sinais foram marcados, mas ainda há pontos para conferir.';
+    detalhe = 'Não use links da própria mensagem para validar a abordagem. Procure o canal oficial de forma independente.';
+    cor = 'var(--amber)';
+  }else{
+    nivel = 'Risco baixo na triagem';
+    classe = 'low';
+    titulo = 'A triagem encontrou poucos sinais típicos de golpe.';
+    detalhe = 'Isso não comprova que a abordagem seja legítima. Antes de pagar ou fornecer dados, confirme remetente, beneficiário e finalidade.';
+    cor = 'var(--green)';
+  }
+
+  return {score,nivel,classe,titulo,detalhe,cor,detectados};
+}
+
+function renderQuizResult(){
+  const r = calcularQuiz();
+
+  const actions = r.score >= 55
+    ? [
+        'Não faça Pix, transferência, pagamento ou assinatura enquanto houver dúvida.',
+        'Não informe senha, token, código de SMS/WhatsApp ou dados de cartão.',
+        'Encerre a conversa e procure a instituição pelo aplicativo, site ou telefone oficial.',
+        'Se já houve pagamento ou acesso ao aparelho, acione seu banco e siga o Guia de Ação.'
+      ]
+    : [
+        'Confirme o remetente por um canal independente antes de agir.',
+        'Abra aplicativos e sites oficiais diretamente, sem usar links recebidos.',
+        'Confira o nome do beneficiário antes de qualquer Pix ou boleto.',
+        'Se surgir urgência, taxa antecipada ou pedido de código, interrompa a operação.'
+      ];
+
+  const encontrados = r.detectados.length
+    ? r.detectados.map(q=>`
+        <div class="risk-found-item">
+          <strong>${q.tag}</strong>
+          <span>${q.explain}</span>
+        </div>`).join('')
+    : `<div class="risk-found-item"><strong>Nenhum sinal específico marcado</strong><span>Mantenha a verificação básica antes de qualquer pagamento ou compartilhamento de dados.</span></div>`;
+
+  document.getElementById('quizContainer').innerHTML = `
+    <div class="risk-summary">
+      <div class="gauge-wrap risk-card">
+        <div class="gauge" style="background:conic-gradient(${r.cor} ${r.score*3.6}deg,#EEF1F4 0deg);">
+          <div class="gauge-inner">
+            <div class="pct">${r.score}%</div>
+            <div class="pct-lbl">risco estimado</div>
+          </div>
+        </div>
+        <span class="risk-level ${r.classe}">${r.nivel}</span>
+        <div class="risk-message">${r.titulo}</div>
+        <div class="risk-detail">${r.detalhe}</div>
+      </div>
+
+      <div class="risk-card">
+        <h3 style="font-size:15px;">Sinais identificados na sua triagem</h3>
+        <div class="risk-found">${encontrados}</div>
+
+        <h3 style="font-size:15px;margin-top:18px;">O que fazer agora</h3>
+        <div class="risk-actions">
+          ${actions.map((a,i)=>`
+            <div class="risk-action">
+              <div class="n">${i+1}</div>
+              <div>${a}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-result-actions">
+      <button class="btn btn-primary" onclick="reiniciarQuiz()">Refazer triagem</button>
+      ${r.score >= 30 ? '<button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" onclick="goTo(\\'mensagem\\')">Analisar a mensagem com mais detalhes →</button>' : ''}
+      ${r.score >= 55 ? '<button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" onclick="goTo(\\'guia\\')">Ver Guia de Ação →</button>' : ''}
+    </div>
+
+    <div class="confidence-note">
+      O percentual é uma <strong>triagem preventiva baseada nos sinais informados</strong>, não uma certificação de fraude ou legitimidade. Um golpe pode não apresentar todos os padrões conhecidos.
+    </div>`;
+}
+
+// =========================================================
+// DESAFIO "É GOLPE OU É SEGURO?"
+// Feedback imediato com explicação dos sinais
+// =========================================================
+const CHALLENGES = [
+  {
+    titulo:'Central bancária',
+    texto:'“Olá, somos da central de segurança do seu banco. Detectamos uma compra suspeita. Instale o AnyDesk e faça uma transferência teste para cancelar a fraude.”',
+    resposta:'golpe',
+    dicas:[
+      'Central legítima não pede acesso remoto ao aparelho.',
+      '“Transferência teste” é um sinal crítico.',
+      'A urgência serve para reduzir seu tempo de decisão.'
+    ],
+    redflags:['Acesso remoto','Transferência teste','Urgência']
+  },
+  {
+    titulo:'Aviso no aplicativo oficial',
+    texto:'“Sua fatura está disponível. Para consultar, abra diretamente o aplicativo oficial do banco. Não solicitamos senha, código ou transferência por mensagem.”',
+    resposta:'seguro',
+    dicas:[
+      'A mensagem orienta a abrir o canal oficial diretamente.',
+      'Não há pedido de senha, código ou pagamento.',
+      'Não há pressão para agir imediatamente.'
+    ],
+    redflags:[]
+  },
+  {
+    titulo:'Portabilidade de consignado',
+    texto:'“Conseguimos reduzir sua parcela hoje. Para concluir a portabilidade, faça um Pix de R$ 480 para taxa de liberação e assine o documento que enviaremos.”',
+    resposta:'golpe',
+    dicas:[
+      'Cobrança antecipada para liberar crédito é sinal forte de fraude.',
+      'Portabilidade não solicitada exige verificação direta com o banco.',
+      'Pressa e assinatura imediata aumentam o risco.'
+    ],
+    redflags:['Taxa antecipada','Portabilidade não solicitada','Pressão']
+  },
+  {
+    titulo:'Parente com número novo',
+    texto:'“Oi, mãe. Troquei de número e meu celular antigo quebrou. Preciso pagar uma conta agora. Faz um Pix para essa chave que depois te explico.”',
+    resposta:'golpe',
+    dicas:[
+      'Número novo + pedido urgente de dinheiro é padrão comum.',
+      'A pessoa evita confirmação por ligação ou vídeo.',
+      'O pagamento pode ser direcionado a terceiro.'
+    ],
+    redflags:['Número novo','Pedido urgente de Pix','Identidade não confirmada']
+  },
+  {
+    titulo:'Confirmação por canal conhecido',
+    texto:'“Recebi sua mensagem. Não farei nenhum pagamento por aqui. Vou ligar para o número oficial da empresa e confirmar os dados antes de prosseguir.”',
+    resposta:'seguro',
+    dicas:[
+      'A confirmação é feita por canal independente.',
+      'Não há envio de credenciais.',
+      'Nenhum pagamento é realizado antes da verificação.'
+    ],
+    redflags:[]
+  },
+  {
+    titulo:'Falso advogado',
+    texto:'“Seu processo foi ganho e o alvará está liberado. Para receber R$ 38 mil ainda hoje, pague R$ 1.250 de custas por Pix.”',
+    resposta:'golpe',
+    dicas:[
+      'Pagamento antecipado para liberar valor judicial é sinal de alerta.',
+      'Golpistas podem usar dados reais de processos.',
+      'Confirme com o advogado pelo contato já conhecido e no tribunal.'
+    ],
+    redflags:['Falsa liberação','Custas por Pix','Urgência']
+  }
+];
+
+let challengeIndex = 0;
+let challengeRespondido = false;
+
+function renderChallenge(){
+  const c = document.getElementById('challengeContainer');
+  if(!c) return;
+
+  const item = CHALLENGES[challengeIndex];
+  c.innerHTML = `
+    <div class="challenge-card">
+      <div class="challenge-label">${item.titulo} · cenário ${challengeIndex + 1} de ${CHALLENGES.length}</div>
+      <div class="challenge-text">${item.texto}</div>
+
+      <div class="challenge-tips">
+        <strong>Dicas para decidir</strong>
+        <ul>${item.dicas.map(d=>`<li>${d}</li>`).join('')}</ul>
+      </div>
+
+      <div class="challenge-choice-title">Escolha uma opção:</div>
+      <div class="challenge-choices">
+        <button class="challenge-btn golpe" onclick="responderChallenge('golpe')">É golpe</button>
+        <button class="challenge-btn seguro" onclick="responderChallenge('seguro')">É seguro</button>
+      </div>
+
+      <div class="challenge-feedback" id="challengeFeedback"></div>
+
+      <div class="challenge-nav">
+        <button class="linklike" onclick="challengeAnterior()" ${challengeIndex===0?'disabled style="opacity:.35;text-decoration:none;"':''}>← Anterior</button>
+        <button class="linklike" onclick="challengeProximo()">Próximo cenário →</button>
+      </div>
+    </div>`;
+  challengeRespondido = false;
+}
+
+function responderChallenge(escolha){
+  const item = CHALLENGES[challengeIndex];
+  const feedback = document.getElementById('challengeFeedback');
+  const acertou = escolha === item.resposta;
+
+  feedback.className = 'challenge-feedback show ' + (acertou ? 'ok' : 'erro');
+
+  const classificacao = item.resposta === 'golpe' ? 'É golpe' : 'É seguro';
+
+  let detalhes = '';
+  if(item.resposta === 'golpe'){
+    detalhes = item.redflags.length
+      ? `<div class="challenge-redflags">${item.redflags.map(r=>`<span>⚠ ${r}</span>`).join('')}</div>`
+      : '';
+  }
+
+  feedback.innerHTML = `
+    <strong>${acertou ? '✓ Acertou.' : '✕ Não desta vez.'} ${classificacao}.</strong>
+    <p>${item.resposta === 'golpe'
+      ? 'Os sinais acima mostram uma abordagem de alto risco. A ação mais segura é interromper a conversa, não pagar, não informar códigos e confirmar tudo por um canal oficial independente.'
+      : 'O cenário apresenta práticas de verificação mais seguras: uso de canal oficial, ausência de pedido de senha/código e nenhuma pressão para transferir dinheiro.'}</p>
+    ${detalhes}
+  `;
+
+  challengeRespondido = true;
+}
+
+function challengeProximo(){
+  challengeIndex = (challengeIndex + 1) % CHALLENGES.length;
+  renderChallenge();
+}
+
+function challengeAnterior(){
+  if(challengeIndex > 0) challengeIndex--;
+  renderChallenge();
+}
+
 renderQuiz();
+renderChallenge();
 carregarSessao();
 </script>
 </body>
