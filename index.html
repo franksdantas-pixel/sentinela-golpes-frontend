@@ -942,6 +942,35 @@
   .challenge-btn.selected{outline:2px solid currentColor;outline-offset:2px;}
   .challenge-btn:disabled{cursor:default;opacity:.78;}
 
+
+  /* ---------- CONSULTA CNPJ 10/10: índice preventivo e orientação ---------- */
+  .cnpj-risk-grid{display:grid;grid-template-columns:.82fr 1.18fr;gap:18px;margin-top:18px;align-items:stretch;}
+  .cnpj-risk-card,.cnpj-action-card{border:1px solid var(--line);border-radius:14px;padding:18px;background:linear-gradient(145deg,#fff,#fbfcfd);}
+  .cnpj-risk-card{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .cnpj-gauge{width:154px;height:154px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--green) 0deg,#EEF1F4 0deg);transition:background .25s ease;}
+  .cnpj-gauge-inner{width:116px;height:116px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px var(--line);}
+  .cnpj-risk-number{font-family:'Space Grotesk';font-size:37px;font-weight:800;color:var(--navy);line-height:1;}
+  .cnpj-risk-label{margin-top:5px;font-size:9.8px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+  .cnpj-risk-band{display:inline-flex;margin-top:13px;padding:5px 10px;border-radius:999px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;}
+  .cnpj-risk-band.baixo{background:var(--green-bg);color:#237A4B;}
+  .cnpj-risk-band.atencao{background:var(--amber-bg);color:#866119;}
+  .cnpj-risk-band.alto{background:#FFF0E2;color:#98501B;}
+  .cnpj-risk-band.critico{background:var(--red-bg);color:#A43B34;}
+  .cnpj-risk-summary{margin-top:11px;font-size:12.2px;line-height:1.55;color:var(--muted);max-width:360px;}
+  .cnpj-risk-summary strong{color:var(--navy);}
+  .cnpj-action-card h3,.cnpj-section-title{font-size:15px;color:var(--navy);}
+  .cnpj-checklist{display:flex;flex-direction:column;gap:9px;margin-top:12px;}
+  .cnpj-check{display:grid;grid-template-columns:25px 1fr;gap:9px;align-items:start;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:#fff;}
+  .cnpj-check .num{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-size:10px;font-weight:800;}
+  .cnpj-check p{margin:0;font-size:11.8px;line-height:1.5;color:var(--ink);}
+  .cnpj-analysis-note{margin-top:12px;padding:11px 12px;border-radius:10px;background:#F6F8FA;border:1px solid var(--line);font-size:11.4px;line-height:1.5;color:var(--muted);}
+  .cnpj-analysis-note strong{color:var(--navy);}
+  .cnpj-flags-title{margin-top:20px;margin-bottom:9px;font-size:15px;color:var(--navy);}
+  .cnpj-result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .cnpj-result-actions .btn{color:var(--navy);border-color:var(--line);}
+  .cnpj-partial{margin-top:12px;padding:10px 12px;border-radius:10px;background:#FFF9E8;border:1px solid rgba(233,150,61,.24);font-size:11.5px;line-height:1.5;color:#775716;display:none;}
+  @media(max-width:820px){.cnpj-risk-grid{grid-template-columns:1fr;}.cnpj-gauge{width:142px;height:142px}.cnpj-gauge-inner{width:106px;height:106px}}
+
 </style>
 </head>
 <body>
@@ -1075,7 +1104,30 @@
           <div class="data-cell"><div class="k">Município / UF</div><div class="v" id="cnpjMunicipio">—</div></div>
           <div class="data-cell"><div class="k">Porte</div><div class="v" id="cnpjPorte">—</div></div>
         </div>
+        <div class="cnpj-risk-grid">
+          <div class="cnpj-risk-card">
+            <div class="cnpj-gauge" id="cnpjRiskGauge">
+              <div class="cnpj-gauge-inner">
+                <div class="cnpj-risk-number" id="cnpjRiskNumber">0</div>
+                <div class="cnpj-risk-label">índice preventivo / 100</div>
+              </div>
+            </div>
+            <span class="cnpj-risk-band baixo" id="cnpjRiskBand">baixo</span>
+            <div class="cnpj-risk-summary" id="cnpjRiskSummary">—</div>
+            <div class="cnpj-analysis-note"><strong>Importante:</strong> este índice combina sinais cadastrais e inconsistências informadas. Não representa probabilidade estatística e não certifica fraude nem legitimidade.</div>
+          </div>
+          <div class="cnpj-action-card">
+            <h3>O que conferir antes de pagar</h3>
+            <div class="cnpj-checklist" id="cnpjChecklist"></div>
+            <div class="cnpj-partial" id="cnpjPartialNote"></div>
+          </div>
+        </div>
+        <h3 class="cnpj-flags-title">Sinais e validações da consulta</h3>
         <ul class="flag-list" id="cnpjFlags"></ul>
+        <div class="cnpj-result-actions">
+          <button class="btn btn-ghost" onclick="goTo('mensagem')">Analisar mensagem →</button>
+          <button class="btn btn-ghost" onclick="goTo('guia')">Ver Guia de Ação →</button>
+        </div>
       </div>
     </div>
   </section>
@@ -1478,6 +1530,48 @@ async function consultarCNPJ(){
 
 function formatCNPJ(digits){ return digits.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5"); }
 
+function calcularIdadeCNPJ(dataStr){
+  if(!dataStr) return null;
+  const m = String(dataStr).trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+  let d;
+  if(m) d = new Date(Date.UTC(Number(m[1]), Number(m[2])-1, Number(m[3])));
+  else d = new Date(dataStr);
+  if(Number.isNaN(d.getTime())) return null;
+  const hoje = new Date();
+  let meses = (hoje.getUTCFullYear()-d.getUTCFullYear())*12 + (hoje.getUTCMonth()-d.getUTCMonth());
+  if(hoje.getUTCDate() < d.getUTCDate()) meses--;
+  meses = Math.max(0, meses);
+  const anos = Math.floor(meses/12), resto = meses%12;
+  if(anos === 0) return `${meses} ${meses===1?'mês':'meses'}`;
+  if(resto === 0) return `${anos} ${anos===1?'ano':'anos'}`;
+  return `${anos} ${anos===1?'ano':'anos'} e ${resto} ${resto===1?'mês':'meses'}`;
+}
+
+function calcularRiscoCNPJ(avaliacao){
+  let score = avaliacao && avaliacao.ativo ? 4 : 62;
+  const flags = (avaliacao && Array.isArray(avaliacao.flags)) ? avaliacao.flags : [];
+  flags.forEach(f=>{
+    const t = (f.title || '').toLowerCase();
+    if(t.includes('nenhum sinal')) return;
+    if(t.includes('pessoa física')) score += 32;
+    else if(t.includes('não está ativo') || t.includes('nao esta ativo')) score += 30;
+    else if(t.includes('atividade') && (t.includes('não bate') || t.includes('nao bate') || t.includes('pode não bater') || t.includes('pode nao bater'))) score += 24;
+    else if(t.includes('destinatário') || t.includes('destinatario')) score += 22;
+    else if(t.includes('menos de 12 meses')) score += 18;
+    else if(f.level === 'red') score += 28;
+    else if(f.level === 'amber') score += 13;
+    else score += 8;
+  });
+  return Math.min(98, Math.max(0, score));
+}
+
+function faixaRiscoCNPJ(score){
+  if(score <= 24) return {key:'baixo', label:'Baixo', cor:'var(--green)', resumo:'Os dados cadastrais consultados não apresentaram inconsistências relevantes. Ainda assim, confirme beneficiário, produto/serviço e canal de contato antes de pagar.'};
+  if(score <= 49) return {key:'atencao', label:'Atenção', cor:'var(--amber)', resumo:'Há pontos que merecem confirmação independente antes de qualquer pagamento ou assinatura.'};
+  if(score <= 74) return {key:'alto', label:'Alto', cor:'#E9902F', resumo:'Foram encontrados sinais cadastrais ou inconsistências relevantes. Não prossiga antes de esclarecer os pontos destacados por canais independentes.'};
+  return {key:'critico', label:'Crítico', cor:'var(--red)', resumo:'Há sinais fortes de incompatibilidade ou irregularidade cadastral. Interrompa a operação até confirmar a situação por fontes e canais oficiais.'};
+}
+
 function renderCNPJResult(data, avaliacao, raw){
   const resultBox = document.getElementById('cnpjResult');
 
@@ -1487,24 +1581,19 @@ function renderCNPJResult(data, avaliacao, raw){
 
   const dataAberturaRaw = data.data_inicio_atividade;
   let dataAberturaFormatada = '—';
-
   if(dataAberturaRaw){
     const valorData = String(dataAberturaRaw).trim();
     const match = valorData.match(/^(\d{4})-(\d{2})-(\d{2})/);
-
     if(match){
       dataAberturaFormatada = `${match[3]}/${match[2]}/${match[1]}`;
     }else{
       const dataObj = new Date(valorData);
-      if(!Number.isNaN(dataObj.getTime())){
-        dataAberturaFormatada = dataObj.toLocaleDateString('pt-BR', { timeZone:'UTC' });
-      }else{
-        dataAberturaFormatada = valorData;
-      }
+      if(!Number.isNaN(dataObj.getTime())) dataAberturaFormatada = dataObj.toLocaleDateString('pt-BR', { timeZone:'UTC' });
+      else dataAberturaFormatada = valorData;
     }
   }
-
-  document.getElementById('cnpjDataAbertura').textContent = dataAberturaFormatada;
+  const idade = calcularIdadeCNPJ(dataAberturaRaw);
+  document.getElementById('cnpjDataAbertura').textContent = idade ? `${dataAberturaFormatada} · ${idade}` : dataAberturaFormatada;
   document.getElementById('cnpjAtividade').textContent = data.cnae_fiscal_descricao || '—';
   document.getElementById('cnpjNatureza').textContent = data.natureza_juridica || '—';
   document.getElementById('cnpjMunicipio').textContent = (data.municipio ? data.municipio+' / '+data.uf : '—');
@@ -1514,9 +1603,41 @@ function renderCNPJResult(data, avaliacao, raw){
   statusBadge.textContent = data.descricao_situacao_cadastral || 'Situação desconhecida';
   statusBadge.className = 'badge ' + (avaliacao.ativo ? 'badge-green' : 'badge-red');
 
+  const score = calcularRiscoCNPJ(avaliacao);
+  const faixa = faixaRiscoCNPJ(score);
+  document.getElementById('cnpjRiskNumber').textContent = score;
+  const gauge = document.getElementById('cnpjRiskGauge');
+  gauge.style.background = `conic-gradient(${faixa.cor} ${score*3.6}deg, #EEF1F4 0deg)`;
+  const band = document.getElementById('cnpjRiskBand');
+  band.className = `cnpj-risk-band ${faixa.key}`;
+  band.textContent = `Risco ${faixa.label}`;
+  document.getElementById('cnpjRiskSummary').innerHTML = `<strong>${faixa.resumo}</strong>`;
+
+  const atividadeInformada = document.getElementById('atividadeAnunciada').value.trim();
+  const destinatarioInformado = document.getElementById('nomeDestinatario').value.trim();
+  const checklist = [];
+  if(!avaliacao.ativo) checklist.push('Não efetue pagamento até esclarecer por que o CNPJ não consta como ativo e confirmar a contraparte por canal oficial.');
+  else checklist.push('Confirme se razão social e CNPJ exibidos no banco, boleto ou contrato são os mesmos desta consulta.');
+  if(atividadeInformada) checklist.push(`Compare o que foi anunciado (“${atividadeInformada}”) com a atividade econômica cadastrada e peça explicação documental se houver diferença.`);
+  else checklist.push('Informe também o que a empresa disse que vende ou faz para permitir a comparação com o CNAE cadastrado.');
+  if(destinatarioInformado) checklist.push(`Antes de confirmar o pagamento, confira se o beneficiário exibido (“${destinatarioInformado}”) corresponde à empresa consultada.`);
+  else checklist.push('Informe o nome que aparece como beneficiário do Pix/boleto para ampliar a validação do destinatário.');
+  checklist.push('Não use telefone ou link recebido na própria abordagem para confirmar. Procure site, aplicativo ou contato oficial por conta própria.');
+  document.getElementById('cnpjChecklist').innerHTML = checklist.map((x,i)=>`<div class="cnpj-check"><span class="num">${i+1}</span><p>${x}</p></div>`).join('');
+
+  const partial = document.getElementById('cnpjPartialNote');
+  const faltantes = [];
+  if(!atividadeInformada) faltantes.push('atividade anunciada');
+  if(!destinatarioInformado) faltantes.push('nome do destinatário do pagamento');
+  if(faltantes.length){
+    partial.style.display = 'block';
+    partial.innerHTML = `<strong>Análise parcial:</strong> para uma checagem mais completa, refaça a consulta informando ${faltantes.join(' e ')}.`;
+  }else partial.style.display = 'none';
+
   const flagsUl = document.getElementById('cnpjFlags');
   flagsUl.innerHTML = '';
-  avaliacao.flags.forEach(f=>{
+  const flags = (avaliacao.flags && avaliacao.flags.length) ? avaliacao.flags : [{level:'amber',title:'Dados cadastrais consultados',desc:'Nenhum alerta específico foi retornado pelo motor cadastral. Isso não substitui a confirmação do negócio e do beneficiário.'}];
+  flags.forEach(f=>{
     const li = document.createElement('li');
     li.className = 'flag-item';
     li.innerHTML = `<div class="dot ${f.level}"></div><div class="txt"><strong>${f.title}</strong><p>${f.desc}</p></div>`;
