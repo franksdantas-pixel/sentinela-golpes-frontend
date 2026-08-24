@@ -295,6 +295,212 @@
   .status-pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--muted);}
   .status-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--amber);animation:pulse 1.2s infinite;}
   @keyframes pulse{50%{opacity:.3;}}
+
+  /* ---------- SENTINELA 2.0: HOME + SIMULADOR GRATUITO ---------- */
+  body{
+    background:
+      radial-gradient(circle at 8% -5%, rgba(18,165,148,.08), transparent 29rem),
+      radial-gradient(circle at 94% 6%, rgba(30,51,80,.09), transparent 31rem),
+      var(--paper);
+  }
+
+  header.top{
+    box-shadow:0 10px 28px rgba(15,27,45,.14);
+  }
+
+  nav.tabs button[data-view="simulador"]{
+    border-color:rgba(95,215,199,.22);
+  }
+  nav.tabs button[data-view="simulador"]::after{
+    content:"GRÁTIS";
+    display:inline-block;
+    margin-left:6px;
+    padding:2px 6px;
+    border-radius:999px;
+    background:rgba(95,215,199,.15);
+    color:var(--teal-light);
+    font-size:8.5px;
+    font-weight:800;
+    letter-spacing:.05em;
+    vertical-align:1px;
+  }
+  nav.tabs button[data-view="simulador"].active::after{
+    background:rgba(4,33,29,.16);
+    color:#063b33;
+  }
+
+  .hero{
+    min-height:480px;
+    padding:52px 44px;
+    border:1px solid rgba(95,215,199,.17);
+    box-shadow:0 26px 72px rgba(15,27,45,.18);
+    isolation:isolate;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    width:440px;
+    height:440px;
+    right:-190px;
+    top:-210px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(95,215,199,.20),rgba(18,165,148,.04) 48%,transparent 72%);
+    z-index:-1;
+  }
+  .hero-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 11px;
+    border-radius:999px;
+    color:#DFFFF9;
+    background:rgba(18,165,148,.13);
+    border:1px solid rgba(95,215,199,.25);
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.055em;
+    text-transform:uppercase;
+  }
+  .hero-kicker::before{
+    content:"";
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--teal-light);
+    box-shadow:0 0 0 5px rgba(95,215,199,.10);
+  }
+  .hero h1{
+    font-size:clamp(36px,5vw,56px);
+    line-height:1.07;
+    max-width:720px;
+  }
+  .hero p.lead{
+    font-size:17px;
+    line-height:1.7;
+    max-width:650px;
+    color:#C4D3DF;
+  }
+  .hero-actions .btn{min-height:47px;}
+  .hero-trust{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+  .hero-trust span{
+    padding:7px 10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.11);
+    color:#C9D8E3;
+    font-size:11.5px;
+  }
+  .radar-wrap::after{
+    content:"CONFIRME ANTES DE AGIR";
+    position:absolute;
+    bottom:0;
+    color:#87A7B5;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9.5px;
+    font-weight:600;
+    letter-spacing:.13em;
+  }
+
+  .free-callout{
+    margin-top:18px;
+    padding:20px 22px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#E7F4EE,#F5FFFC);
+    border:1px solid rgba(46,158,109,.24);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    flex-wrap:wrap;
+    box-shadow:0 10px 28px rgba(46,158,109,.06);
+  }
+  .free-callout strong{
+    display:block;
+    color:#176847;
+    font-family:'Space Grotesk';
+    font-size:16px;
+  }
+  .free-callout p{
+    margin:4px 0 0;
+    color:#4F6F62;
+    font-size:13px;
+  }
+
+  .stat,.scam-card,.panel{
+    box-shadow:0 9px 28px rgba(15,27,45,.045);
+  }
+  .stat,.scam-card{
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+  }
+  .stat:hover,.scam-card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(18,165,148,.30);
+    box-shadow:0 15px 34px rgba(15,27,45,.09);
+  }
+  .scam-card{
+    position:relative;
+    overflow:hidden;
+  }
+  .scam-card::before{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    width:3px;
+    background:var(--teal);
+  }
+
+  .free-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:6px 11px;
+    border-radius:999px;
+    background:var(--green-bg);
+    color:#176847;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+  .free-badge::before{
+    content:"✓";
+    font-weight:900;
+  }
+  .sim-free-banner{
+    display:flex;
+    gap:12px;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    padding:16px 18px;
+    margin-bottom:20px;
+    border-radius:13px;
+    background:linear-gradient(135deg,#E7F4EE,#F7FFFD);
+    border:1px solid rgba(46,158,109,.22);
+  }
+  .sim-free-banner strong{
+    color:#176847;
+    font-size:14px;
+  }
+  .sim-free-banner span{
+    color:#547166;
+    font-size:12.5px;
+  }
+
+  .section-head h2{font-size:clamp(23px,3vw,29px);}
+
+  @media(max-width:820px){
+    .hero{min-height:auto;padding:34px 22px;}
+    .hero h1{font-size:34px;}
+  }
+
 </style>
 </head>
 <body>
@@ -330,12 +536,18 @@
   <section class="view active" id="view-inicio">
     <div class="hero">
       <div>
-        <span class="badge badge-neutral" style="background:rgba(255,255,255,0.08);color:#C9D6E2;">R$ 5,00 por consulta</span>
-        <h1 style="margin-top:14px;">Antes de pagar, transferir ou assinar qualquer coisa: confirme.</h1>
-        <p class="lead">Consulte a situação real de um CNPJ na Receita Federal ou cole a mensagem que você recebeu para identificar sinais de golpe. Cada consulta (CNPJ ou mensagem) custa R$ 5,00, pago via Pix ou cartão, com liberação automática.</p>
+        <div class="hero-kicker">Sentinela digital contra golpes</div>
+        <h1 style="margin-top:18px;">Desconfie primeiro.<br>Confirme antes de agir.</h1>
+        <p class="lead">Recebeu uma mensagem estranha, uma proposta “boa demais” ou vai pagar para uma empresa que não conhece? Faça uma triagem rápida antes de transferir, assinar ou fornecer dados.</p>
         <div class="hero-actions">
-          <button class="btn btn-primary" onclick="goTo('cnpj')">Consultar CNPJ agora →</button>
-          <button class="btn btn-ghost" onclick="goTo('mensagem')">Analisar uma mensagem</button>
+          <button class="btn btn-primary" onclick="goTo('simulador')">Testar grátis: “É Golpe?” →</button>
+          <button class="btn btn-ghost" onclick="goTo('mensagem')">Análise aprofundada</button>
+          <button class="btn btn-ghost" onclick="goTo('cnpj')">Verificar CNPJ</button>
+        </div>
+        <div class="hero-trust">
+          <span>✓ Simulador gratuito e sem login</span>
+          <span>✓ CNPJ e mensagem: R$ 5 por consulta</span>
+          <span>✓ Pix ou cartão com liberação automática</span>
         </div>
       </div>
       <div class="radar-wrap">
@@ -347,15 +559,23 @@
       </div>
     </div>
 
+    <div class="free-callout">
+      <div>
+        <strong>Não precisa criar conta para começar.</strong>
+        <p>Use gratuitamente o Simulador “É Golpe?” e veja uma triagem de risco em poucos passos.</p>
+      </div>
+      <button class="btn btn-primary" onclick="goTo('simulador')">Fazer teste gratuito →</button>
+    </div>
+
     <div class="stat-row">
-      <div class="stat"><div class="num">R$ 5</div><div class="lbl">Por consulta de CNPJ ou análise de mensagem</div></div>
-      <div class="stat"><div class="num">.gov.br</div><div class="lbl">Único domínio oficial de órgãos do Governo Federal</div></div>
-      <div class="stat"><div class="num">24h</div><div class="lbl">MED — prazo para o banco analisar o pedido de devolução de Pix golpe</div></div>
+      <div class="stat"><div class="num">Grátis</div><div class="lbl">Simulador “É Golpe?” — sem login e sem consumir créditos</div></div>
+      <div class="stat"><div class="num">R$ 5</div><div class="lbl">Consulta de CNPJ ou análise aprofundada de mensagem</div></div>
+      <div class="stat"><div class="num">Rápido</div><div class="lbl">Triagem objetiva para decidir com mais cautela antes de agir</div></div>
     </div>
 
     <div class="section-head">
-      <h2>Os 8 golpes mais comuns hoje no Brasil</h2>
-      <p>Este aplicativo foi treinado para reconhecer sinais destes padrões específicos.</p>
+      <h2>Reconheça o padrão antes que o golpe avance</h2>
+      <p>Conheça abordagens recorrentes usadas para gerar urgência, confiança artificial e induzir pagamentos ou entrega de dados.</p>
     </div>
     <div class="scam-grid" id="scamGrid"></div>
   </section>
@@ -467,10 +687,20 @@
   <!-- ======================= SIMULADOR (gratuito) ======================= -->
   <section class="view" id="view-simulador">
     <div class="section-head" style="margin-top:0;">
-      <h2>Simulador "É Golpe?" <span class="badge badge-green">Gratuito</span></h2>
-      <p>Responda o que aconteceu na conversa. Este simulador não tem custo.</p>
+      <span class="free-badge">100% gratuito</span>
+      <h2 style="margin-top:10px;">Simulador “É Golpe?”</h2>
+      <p>Faça uma triagem rápida sem criar conta, sem fazer login e sem consumir créditos. Responda o que aconteceu e veja o nível de risco.</p>
     </div>
-    <div class="panel"><div id="quizContainer"></div></div>
+    <div class="panel">
+      <div class="sim-free-banner">
+        <div>
+          <strong>Acesso livre para qualquer pessoa</strong><br>
+          <span>O simulador roda diretamente no navegador e não cobra nenhuma consulta.</span>
+        </div>
+        <span class="badge badge-green">Sem login · Sem crédito · Gratuito</span>
+      </div>
+      <div id="quizContainer"></div>
+    </div>
   </section>
 
   <!-- ======================= GUIA DE AÇÃO ======================= -->
@@ -791,92 +1021,45 @@ function formatCNPJ(digits){ return digits.replace(/^(\d{2})(\d{3})(\d{3})(\d{4}
 function renderCNPJResult(data, avaliacao, raw){
   const resultBox = document.getElementById('cnpjResult');
 
-  document.getElementById('cnpjRazaoSocial').textContent =
-    data.razao_social || '—';
+  document.getElementById('cnpjRazaoSocial').textContent = data.razao_social || '—';
+  document.getElementById('cnpjNumeroFormatado').textContent = formatCNPJ(raw);
+  document.getElementById('cnpjNomeFantasia').textContent = data.nome_fantasia || '—';
 
-  document.getElementById('cnpjNumeroFormatado').textContent =
-    formatCNPJ(raw);
-
-  document.getElementById('cnpjNomeFantasia').textContent =
-    data.nome_fantasia || '—';
-
-  // Formata a data de abertura para dia/mês/ano
   const dataAberturaRaw = data.data_inicio_atividade;
-
   let dataAberturaFormatada = '—';
 
-  if (dataAberturaRaw) {
+  if(dataAberturaRaw){
     const valorData = String(dataAberturaRaw).trim();
-
-    // Formato normalmente retornado pela BrasilAPI: AAAA-MM-DD
     const match = valorData.match(/^(\d{4})-(\d{2})-(\d{2})/);
 
-    if (match) {
-      const ano = match[1];
-      const mes = match[2];
-      const dia = match[3];
-
-      dataAberturaFormatada = `${dia}/${mes}/${ano}`;
-    } else {
-      // Caso a API retorne a data em outro formato
+    if(match){
+      dataAberturaFormatada = `${match[3]}/${match[2]}/${match[1]}`;
+    }else{
       const dataObj = new Date(valorData);
-
-      if (!isNaN(dataObj.getTime())) {
-        dataAberturaFormatada = dataObj.toLocaleDateString('pt-BR', {
-          timeZone: 'UTC'
-        });
-      } else {
+      if(!Number.isNaN(dataObj.getTime())){
+        dataAberturaFormatada = dataObj.toLocaleDateString('pt-BR', { timeZone:'UTC' });
+      }else{
         dataAberturaFormatada = valorData;
       }
     }
   }
 
-  document.getElementById('cnpjDataAbertura').textContent =
-    dataAberturaFormatada;
+  document.getElementById('cnpjDataAbertura').textContent = dataAberturaFormatada;
+  document.getElementById('cnpjAtividade').textContent = data.cnae_fiscal_descricao || '—';
+  document.getElementById('cnpjNatureza').textContent = data.natureza_juridica || '—';
+  document.getElementById('cnpjMunicipio').textContent = (data.municipio ? data.municipio+' / '+data.uf : '—');
+  document.getElementById('cnpjPorte').textContent = data.porte || '—';
 
-  document.getElementById('cnpjAtividade').textContent =
-    data.cnae_fiscal_descricao || '—';
+  const statusBadge = document.getElementById('cnpjStatusBadge');
+  statusBadge.textContent = data.descricao_situacao_cadastral || 'Situação desconhecida';
+  statusBadge.className = 'badge ' + (avaliacao.ativo ? 'badge-green' : 'badge-red');
 
-  document.getElementById('cnpjNatureza').textContent =
-    data.natureza_juridica || '—';
-
-  document.getElementById('cnpjMunicipio').textContent =
-    data.municipio
-      ? data.municipio + ' / ' + data.uf
-      : '—';
-
-  document.getElementById('cnpjPorte').textContent =
-    data.porte || '—';
-
-  const statusBadge =
-    document.getElementById('cnpjStatusBadge');
-
-  statusBadge.textContent =
-    data.descricao_situacao_cadastral ||
-    'Situação desconhecida';
-
-  statusBadge.className =
-    'badge ' +
-    (avaliacao.ativo ? 'badge-green' : 'badge-red');
-
-  const flagsUl =
-    document.getElementById('cnpjFlags');
-
+  const flagsUl = document.getElementById('cnpjFlags');
   flagsUl.innerHTML = '';
-
-  avaliacao.flags.forEach(f => {
+  avaliacao.flags.forEach(f=>{
     const li = document.createElement('li');
-
     li.className = 'flag-item';
-
-    li.innerHTML = `
-      <div class="dot ${f.level}"></div>
-      <div class="txt">
-        <strong>${f.title}</strong>
-        <p>${f.desc}</p>
-      </div>
-    `;
-
+    li.innerHTML = `<div class="dot ${f.level}"></div><div class="txt"><strong>${f.title}</strong><p>${f.desc}</p></div>`;
     flagsUl.appendChild(li);
   });
 
@@ -1043,7 +1226,9 @@ SCAMS.forEach(s=>{
 });
 
 /* =========================================================
-   SIMULADOR "É GOLPE?" (gratuito, sem backend)
+   SIMULADOR "É GOLPE?"
+   100% GRATUITO, SEM LOGIN, SEM CRÉDITOS E SEM BACKEND.
+   Toda a lógica abaixo roda localmente no navegador.
 ========================================================= */
 const QUIZ = [
   {tag:'Central falsa', q:'Alguém entrou em contato dizendo ser do banco, INSS ou de um tribunal, alarmando sobre uma fraude na sua conta?', weight:20},
