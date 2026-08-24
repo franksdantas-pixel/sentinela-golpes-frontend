@@ -917,6 +917,31 @@
     .post-result-edu{grid-template-columns:1fr;}
   }
 
+
+
+  /* ---------- SIMULADOR 10/10: severidade, orientação e placar educativo ---------- */
+  .signal-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:5px;}
+  .signal-severity{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;}
+  .signal-severity.critica{background:var(--red-bg);color:#A53B34;}
+  .signal-severity.alta{background:#FFF1E6;color:#9A4C16;}
+  .signal-severity.media{background:var(--amber-bg);color:#8A651B;}
+  .signal-action{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);font-size:11.5px;line-height:1.45;color:var(--ink);}
+  .signal-action b{color:var(--navy);}
+  .score-method{margin-top:10px;padding:10px 12px;border-radius:10px;background:#F6F8FA;border:1px solid var(--line);font-size:11.3px;line-height:1.5;color:var(--muted);}
+  .score-method strong{color:var(--navy);}
+  .challenge-scorebar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#F7FAFA;}
+  .challenge-scorebar strong{font-size:12px;color:var(--navy);}
+  .challenge-scorebar span{font-size:11.5px;color:var(--muted);}
+  .challenge-progress{height:5px;background:#E8ECEF;border-radius:999px;overflow:hidden;flex:1;min-width:140px;}
+  .challenge-progress > div{height:100%;background:var(--teal);border-radius:999px;transition:width .2s ease;}
+  .challenge-rule{margin-top:10px;padding:10px 12px;border-radius:9px;background:#F5F8F8;border:1px solid var(--line);font-size:11.8px;line-height:1.5;color:var(--ink);}
+  .challenge-rule strong{color:var(--navy);}
+  .challenge-final{margin-top:14px;padding:15px;border-radius:12px;background:linear-gradient(135deg,#F0FAF7,#FFFFFF);border:1px solid rgba(18,165,148,.22);}
+  .challenge-final h4{font-size:14px;color:var(--navy);}
+  .challenge-final p{margin:5px 0 0;font-size:11.8px;line-height:1.5;color:var(--muted);}
+  .challenge-btn.selected{outline:2px solid currentColor;outline-offset:2px;}
+  .challenge-btn:disabled{cursor:default;opacity:.78;}
+
 </style>
 </head>
 <body>
@@ -1740,6 +1765,23 @@ const QUIZ = [
   }
 ];
 
+const SIGNAL_GUIDANCE = {
+  'Falsa central':'Encerre o contato e procure a instituição pelo aplicativo, site ou telefone oficial obtido por você.',
+  'Urgência / ameaça':'Não decida sob pressão. Interrompa a conversa e confirme a informação por outro canal.',
+  'Acesso remoto':'Não instale o aplicativo e não compartilhe a tela. Se já instalou, desconecte o aparelho e procure seu banco.',
+  'Senha / código':'Não informe nenhum código. Se já informou, altere senhas e avise imediatamente a instituição envolvida.',
+  'Taxa antecipada':'Não pague a taxa. Confirme a operação diretamente com a instituição e desconfie de promessa condicionada a Pix prévio.',
+  'Portabilidade / consignado':'Não assine nem autorize nada antes de conferir o contrato e a solicitação diretamente com o banco.',
+  'Pix para terceiro':'Pare o pagamento e confirme o nome/CPF/CNPJ do beneficiário por canal independente.',
+  'Link suspeito':'Não abra o link. Digite o endereço oficial ou abra o aplicativo legítimo por conta própria.',
+  'WhatsApp / parente':'Ligue ou faça vídeo para o contato antigo/conhecido antes de qualquer transferência.',
+  'Falso advogado':'Não faça Pix para “liberar” valores. Confirme com o advogado pelo contato já conhecido e consulte o processo no tribunal.',
+  'Emprego / renda fácil':'Não pague para começar a trabalhar. Confirme a empresa, o domínio e a vaga em canais oficiais.',
+  'Investimento':'Não envie dinheiro com base em promessa de lucro garantido. Verifique instituição, registro e riscos antes de investir.',
+  'Comprovante falso':'Considere o pagamento concluído apenas quando o valor aparecer no extrato da sua própria conta.',
+  'Pressão para segredo':'Converse com alguém de confiança e com a instituição envolvida antes de continuar.'
+};
+
 let quizIndex = -1;
 let quizAnswers = [];
 
@@ -1828,7 +1870,6 @@ function reiniciarQuiz(){
 }
 
 function calcularQuiz(){
-  const maxBase = QUIZ.reduce((s,q)=>s+q.weight,0);
   let pontos = 0;
   let hard = false;
   let critical = false;
@@ -1843,47 +1884,50 @@ function calcularQuiz(){
     }
   });
 
-  let score = Math.round((pontos / maxBase) * 100);
+  // Índice de risco (0–100), não probabilidade estatística.
+  // A curva reduz a chance de “100%” apenas por somar muitos sinais leves.
+  let score = Math.round(100 * (1 - Math.exp(-pontos / 105)));
 
-  // Combinações típicas elevam o risco.
   const tags = detectados.map(x=>x.tag);
   const tem = (t)=>tags.includes(t);
 
-  if(tem('Falsa central') && tem('Urgência / ameaça')) score += 8;
-  if(tem('Falsa central') && tem('Senha / código')) score += 16;
-  if(tem('Acesso remoto')) score = Math.max(score, 82);
-  if(tem('Senha / código')) score = Math.max(score, 78);
-  if(tem('Taxa antecipada') && tem('Portabilidade / consignado')) score += 14;
-  if(tem('WhatsApp / parente') && tem('Pix para terceiro')) score += 12;
-  if(tem('Falso advogado') && tem('Taxa antecipada')) score += 12;
-  if(tem('Pressão para segredo')) score += 8;
+  // Combinações típicas de engenharia social/fraude elevam o índice.
+  if(tem('Falsa central') && tem('Urgência / ameaça')) score += 5;
+  if(tem('Falsa central') && tem('Senha / código')) score += 10;
+  if(tem('Acesso remoto')) score = Math.max(score, 84);
+  if(tem('Senha / código')) score = Math.max(score, 80);
+  if(tem('Taxa antecipada') && tem('Portabilidade / consignado')) score += 9;
+  if(tem('WhatsApp / parente') && tem('Pix para terceiro')) score += 8;
+  if(tem('Falso advogado') && tem('Taxa antecipada')) score += 8;
+  if(tem('Pressão para segredo')) score += 5;
 
-  if(critical) score = Math.max(score, 80);
-  else if(hard) score = Math.max(score, 62);
+  if(critical) score = Math.max(score, 82);
+  else if(hard) score = Math.max(score, 64);
 
-  score = Math.max(0, Math.min(100, score));
+  // Evita comunicar certeza matemática. 98 = risco extremo na triagem, não “98% de chance”.
+  score = Math.max(0, Math.min(98, score));
 
   let nivel, classe, titulo, detalhe, cor;
 
-  if(score >= 80){
+  if(score >= 82){
     nivel = 'Risco crítico';
     classe = 'critical';
     titulo = 'Interrompa a operação e confirme tudo por outro canal.';
-    detalhe = 'Há sinais muito fortes associados a golpes. Não transfira dinheiro, não informe códigos e não permita acesso ao aparelho.';
+    detalhe = 'Os sinais informados são fortemente compatíveis com padrões usados em golpes. Não prossiga com pagamento, transferência, instalação de aplicativo ou fornecimento de códigos.';
     cor = 'var(--red)';
-  }else if(score >= 55){
+  }else if(score >= 60){
     nivel = 'Risco alto';
     classe = 'high';
     titulo = 'Há fortes sinais de fraude.';
-    detalhe = 'Não prossiga antes de confirmar a identidade, o beneficiário e a solicitação diretamente com a instituição ou pessoa envolvida.';
+    detalhe = 'Não prossiga antes de confirmar identidade, beneficiário e solicitação diretamente com a instituição ou pessoa envolvida.';
     cor = 'var(--red)';
-  }else if(score >= 30){
+  }else if(score >= 35){
     nivel = 'Risco moderado';
     classe = 'medium';
     titulo = 'Existem sinais que exigem verificação.';
-    detalhe = 'Pare a conversa por alguns minutos e confirme as informações por um canal oficial ou contato já conhecido.';
+    detalhe = 'Pare a conversa e confirme as informações por um canal oficial ou contato já conhecido.';
     cor = 'var(--amber)';
-  }else if(score >= 12){
+  }else if(score >= 15){
     nivel = 'Atenção';
     classe = 'watch';
     titulo = 'Poucos sinais foram marcados, mas ainda há pontos para conferir.';
@@ -1893,17 +1937,17 @@ function calcularQuiz(){
     nivel = 'Risco baixo na triagem';
     classe = 'low';
     titulo = 'A triagem encontrou poucos sinais típicos de golpe.';
-    detalhe = 'Isso não comprova que a abordagem seja legítima. Antes de pagar ou fornecer dados, confirme remetente, beneficiário e finalidade.';
+    detalhe = 'Isso não comprova legitimidade. Antes de pagar ou fornecer dados, confirme remetente, beneficiário e finalidade.';
     cor = 'var(--green)';
   }
 
-  return {score,nivel,classe,titulo,detalhe,cor,detectados};
+  return {score,nivel,classe,titulo,detalhe,cor,detectados,pontos};
 }
 
 function renderQuizResult(){
   const r = calcularQuiz();
 
-  const actions = r.score >= 55
+  const actions = r.score >= 60
     ? [
         'Não faça Pix, transferência, pagamento ou assinatura enquanto houver dúvida.',
         'Não informe senha, token, código de SMS/WhatsApp ou dados de cartão.',
@@ -1918,38 +1962,43 @@ function renderQuizResult(){
       ];
 
   const encontrados = r.detectados.length
-    ? r.detectados.map(q=>`
+    ? r.detectados.map(q=>{
+        const sev = q.critical ? ['Crítica','critica'] : q.hard || q.weight >= 28 ? ['Alta','alta'] : ['Média','media'];
+        return `
         <div class="risk-found-item">
-          <strong>${q.tag}</strong>
+          <div class="signal-meta"><strong>${q.tag}</strong><span class="signal-severity ${sev[1]}">${sev[0]}</span></div>
           <span>${q.explain}</span>
-        </div>`).join('')
-    : `<div class="risk-found-item"><strong>Nenhum sinal específico marcado</strong><span>Mantenha a verificação básica antes de qualquer pagamento ou compartilhamento de dados.</span></div>`;
+          <div class="signal-action"><b>O que fazer:</b> ${SIGNAL_GUIDANCE[q.tag] || 'Confirme a situação por um canal oficial independente antes de agir.'}</div>
+        </div>`;
+      }).join('')
+    : `<div class="risk-found-item"><strong>Nenhum sinal específico marcado</strong><span>Mantenha a verificação básica antes de qualquer pagamento ou compartilhamento de dados.</span><div class="signal-action"><b>O que fazer:</b> confirme remetente, beneficiário e finalidade por um canal independente.</div></div>`;
 
   const porque = r.detectados.length
-    ? r.detectados.slice(0,4).map(q=>`
+    ? r.detectados.slice(0,5).map(q=>`
         <div class="edu-why-item">
           <strong>${q.tag}</strong>
           <span>${q.explain}</span>
         </div>`).join('')
     : `<div class="edu-why-item"><strong>Triagem com poucos sinais</strong><span>A ausência de sinais típicos não prova que a abordagem seja legítima.</span></div>`;
 
-  const alerta = r.score >= 55
+  const alerta = r.score >= 60
     ? `<div class="edu-alert"><strong>🚨 Atenção:</strong> interrompa a operação. Não faça Pix, não instale aplicativos de acesso remoto e não forneça senhas ou códigos de segurança.</div>`
-    : `<div class="quiz-explain"><strong>Continue verificando.</strong><br>Mesmo com risco baixo ou moderado, confirme remetente, beneficiário, links e finalidade da solicitação por um canal independente.</div>`;
+    : `<div class="quiz-explain"><strong>Continue verificando.</strong><br>Mesmo com risco baixo ou moderado, confirme remetente, beneficiário, links e finalidade por um canal independente.</div>`;
 
   document.getElementById('quizContainer').innerHTML = `
     <div class="risk-summary">
       <div class="gauge-wrap risk-card">
         <div class="gauge" style="background:conic-gradient(${r.cor} ${r.score*3.6}deg,#EEF1F4 0deg);">
           <div class="gauge-inner">
-            <div class="pct">${r.score}%</div>
-            <div class="pct-lbl">risco estimado</div>
+            <div class="pct">${r.score}</div>
+            <div class="pct-lbl">índice de risco / 100</div>
           </div>
         </div>
         <span class="risk-level ${r.classe}">${r.nivel}</span>
         <div class="risk-message">${r.titulo}</div>
         <div class="risk-detail">${r.detalhe}</div>
         ${alerta}
+        <div class="score-method"><strong>Como ler este número:</strong> ${r.score}/100 é um índice preventivo calculado pela gravidade e combinação dos sinais marcados. Não representa certeza nem probabilidade estatística de fraude.</div>
       </div>
 
       <div class="risk-card">
@@ -1969,8 +2018,8 @@ function renderQuizResult(){
 
     <div class="post-result-edu">
       <div class="edu-card">
-        <h3>Por que o Sentinela chegou a ${r.score}%?</h3>
-        <p>O percentual considera a gravidade dos sinais que você marcou e combinações comuns em golpes.</p>
+        <h3>Por que o Sentinela chegou a ${r.score}/100?</h3>
+        <p>O índice combina gravidade dos sinais e padrões que costumam aparecer juntos em abordagens fraudulentas.</p>
         <div class="edu-why">${porque}</div>
       </div>
 
@@ -1987,24 +2036,27 @@ function renderQuizResult(){
 
     <div class="quiz-result-actions">
       <button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" onclick="reiniciarQuiz()">Refazer triagem</button>
-      ${r.score >= 55 ? '<button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" onclick="goTo(\'guia\')">Ver Guia de Ação →</button>' : ''}
+      <button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" onclick="goTo('cnpj')">Consultar CNPJ →</button>
+      ${r.score >= 60 ? '<button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" onclick="goTo(\'guia\')">Ver Guia de Ação →</button>' : ''}
     </div>
 
     <div class="confidence-note">
-      O percentual é uma <strong>triagem preventiva baseada nos sinais informados</strong>, não uma certificação de fraude ou legitimidade. Um golpe pode não apresentar todos os padrões conhecidos.
+      Esta ferramenta é <strong>educativa e preventiva</strong>. O resultado depende das respostas informadas e não certifica fraude ou legitimidade.
     </div>
 
     <div class="challenge-wrap">
       <div class="challenge-head">
         <div>
-          <h3>Desafio educativo: “É golpe ou é seguro?”</h3>
-          <p>Agora teste sua percepção em cenários rápidos. Leia as dicas, escolha uma resposta e veja imediatamente por que acertou ou errou.</p>
+          <h3>Agora teste se você reconheceria o golpe</h3>
+          <p>Leia cada situação, escolha <strong>“É golpe”</strong> ou <strong>“É seguro”</strong> e veja imediatamente os sinais que justificam a resposta.</p>
         </div>
         <span class="badge badge-green">Aprenda praticando</span>
       </div>
       <div id="challengeContainerInline"></div>
     </div>`;
 
+  challengeIndex = 0;
+  challengeAnswers = Array(CHALLENGES.length).fill(null);
   renderChallengeInline();
 }
 
@@ -2022,6 +2074,7 @@ const CHALLENGES = [
       '“Transferência teste” é um sinal crítico.',
       'A urgência serve para reduzir seu tempo de decisão.'
     ],
+    regra:'Banco não pede acesso remoto nem “transferência teste”. Desligue e abra o app oficial.',
     redflags:['Acesso remoto','Transferência teste','Urgência']
   },
   {
@@ -2033,6 +2086,7 @@ const CHALLENGES = [
       'Não há pedido de senha, código ou pagamento.',
       'Não há pressão para agir imediatamente.'
     ],
+    regra:'Canal oficial aberto por você + nenhum pedido de credencial é um sinal de procedimento mais seguro.',
     redflags:[]
   },
   {
@@ -2044,6 +2098,7 @@ const CHALLENGES = [
       'Portabilidade não solicitada exige verificação direta com o banco.',
       'Pressa e assinatura imediata aumentam o risco.'
     ],
+    regra:'Crédito ou portabilidade não deve depender de Pix antecipado para “liberação”.',
     redflags:['Taxa antecipada','Portabilidade não solicitada','Pressão']
   },
   {
@@ -2055,6 +2110,7 @@ const CHALLENGES = [
       'A pessoa evita confirmação por ligação ou vídeo.',
       'O pagamento pode ser direcionado a terceiro.'
     ],
+    regra:'Número novo + urgência + Pix = confirme por ligação ou vídeo antes de pagar.',
     redflags:['Número novo','Pedido urgente de Pix','Identidade não confirmada']
   },
   {
@@ -2066,6 +2122,7 @@ const CHALLENGES = [
       'Não há envio de credenciais.',
       'Nenhum pagamento é realizado antes da verificação.'
     ],
+    regra:'Quando houver dúvida, interrompa a conversa e confirme por um canal independente.',
     redflags:[]
   },
   {
@@ -2077,20 +2134,46 @@ const CHALLENGES = [
       'Golpistas podem usar dados reais de processos.',
       'Confirme com o advogado pelo contato já conhecido e no tribunal.'
     ],
+    regra:'Valor judicial não deve ser “liberado” mediante Pix urgente para contato desconhecido.',
     redflags:['Falsa liberação','Custas por Pix','Urgência']
   }
 ];
 
 let challengeIndex = 0;
 let challengeRespondido = false;
+let challengeAnswers = Array(CHALLENGES.length).fill(null);
 
+
+function getChallengeStats(){
+  const respondidos = challengeAnswers.filter(x=>x !== null).length;
+  const acertos = challengeAnswers.filter(Boolean).length;
+  const pct = respondidos ? Math.round((acertos / respondidos) * 100) : 0;
+  return {respondidos,acertos,pct};
+}
+
+function resetChallenge(){
+  challengeIndex = 0;
+  challengeAnswers = Array(CHALLENGES.length).fill(null);
+  renderChallengeInline();
+}
 
 function renderChallengeInline(){
   const c = document.getElementById('challengeContainerInline');
   if(!c) return;
 
   const item = CHALLENGES[challengeIndex];
+  const stats = getChallengeStats();
+  const done = challengeAnswers[challengeIndex] !== null;
+  const progresso = Math.round((stats.respondidos / CHALLENGES.length) * 100);
+  const finalizado = stats.respondidos === CHALLENGES.length;
+
   c.innerHTML = `
+    <div class="challenge-scorebar">
+      <div><strong>Seu placar: ${stats.acertos}/${stats.respondidos || 0} acerto(s)</strong><br><span>${stats.respondidos} de ${CHALLENGES.length} cenário(s) respondido(s)</span></div>
+      <div class="challenge-progress"><div style="width:${progresso}%;"></div></div>
+      ${stats.respondidos ? `<strong>${stats.pct}%</strong>` : ''}
+    </div>
+
     <div class="challenge-card">
       <div class="challenge-label">${item.titulo} · cenário ${challengeIndex + 1} de ${CHALLENGES.length}</div>
       <div class="challenge-text">${item.texto}</div>
@@ -2102,38 +2185,49 @@ function renderChallengeInline(){
 
       <div class="challenge-choice-title">Escolha uma opção:</div>
       <div class="challenge-choices">
-        <button class="challenge-btn golpe" onclick="responderChallengeInline('golpe')">É golpe</button>
-        <button class="challenge-btn seguro" onclick="responderChallengeInline('seguro')">É seguro</button>
+        <button class="challenge-btn golpe" onclick="responderChallengeInline('golpe')" ${done?'disabled':''}>É golpe</button>
+        <button class="challenge-btn seguro" onclick="responderChallengeInline('seguro')" ${done?'disabled':''}>É seguro</button>
       </div>
 
       <div class="challenge-feedback" id="challengeFeedbackInline"></div>
 
       <div class="challenge-nav">
         <button class="linklike" onclick="challengeAnteriorInline()" ${challengeIndex===0?'disabled style="opacity:.35;text-decoration:none;"':''}>← Anterior</button>
-        <button class="linklike" onclick="challengeProximoInline()">Próximo cenário →</button>
+        <button class="linklike" onclick="challengeProximoInline()">${challengeIndex === CHALLENGES.length-1 ? 'Ver primeiro cenário →' : 'Próximo cenário →'}</button>
       </div>
-    </div>`;
+    </div>
+
+    ${finalizado ? `<div class="challenge-final"><h4>Desafio concluído: ${stats.acertos} de ${CHALLENGES.length} acertos (${stats.pct}%)</h4><p>${stats.pct >= 80 ? 'Ótimo reconhecimento de sinais. Continue confirmando por canais oficiais antes de agir.' : stats.pct >= 60 ? 'Bom resultado. Reveja os cenários em que houve erro e memorize as regras práticas.' : 'Vale refazer o desafio. O objetivo é reconhecer os sinais antes de transferir dinheiro ou entregar dados.'}</p><button class="btn btn-primary" style="margin-top:10px;" onclick="resetChallenge()">Tentar outro desafio →</button></div>` : ''}`;
+
+  if(done){
+    mostrarFeedbackChallengeInline();
+  }
 }
 
-function responderChallengeInline(escolha){
+function mostrarFeedbackChallengeInline(){
   const item = CHALLENGES[challengeIndex];
   const feedback = document.getElementById('challengeFeedbackInline');
-  const acertou = escolha === item.resposta;
-
-  feedback.className = 'challenge-feedback show ' + (acertou ? 'ok' : 'erro');
-
+  if(!feedback || challengeAnswers[challengeIndex] === null) return;
+  const acertou = challengeAnswers[challengeIndex];
   const classificacao = item.resposta === 'golpe' ? 'É golpe' : 'É seguro';
   const detalhes = item.resposta === 'golpe' && item.redflags.length
     ? `<div class="challenge-redflags">${item.redflags.map(r=>`<span>⚠ ${r}</span>`).join('')}</div>`
     : '';
 
+  feedback.className = 'challenge-feedback show ' + (acertou ? 'ok' : 'erro');
   feedback.innerHTML = `
-    <strong>${acertou ? '✓ Acertou.' : '✕ Não desta vez.'} ${classificacao}.</strong>
+    <strong>${acertou ? '✓ Acertou.' : '✕ Atenção.'} ${classificacao}.</strong>
     <p>${item.resposta === 'golpe'
       ? 'Os sinais do cenário indicam uma abordagem de alto risco. Interrompa a conversa, não pague, não compartilhe códigos e confirme tudo por um canal oficial independente.'
       : 'O cenário adota práticas mais seguras: confirmação por canal oficial, ausência de pedido de credenciais e nenhuma pressão para transferir dinheiro.'}</p>
     ${detalhes}
-  `;
+    <div class="challenge-rule"><strong>Regra de bolso:</strong> ${item.regra}</div>`;
+}
+
+function responderChallengeInline(escolha){
+  const item = CHALLENGES[challengeIndex];
+  challengeAnswers[challengeIndex] = escolha === item.resposta;
+  renderChallengeInline();
 }
 
 function challengeProximoInline(){
