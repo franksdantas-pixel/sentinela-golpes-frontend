@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <!-- Sentinela Golpes v3.2 — Analytics & Conversões -->
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SC23YRGXZ"></script>
 <script>
@@ -1848,6 +1849,47 @@ const params = new URLSearchParams(window.location.search);
 const API_BASE = params.get('api') || 'https://sentinela-golpes-backend.onrender.com';
 
 /* =========================================================
+   SENTINELA 3.2 — ANALYTICS & CONVERSÕES
+   Eventos sem PII: não envia e-mail, CNPJ, texto analisado,
+   senha, token, código Pix ou dados de cartão.
+========================================================= */
+function sgTrack(eventName, params = {}){
+  try{
+    if(typeof window.gtag !== 'function') return;
+    window.gtag('event', eventName, params);
+  }catch(e){
+    console.warn('Analytics indisponível:', e);
+  }
+}
+
+function sgCreditItems(qtd){
+  return [{
+    item_id: 'credito_sentinela',
+    item_name: 'Crédito Sentinela',
+    price: 5,
+    quantity: Number(qtd || 1)
+  }];
+}
+
+function sgTrackPurchaseOnce({ transactionId, value, quantity, paymentType }){
+  if(!transactionId) return;
+  const key = 'sg_ga_purchase_' + String(transactionId);
+  try{
+    if(localStorage.getItem(key)) return;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  sgTrack('purchase', {
+    transaction_id: String(transactionId),
+    value: Number(value || (Number(quantity || 1) * 5)),
+    currency: 'BRL',
+    payment_type: paymentType || 'unknown',
+    items: sgCreditItems(quantity)
+  });
+}
+
+let quizAnalyticsCompleted = false;
+
+/* =========================================================
    ESTADO
 ========================================================= */
 let authToken = localStorage.getItem('sg_token') || null;
@@ -1862,6 +1904,7 @@ let pixPollInterval = null;
    NAVEGAÇÃO
 ========================================================= */
 function goTo(view){
+  sgTrack('section_view', { section_name: String(view || '') });
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+view).classList.add('active');
   document.querySelectorAll('#mainTabs button').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
@@ -1965,6 +2008,7 @@ async function submitAuth(){
     fecharAuthModal();
     renderAccountBox();
     atualizarTelaCreditos();
+    sgTrack(authMode === 'login' ? 'login' : 'sign_up', { method: 'email' });
   }catch(e){
     errBox.textContent = e.message;
   }
@@ -2010,6 +2054,15 @@ async function consultarCNPJ(){
     currentUser.creditos = resp.creditosRestantes;
     renderAccountBox();
     renderCNPJResult(resp.dados, resp.avaliacao, raw);
+    const cnpjRiskScore = calcularRiscoCNPJ(resp.avaliacao);
+    const cnpjRiskBand = faixaRiscoCNPJ(cnpjRiskScore);
+    sgTrack('cnpj_analysis', {
+      result: 'success',
+      risk_level: cnpjRiskBand.key,
+      risk_score: cnpjRiskScore,
+      currency: 'BRL',
+      value: 5
+    });
   }catch(e){
     if(e.status === 402){
       errBox.textContent = 'Você não tem créditos. ';
@@ -2473,6 +2526,13 @@ async function analisarMensagem(){
 
     resultBox.classList.add('show');
     resultBox.scrollIntoView({behavior:'smooth', block:'start'});
+    sgTrack('message_analysis', {
+      result: 'success',
+      risk_level: score >= 82 ? 'critical' : score >= 60 ? 'high' : score >= 35 ? 'medium' : score >= 15 ? 'watch' : 'low',
+      risk_score: score,
+      currency: 'BRL',
+      value: 5
+    });
   }catch(e){
     if(e.status === 402){
       errBox.innerHTML = 'Você não tem créditos. <button class="linklike" onclick="goTo(\'creditos\')">Comprar créditos →</button>';
@@ -2527,6 +2587,17 @@ async function comprarPix(){
   errBox.classList.remove('show');
   try{
     const cobranca = await api('/pagamentos/pix', { method:'POST', body:{ quantidade: qtdSelecionada } });
+    sgTrack('begin_checkout', {
+      currency: 'BRL',
+      value: Number(cobranca.valor || (qtdSelecionada * 5)),
+      items: sgCreditItems(qtdSelecionada)
+    });
+    sgTrack('add_payment_info', {
+      currency: 'BRL',
+      value: Number(cobranca.valor || (qtdSelecionada * 5)),
+      payment_type: 'pix',
+      items: sgCreditItems(qtdSelecionada)
+    });
     abrirPixModal(cobranca);
   }catch(e){
     errBox.textContent = e.message; errBox.classList.add('show');
@@ -2538,6 +2609,17 @@ async function comprarCartao(){
   errBox.classList.remove('show');
   try{
     const cobranca = await api('/pagamentos/cartao', { method:'POST', body:{ quantidade: qtdSelecionada } });
+    sgTrack('begin_checkout', {
+      currency: 'BRL',
+      value: Number(cobranca.valor || (qtdSelecionada * 5)),
+      items: sgCreditItems(qtdSelecionada)
+    });
+    sgTrack('add_payment_info', {
+      currency: 'BRL',
+      value: Number(cobranca.valor || (qtdSelecionada * 5)),
+      payment_type: 'card',
+      items: sgCreditItems(qtdSelecionada)
+    });
     window.open(cobranca.checkoutUrl, '_blank');
   }catch(e){
     errBox.textContent = e.message; errBox.classList.add('show');
@@ -2558,6 +2640,12 @@ function abrirPixModal(cobranca){
       if(status === 'aprovado'){
         clearInterval(pixPollInterval);
         document.getElementById('pixStatusPill').innerHTML = '✅ Pagamento confirmado!';
+        sgTrackPurchaseOnce({
+          transactionId: cobranca.transacaoId,
+          value: cobranca.valor,
+          quantity: qtdSelecionada,
+          paymentType: 'pix'
+        });
         const { usuario } = await api('/conta/me');
         currentUser = usuario;
         renderAccountBox();
@@ -2801,6 +2889,8 @@ let quizAnswers = [];
 function iniciarQuiz(){
   quizIndex = 0;
   quizAnswers = [];
+  quizAnalyticsCompleted = false;
+  sgTrack('simulator_start', { simulator_name: 'e_golpe' });
   renderQuiz();
 }
 
@@ -2879,6 +2969,7 @@ function voltarQuiz(){
 function reiniciarQuiz(){
   quizIndex = -1;
   quizAnswers = [];
+  quizAnalyticsCompleted = false;
   renderQuiz();
 }
 
@@ -2959,6 +3050,16 @@ function calcularQuiz(){
 
 function renderQuizResult(){
   const r = calcularQuiz();
+
+  if(!quizAnalyticsCompleted){
+    quizAnalyticsCompleted = true;
+    sgTrack('simulator_completed', {
+      simulator_name: 'e_golpe',
+      risk_level: r.classe,
+      risk_score: r.score,
+      signals_count: r.detectados.length
+    });
+  }
 
   const actions = r.score >= 60
     ? [
