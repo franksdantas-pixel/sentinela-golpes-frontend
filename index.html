@@ -7,9 +7,16 @@
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
+  // Consent Mode: analytics starts denied until the visitor chooses.
+  gtag('consent', 'default', {
+    analytics_storage: 'denied',
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    wait_for_update: 500
+  });
   gtag('js', new Date());
-
-  gtag('config', 'G-4SC23YRGXZ');
+  gtag('config', 'G-4SC23YRGXZ', { anonymize_ip: true });
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1247,6 +1254,28 @@
   background:#eef8f5;color:#087457;font-size:9px;font-weight:800;vertical-align:middle;
 }
 
+
+
+  /* ---------- LEGAL / PRIVACIDADE / COOKIES 3.3 ---------- */
+  .legal-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;align-items:center;}
+  .legal-links button,.legal-links a{background:none;border:none;padding:0;color:var(--teal);font-size:12.5px;font-weight:700;text-decoration:underline;cursor:pointer;}
+  .legal-overlay{position:fixed;inset:0;background:rgba(15,27,45,.62);display:none;align-items:center;justify-content:center;z-index:220;padding:20px;}
+  .legal-overlay.show{display:flex;}
+  .legal-box{width:min(900px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:16px;border:1px solid var(--line);box-shadow:0 24px 70px rgba(15,27,45,.28);text-align:left;}
+  .legal-head{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:18px 22px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start;z-index:2;}
+  .legal-head h3{font-size:20px;color:var(--navy);}.legal-head p{margin:4px 0 0;color:var(--muted);font-size:12px;}
+  .legal-close{background:#EEF1F4;border:0;border-radius:9px;padding:8px 11px;color:var(--navy);font-weight:800;}
+  .legal-content{padding:22px;}.legal-content h4{margin:22px 0 7px;color:var(--navy);font-size:15px;}.legal-content h4:first-child{margin-top:0;}
+  .legal-content p,.legal-content li{font-size:13px;line-height:1.65;color:#435263;}.legal-content ul{padding-left:20px;}
+  .legal-note{padding:12px 14px;border-radius:10px;background:#F6F8FA;border:1px solid var(--line);font-size:12px;color:var(--muted);margin:14px 0;}
+  .cookie-banner{position:fixed;left:18px;right:18px;bottom:18px;z-index:230;display:none;max-width:980px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 55px rgba(15,27,45,.24);padding:18px;}
+  .cookie-banner.show{display:block;}.cookie-banner h3{font-size:16px;color:var(--navy);margin-bottom:6px;}.cookie-banner p{font-size:12.5px;color:var(--muted);margin:0;line-height:1.55;}
+  .cookie-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}.cookie-actions .btn{padding:9px 14px;font-size:12.5px;}
+  .cookie-pref{display:flex;justify-content:space-between;gap:18px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);}.cookie-pref:last-child{border-bottom:0;}
+  .cookie-pref strong{display:block;font-size:13px;color:var(--navy);}.cookie-pref span{display:block;font-size:12px;color:var(--muted);margin-top:3px;}
+  .switch{position:relative;width:44px;height:24px;flex:none;}.switch input{opacity:0;width:0;height:0;}.slider{position:absolute;inset:0;background:#C8D0D8;border-radius:999px;transition:.2s;}.slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}.switch input:checked + .slider{background:var(--teal);}.switch input:checked + .slider:before{transform:translateX(20px);}.switch input:disabled + .slider{opacity:.55;cursor:not-allowed;}
+  @media(max-width:640px){.cookie-banner{left:10px;right:10px;bottom:10px}.legal-box{max-height:92vh}.legal-head,.legal-content{padding:16px}}
+
 </style>
 </head>
 <body>
@@ -1786,7 +1815,7 @@
         <h3>Soluções para instituições</h3>
         <p>Bancos, fintechs, sindicatos ou PROCON interessados em licenciamento, white-label ou API própria podem entrar em contato antes de qualquer pagamento.</p>
       </div>
-      <a class="institutional-contact" href="mailto:fsantosdantas@hotmail.com" aria-label="Enviar e-mail para o Sentinela Golpes">fsantosdantas@hotmail.com</a>
+      <a href="https://outlook.live.com/mail/0/deeplink/compose?to=fsantosdantas%40hotmail.com&subject=Contato%20-%20Sentinela%20Golpes&body=Ol%C3%A1%2C%20gostaria%20de%20entrar%20em%20contato%20com%20o%20Sentinela%20Golpes." target="_blank" rel="noopener noreferrer">fsantosdantas@hotmail.com</a>
     </div>
   </section>
 
@@ -1809,6 +1838,10 @@
       <div class="field" style="margin-bottom:0;">
         <label>Senha</label>
         <input type="text" id="authSenha" placeholder="mínimo 6 caracteres">
+      </div>
+      <div class="consent-row" id="authConsentRow" style="display:none;gap:8px;align-items:flex-start;text-align:left;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:#F8FAFB;">
+        <input type="checkbox" id="authConsent" style="margin-top:3px;">
+        <label for="authConsent" style="font-size:11.8px;line-height:1.45;color:var(--muted);">Li e aceito os <button type="button" class="linklike" onclick="abrirLegal('termos')">Termos de Uso</button> e declaro estar ciente da <button type="button" class="linklike" onclick="abrirLegal('privacidade')">Política de Privacidade</button>.</label>
       </div>
       <div class="error-box" id="authError"></div>
       <button class="btn btn-primary" id="authSubmitBtn" onclick="submitAuth()">Entrar</button>
@@ -1835,13 +1868,184 @@
   </div>
 </div>
 
+<!-- ======================= LEGAL / PRIVACIDADE / COOKIES 3.3 ======================= -->
+<div class="legal-overlay" id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+  <div class="legal-box">
+    <div class="legal-head">
+      <div><h3 id="legalTitle">Informações legais</h3><p>Última atualização: 26 de agosto de 2026</p></div>
+      <button class="legal-close" type="button" onclick="fecharLegal()" aria-label="Fechar">✕</button>
+    </div>
+    <div class="legal-content" id="legalContent"></div>
+  </div>
+</div>
+
+<div class="legal-overlay" id="cookiePrefsModal" role="dialog" aria-modal="true" aria-labelledby="cookiePrefsTitle">
+  <div class="legal-box" style="max-width:620px;">
+    <div class="legal-head">
+      <div><h3 id="cookiePrefsTitle">Preferências de cookies</h3><p>Você pode alterar sua escolha a qualquer momento.</p></div>
+      <button class="legal-close" type="button" onclick="fecharPreferenciasCookies()" aria-label="Fechar">✕</button>
+    </div>
+    <div class="legal-content">
+      <div class="cookie-pref"><div><strong>Essenciais</strong><span>Necessários para autenticação, segurança e funcionamento do site.</span></div><label class="switch"><input type="checkbox" checked disabled><span class="slider"></span></label></div>
+      <div class="cookie-pref"><div><strong>Analytics</strong><span>Permite métricas de audiência e uso do site por meio do Google Analytics 4. Não enviamos e-mail, CNPJ consultado, texto analisado, senha, token, código Pix ou dados de cartão ao GA4.</span></div><label class="switch"><input type="checkbox" id="analyticsConsentToggle"><span class="slider"></span></label></div>
+      <div class="cookie-actions"><button class="btn btn-primary" type="button" onclick="salvarPreferenciasCookies()">Salvar preferências</button><button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" type="button" onclick="rejeitarAnalytics()">Somente essenciais</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="cookie-banner" id="cookieBanner" role="region" aria-label="Aviso de cookies">
+  <h3>Privacidade e cookies</h3>
+  <p>Usamos armazenamento essencial para o funcionamento do site. Com sua autorização, usamos Google Analytics 4 para medir o uso das funcionalidades e melhorar o Sentinela Golpes. Você pode aceitar, recusar ou personalizar.</p>
+  <div class="cookie-actions">
+    <button class="btn btn-primary" type="button" onclick="aceitarAnalytics()">Aceitar Analytics</button>
+    <button class="btn btn-ghost" style="color:var(--navy);border-color:var(--line);" type="button" onclick="rejeitarAnalytics()">Somente essenciais</button>
+    <button class="linklike" type="button" onclick="abrirPreferenciasCookies()">Personalizar</button>
+  </div>
+</div>
+
 <footer>
   <div class="disclaimer">
-    Sentinela Golpes é uma ferramenta informativa e educativa. A consulta de CNPJ utiliza a base pública de dados abertos da Receita Federal (via BrasilAPI). A análise de mensagens combina o motor de regras do servidor com validações preventivas de padrões e combinações de risco — não substitui orientação jurídica, contábil ou financeira profissional. Pagamentos processados pelo Mercado Pago.
+    <strong>Sentinela Golpes — prevenção e ação contra golpes e fraudes.</strong> Plataforma informativa, educativa, preventiva e corretiva, com orientação para identificação de sinais de risco e mitigação de danos. Os resultados são indicativos e não constituem certificação de fraude, garantia de legitimidade, perícia ou aconselhamento jurídico, contábil ou financeiro individualizado. Pagamentos processados pelo Mercado Pago.
+    <div class="legal-links" aria-label="Informações legais">
+      <button type="button" onclick="abrirLegal('termos')">Termos de Uso</button>
+      <button type="button" onclick="abrirLegal('privacidade')">Política de Privacidade</button>
+      <button type="button" onclick="abrirLegal('aviso')">Aviso Legal</button>
+      <button type="button" onclick="abrirPreferenciasCookies()">Gerenciar Cookies</button>
+      <a href="https://outlook.live.com/mail/0/deeplink/compose?to=fsantosdantas%40hotmail.com&subject=Contato%20-%20Sentinela%20Golpes&body=Ol%C3%A1%2C%20gostaria%20de%20entrar%20em%20contato%20com%20o%20Sentinela%20Golpes." target="_blank" rel="noopener noreferrer">E-mail</a>
+      <a href="https://wa.me/5586998165410" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    </div>
   </div>
 </footer>
 
 <script>
+/* =========================================================
+   LEGAL / LGPD / COOKIES 3.3
+========================================================= */
+const LEGAL_TEXTOS = {
+  termos: {
+    titulo: 'Termos de Uso',
+    html: `
+      <h4>1. Aceitação e finalidade</h4>
+      <p>O Sentinela Golpes é uma plataforma de caráter informativo, educativo, preventivo e corretivo. Ela auxilia na identificação antecipada de sinais e fatores de risco relacionados a golpes e fraudes e, diante de suspeita ou ocorrência, fornece orientações sobre providências voltadas à mitigação de danos, preservação de evidências e utilização de canais oficiais.</p>
+      <h4>2. Funcionalidades</h4>
+      <p>Podem ser disponibilizados consulta de CNPJ, análise de mensagens suspeitas, Simulador “É Golpe?”, Guia de Ação, conta e histórico, aquisição e uso de créditos e outras funcionalidades relacionadas à prevenção e resposta a fraudes.</p>
+      <h4>3. Natureza dos resultados</h4>
+      <p>Resultados, pontuações, classificações e alertas são indicativos. Não confirmam que pessoa, empresa, mensagem, operação, site ou conta seja fraudulenta ou legítima. O índice de risco não representa probabilidade estatística nem substitui confirmação por canais oficiais, perícia ou orientação profissional individualizada.</p>
+      <h4>4. Consulta de CNPJ</h4>
+      <p>A consulta utiliza informações cadastrais obtidas de fonte pública por serviço externo. CNPJ ativo ou dados cadastrais regulares não comprovam a legitimidade de uma negociação nem que o interlocutor represente efetivamente a empresa consultada.</p>
+      <h4>5. Análise de mensagens e simulador</h4>
+      <p>A análise de mensagens e o Simulador “É Golpe?” identificam sinais e combinações de risco com base nas informações fornecidas e nos mecanismos disponíveis. Podem ocorrer falsos positivos, falsos negativos e novas modalidades de fraude ainda não contempladas.</p>
+      <h4>6. Guia de Ação e atuação corretiva</h4>
+      <p>As orientações pós-suspeita ou pós-golpe têm caráter geral e buscam auxiliar na redução de danos e no encaminhamento aos canais competentes. Não garantem recuperação de valores, bloqueio de transações ou solução do caso e não substituem atendimento de instituição financeira, autoridade policial, órgão de defesa do consumidor ou profissional habilitado.</p>
+      <h4>7. Conta, credenciais e uso responsável</h4>
+      <p>O usuário é responsável pela confidencialidade de suas credenciais e deve fornecer somente dados necessários. É vedado tentar contornar autenticação, créditos, controles de acesso, limites de uso ou mecanismos de segurança.</p>
+      <h4>8. Créditos e pagamentos</h4>
+      <p>Funcionalidades pagas e respectivos preços são informados antes da contratação. Pix e cartão são processados pelo Mercado Pago. A aquisição de crédito dá acesso ao serviço correspondente e não representa garantia de identificação de fraude ou de segurança da operação analisada.</p>
+      <h4>9. Serviços de terceiros e disponibilidade</h4>
+      <p>O serviço depende de infraestrutura e provedores externos e pode sofrer indisponibilidades. Dados, APIs, meios de pagamento e links de terceiros estão sujeitos às condições e disponibilidade de seus respectivos responsáveis.</p>
+      <h4>10. Responsabilidade do usuário</h4>
+      <p>Antes de pagar, transferir valores, fornecer dados, assinar documentos ou instalar aplicativos, o usuário deve confirmar a solicitação por canal oficial independente. Resultados do Sentinela não devem ser usados isoladamente para imputar publicamente a terceiros a prática de crime ou fraude.</p>
+      <h4>11. Privacidade, propriedade intelectual e alterações</h4>
+      <p>O tratamento de dados é descrito na Política de Privacidade. Conteúdos e elementos originais da plataforma são protegidos pela legislação aplicável, ressalvados direitos de terceiros. Estes Termos podem ser atualizados para refletir mudanças legais, técnicas ou operacionais.</p>
+      <h4>12. Legislação aplicável e contato</h4>
+      <p>Aplicam-se as leis brasileiras, preservados os direitos legalmente assegurados ao consumidor e as regras de competência aplicáveis.</p>
+      <div class="legal-note">Contato: <a href="https://outlook.live.com/mail/0/deeplink/compose?to=fsantosdantas%40hotmail.com&subject=Contato%20-%20Sentinela%20Golpes&body=Ol%C3%A1%2C%20gostaria%20de%20entrar%20em%20contato%20com%20o%20Sentinela%20Golpes." target="_blank" rel="noopener noreferrer">fsantosdantas@hotmail.com</a> · WhatsApp: <a href="https://wa.me/5586998165410" target="_blank" rel="noopener noreferrer">(86) 99816-5410</a>.</div>`
+  },
+  privacidade: {
+    titulo: 'Política de Privacidade e Proteção de Dados',
+    html: `
+      <h4>1. Objetivo e escopo</h4>
+      <p>Esta Política explica como o Sentinela Golpes trata informações relacionadas ao cadastro, autenticação, consultas, análises, simulador, histórico, créditos, pagamentos, segurança e medição de uso da plataforma, observada a legislação brasileira aplicável, inclusive a LGPD.</p>
+      <h4>2. Dados que podem ser tratados</h4>
+      <ul><li>dados de conta, como nome e e-mail;</li><li>credenciais de autenticação e informações necessárias à sessão;</li><li>dados fornecidos voluntariamente nas consultas e análises;</li><li>respostas e resultados do simulador, como nível e pontuação de risco e quantidade de sinais;</li><li>histórico de uso, quando disponível;</li><li>dados operacionais de créditos e transações;</li><li>dados técnicos e estatísticos, como páginas e funcionalidades utilizadas, sessão, navegador, dispositivo, origem do acesso e localização aproximada.</li></ul>
+      <h4>3. Finalidades</h4>
+      <p>Os dados podem ser utilizados para prestar as funcionalidades solicitadas, administrar contas e créditos, apresentar histórico, processar e conciliar pagamentos, prevenir abuso e fraude, manter segurança, diagnosticar falhas, produzir estatísticas de uso, melhorar a plataforma, atender solicitações e cumprir obrigações legais ou exercer direitos.</p>
+      <h4>4. Minimização e conteúdo enviado</h4>
+      <p>Forneça apenas o necessário. Não envie senhas, códigos de autenticação, PINs, números completos de cartão, códigos de segurança, credenciais bancárias ou dados sensíveis desnecessários. Na análise de mensagens, recomenda-se remover dados pessoais que não sejam necessários à avaliação.</p>
+      <h4>5. Consulta de CNPJ e serviços externos</h4>
+      <p>O CNPJ informado pode ser encaminhado ao serviço externo necessário à consulta de dados públicos. A plataforma também utiliza prestadores de infraestrutura, hospedagem, banco de dados, autenticação, pagamento e medição, na medida necessária à operação.</p>
+      <h4>6. Google Analytics 4</h4>
+      <p>Com autorização do visitante, o Sentinela utiliza Google Analytics 4 para medir audiência e uso das funcionalidades. Podem ser registrados eventos como visualização de seções, início e conclusão do simulador, login, cadastro, consultas, análises e eventos de compra. O Sentinela não envia ao GA4 e-mail, CNPJ consultado, conteúdo integral da mensagem analisada, senha, token, código Pix ou dados de cartão.</p>
+      <h4>7. Cookies e preferências</h4>
+      <p>O armazenamento essencial é utilizado para funcionalidades necessárias, como autenticação e segurança. O armazenamento de Analytics permanece desativado por padrão até a escolha do visitante. A preferência pode ser alterada a qualquer momento em “Gerenciar Cookies” no rodapé.</p>
+      <h4>8. Pagamentos</h4>
+      <p>Pix e cartão são processados pelo Mercado Pago. O Sentinela não deve armazenar dados completos de cartão ou código de segurança. Informações operacionais da transação podem ser mantidas para confirmação do serviço, segurança, controle financeiro e exercício regular de direitos.</p>
+      <h4>9. Compartilhamento</h4>
+      <p>Dados podem ser tratados por prestadores essenciais e compartilhados quando necessário à prestação do serviço, ao cumprimento de obrigação legal, ordem de autoridade competente ou exercício regular de direitos. O Sentinela não comercializa dados pessoais dos usuários.</p>
+      <h4>10. Retenção e segurança</h4>
+      <p>Os dados são mantidos pelo período necessário às finalidades informadas, obrigações legais, segurança e exercício regular de direitos. São adotadas medidas técnicas e administrativas razoáveis, embora nenhum sistema conectado à internet possa garantir segurança absoluta.</p>
+      <h4>11. Direitos do titular</h4>
+      <p>O titular pode exercer, conforme aplicável, os direitos previstos na LGPD, incluindo confirmação de tratamento, acesso, correção, informações sobre compartilhamento, oposição e eliminação nas hipóteses legais. Poderá ser solicitada confirmação de identidade para proteção dos próprios dados.</p>
+      <h4>12. Crianças, terceiros e atualizações</h4>
+      <p>O serviço não é concebido especificamente para crianças. Links e serviços externos possuem práticas próprias de privacidade. Esta Política pode ser atualizada para refletir mudanças legais, técnicas ou operacionais.</p>
+      <h4>13. Canal de privacidade</h4>
+      <div class="legal-note">Solicitações relacionadas a privacidade e proteção de dados: <a href="https://outlook.live.com/mail/0/deeplink/compose?to=fsantosdantas%40hotmail.com&subject=Contato%20-%20Sentinela%20Golpes&body=Ol%C3%A1%2C%20gostaria%20de%20entrar%20em%20contato%20com%20o%20Sentinela%20Golpes." target="_blank" rel="noopener noreferrer">fsantosdantas@hotmail.com</a> · Telefone/WhatsApp: <a href="https://wa.me/5586998165410" target="_blank" rel="noopener noreferrer">(86) 99816-5410</a>.</div>`
+  },
+  aviso: {
+    titulo: 'Aviso Legal',
+    html: `
+      <h4>Informação, prevenção e orientação corretiva</h4>
+      <p>O Sentinela Golpes auxilia na prevenção de golpes e na orientação após suspeita ou ocorrência, com foco em identificação de sinais de risco, redução de danos, preservação de evidências e encaminhamento a canais oficiais.</p><p style="font-size:12px;color:var(--muted);margin-top:10px;">O e-mail abre no Outlook Web em uma nova aba, sem depender de aplicativo de e-mail instalado no computador.</p>
+      <h4>Sem garantia ou certificação</h4>
+      <p>Nenhuma análise, pontuação, alerta, consulta cadastral ou orientação constitui garantia de que uma operação seja segura, confirmação de fraude, certificação de legitimidade, perícia ou decisão de autoridade competente.</p>
+      <h4>Sem promessa de recuperação</h4>
+      <p>A atuação corretiva não significa que o Sentinela recuperará valores, cancelará transações, bloqueará contas, representará o usuário perante instituições ou garantirá resultado administrativo ou judicial.</p>
+      <h4>Confirmação por canais oficiais</h4>
+      <p>Em caso de dúvida, interrompa a operação e confirme a solicitação diretamente com a instituição ou pessoa envolvida usando um canal oficial obtido de forma independente. Em situação de golpe consumado, procure imediatamente as instituições e autoridades competentes conforme o caso.</p>
+      <h4>Atualização de procedimentos</h4>
+      <p>Prazos, regras, canais e procedimentos de bancos, órgãos públicos, autoridades e prestadores externos podem mudar. Verifique sempre a orientação vigente no canal oficial correspondente.</p>`
+  },
+  contato: {
+    titulo: 'Contato — Sentinela Golpes',
+    html: `
+      <h4>Fale com o Sentinela</h4>
+      <p>Para dúvidas, suporte, pagamentos, privacidade ou solicitações relacionadas a dados pessoais, utilize um dos canais abaixo.</p>
+      <p><strong>E-mail:</strong> <a href="https://outlook.live.com/mail/0/deeplink/compose?to=fsantosdantas%40hotmail.com&subject=Contato%20-%20Sentinela%20Golpes&body=Ol%C3%A1%2C%20gostaria%20de%20entrar%20em%20contato%20com%20o%20Sentinela%20Golpes." target="_blank" rel="noopener noreferrer">fsantosdantas@hotmail.com</a></p>
+      <p><strong>Telefone/WhatsApp:</strong> <a href="https://wa.me/5586998165410" target="_blank" rel="noopener noreferrer">(86) 99816-5410</a></p>`
+  }
+};
+function abrirLegal(tipo){
+  const item = LEGAL_TEXTOS[tipo] || LEGAL_TEXTOS.privacidade;
+  document.getElementById('legalTitle').textContent = item.titulo;
+  document.getElementById('legalContent').innerHTML = item.html;
+  document.getElementById('legalModal').classList.add('show');
+}
+function fecharLegal(){ document.getElementById('legalModal').classList.remove('show'); }
+document.getElementById('legalModal').addEventListener('click', e=>{ if(e.target.id === 'legalModal') fecharLegal(); });
+
+const SG_CONSENT_KEY = 'sg_cookie_consent_v1';
+function aplicarConsentimentoAnalytics(permitido){
+  try{
+    gtag('consent', 'update', {
+      analytics_storage: permitido ? 'granted' : 'denied',
+      ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied'
+    });
+  }catch(e){}
+}
+function gravarConsentimentoAnalytics(permitido){
+  try{ localStorage.setItem(SG_CONSENT_KEY, permitido ? 'granted' : 'denied'); }catch(e){}
+  aplicarConsentimentoAnalytics(permitido);
+  document.getElementById('cookieBanner').classList.remove('show');
+  document.getElementById('cookiePrefsModal').classList.remove('show');
+}
+function aceitarAnalytics(){ gravarConsentimentoAnalytics(true); }
+function rejeitarAnalytics(){ gravarConsentimentoAnalytics(false); }
+function abrirPreferenciasCookies(){
+  let pref = null; try{ pref = localStorage.getItem(SG_CONSENT_KEY); }catch(e){}
+  document.getElementById('analyticsConsentToggle').checked = pref === 'granted';
+  document.getElementById('cookiePrefsModal').classList.add('show');
+}
+function fecharPreferenciasCookies(){ document.getElementById('cookiePrefsModal').classList.remove('show'); }
+function salvarPreferenciasCookies(){ gravarConsentimentoAnalytics(document.getElementById('analyticsConsentToggle').checked); }
+document.getElementById('cookiePrefsModal').addEventListener('click', e=>{ if(e.target.id === 'cookiePrefsModal') fecharPreferenciasCookies(); });
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape'){ fecharLegal(); fecharPreferenciasCookies(); } });
+(function iniciarConsentimento(){
+  let pref = null; try{ pref = localStorage.getItem(SG_CONSENT_KEY); }catch(e){}
+  if(pref === 'granted') aplicarConsentimentoAnalytics(true);
+  else if(pref === 'denied') aplicarConsentimentoAnalytics(false);
+  else document.getElementById('cookieBanner').classList.add('show');
+})();
+
 /* =========================================================
    CONFIGURAÇÃO — troque pela URL real do seu backend hospedado
 ========================================================= */
@@ -1983,6 +2187,8 @@ function abrirAuthModal(modo){
   document.getElementById('authError').textContent = '';
   document.getElementById('authModalTitle').textContent = modo === 'login' ? 'Entrar' : 'Criar conta';
   document.getElementById('campoNome').style.display = modo === 'login' ? 'none' : 'block';
+  document.getElementById('authConsentRow').style.display = modo === 'login' ? 'none' : 'flex';
+  if(modo === 'cadastro') document.getElementById('authConsent').checked = false;
   document.getElementById('authSubmitBtn').textContent = modo === 'login' ? 'Entrar' : 'Criar conta';
   document.getElementById('authSwitch').innerHTML = modo === 'login'
     ? 'Não tem conta? <button onclick="alternarAuthModo()">Criar conta</button>'
@@ -1998,6 +2204,10 @@ async function submitAuth(){
   const nome = document.getElementById('authNome').value.trim();
   const errBox = document.getElementById('authError');
   errBox.textContent = '';
+  if(authMode === 'cadastro' && !document.getElementById('authConsent').checked){
+    errBox.textContent = 'Para criar a conta, leia e aceite os Termos de Uso e a Política de Privacidade.';
+    return;
+  }
   try{
     const rota = authMode === 'login' ? '/auth/login' : '/auth/registrar';
     const body = authMode === 'login' ? { email, senha } : { email, senha, nome };
