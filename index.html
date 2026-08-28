@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- Sentinela Golpes v3.3.5 — Atualização pontual MED e prazos -->
+  <!-- Sentinela Golpes v3.3.7 — CNPJ preventivo + ajustes finais de autenticação -->
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SC23YRGXZ"></script>
 <script>
@@ -207,6 +207,28 @@
   .data-cell{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fbfcfd;}
   .data-cell .k{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:700;}
   .data-cell .v{font-size:14.5px;margin-top:4px;font-weight:600;}
+
+  .cnpj-preventive{
+    margin-top:18px;
+    border:1.5px solid rgba(232,150,61,.45);
+    border-radius:14px;
+    padding:18px;
+    background:linear-gradient(135deg,#FFF9EF 0%,#FFFFFF 100%);
+  }
+  .cnpj-preventive-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;}
+  .cnpj-preventive-head .icon{font-size:22px;line-height:1;}
+  .cnpj-preventive-head h4{margin:0;font-size:16px;color:var(--navy);}
+  .cnpj-preventive-head p{margin:3px 0 0;color:var(--muted);font-size:12.8px;}
+  .cnpj-preventive-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:12px;}
+  @media(max-width:760px){.cnpj-preventive-grid{grid-template-columns:1fr;}}
+  .cnpj-preventive-card{background:#fff;border:1px solid var(--line);border-radius:11px;padding:14px;}
+  .cnpj-preventive-card .k{font-size:11px;color:var(--muted);font-weight:800;letter-spacing:.05em;text-transform:uppercase;}
+  .cnpj-preventive-card .v{font-size:14.5px;font-weight:700;color:var(--navy);margin-top:5px;}
+  .cnpj-preventive-card .note{font-size:12.5px;color:var(--muted);margin-top:6px;}
+  .cnpj-preventive-alert{margin-top:12px;border-radius:10px;padding:12px 14px;font-size:13px;font-weight:600;}
+  .cnpj-preventive-alert.neutral{background:#EEF1F4;color:var(--muted);}
+  .cnpj-preventive-alert.attention{background:var(--amber-bg);color:#7A4E12;}
+  .cnpj-preventive-alert.danger{background:var(--red-bg);color:var(--red);}
 
   .loading{display:none;align-items:center;gap:10px;color:var(--muted);font-size:14px;margin-top:14px;}
   .loading.show{display:flex;}
@@ -1359,7 +1381,7 @@
   <section class="view" id="view-cnpj">
     <div class="section-head" style="margin-top:0;">
       <h2>Consultar situação cadastral de um CNPJ</h2>
-      <p>Antes de pagar um boleto ou fazer um Pix para "a empresa", confirme se ela existe de fato, está ativa, e se a atividade declarada bate com o que foi anunciado. <strong>Custo: R$ 5,00 por consulta.</strong></p>
+      <p><strong>Não confira apenas se o CNPJ existe.</strong> Veja há quanto tempo a empresa foi aberta e se a atividade econômica (CNAE) registrada é compatível com o que estão oferecendo a você. <strong>Custo: R$ 5,00 por consulta.</strong></p>
     </div>
 
     <div class="panel">
@@ -1401,6 +1423,31 @@
           </div>
           <span class="badge" id="cnpjStatusBadge">—</span>
         </div>
+        <div class="cnpj-preventive">
+          <div class="cnpj-preventive-head">
+            <div class="icon">🔎</div>
+            <div>
+              <h4>Pontos preventivos do CNPJ</h4>
+              <p>Observe principalmente a atividade econômica e a data de abertura antes de pagar, contratar ou enviar documentos.</p>
+            </div>
+          </div>
+          <div class="cnpj-preventive-grid">
+            <div class="cnpj-preventive-card">
+              <div class="k">Atividade principal — CNAE</div>
+              <div class="v" id="cnpjAtividadePreventiva">—</div>
+              <div class="note">Compare esta atividade com o produto ou serviço que a empresa está oferecendo a você.</div>
+            </div>
+            <div class="cnpj-preventive-card">
+              <div class="k">Data de abertura</div>
+              <div class="v" id="cnpjDataAberturaPreventiva">—</div>
+              <div class="note">CNPJ muito recente merece verificações adicionais, mas a idade isoladamente não comprova fraude.</div>
+            </div>
+          </div>
+          <div class="cnpj-preventive-alert neutral" id="cnpjPreventiveAlert">
+            Esses dados são sinais preventivos e devem ser avaliados em conjunto com beneficiário do pagamento, canais oficiais e demais informações da negociação.
+          </div>
+        </div>
+
         <div class="data-grid">
           <div class="data-cell"><div class="k">Nome fantasia</div><div class="v" id="cnpjNomeFantasia">—</div></div>
           <div class="data-cell"><div class="k">Data de abertura</div><div class="v" id="cnpjDataAbertura">—</div></div>
@@ -1837,7 +1884,7 @@
       </div>
       <div class="field" style="margin-bottom:0;">
         <label>Senha</label>
-        <input type="text" id="authSenha" placeholder="mínimo 6 caracteres">
+        <input type="password" id="authSenha" placeholder="mínimo 10 caracteres">
       </div>
       <div class="consent-row" id="authConsentRow" style="display:none;gap:8px;align-items:flex-start;text-align:left;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:#F8FAFB;">
         <input type="checkbox" id="authConsent" style="margin-top:3px;">
@@ -2185,6 +2232,7 @@ function logout(){
 function abrirAuthModal(modo){
   authMode = modo;
   document.getElementById('authError').textContent = '';
+  document.getElementById('authError').classList.remove('show');
   document.getElementById('authModalTitle').textContent = modo === 'login' ? 'Entrar' : 'Criar conta';
   document.getElementById('campoNome').style.display = modo === 'login' ? 'none' : 'block';
   document.getElementById('authConsentRow').style.display = modo === 'login' ? 'none' : 'flex';
@@ -2203,11 +2251,16 @@ async function submitAuth(){
   const senha = document.getElementById('authSenha').value;
   const nome = document.getElementById('authNome').value.trim();
   const errBox = document.getElementById('authError');
+
   errBox.textContent = '';
+  errBox.classList.remove('show');
+
   if(authMode === 'cadastro' && !document.getElementById('authConsent').checked){
     errBox.textContent = 'Para criar a conta, leia e aceite os Termos de Uso e a Política de Privacidade.';
+    errBox.classList.add('show');
     return;
   }
+
   try{
     const rota = authMode === 'login' ? '/auth/login' : '/auth/registrar';
     const body = authMode === 'login' ? { email, senha } : { email, senha, nome };
@@ -2220,7 +2273,8 @@ async function submitAuth(){
     atualizarTelaCreditos();
     sgTrack(authMode === 'login' ? 'login' : 'sign_up', { method: 'email' });
   }catch(e){
-    errBox.textContent = e.message;
+    errBox.textContent = e.message || 'Não foi possível entrar. Verifique os dados e tente novamente.';
+    errBox.classList.add('show');
   }
 }
 
@@ -2288,6 +2342,18 @@ async function consultarCNPJ(){
 
 function formatCNPJ(digits){ return digits.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5"); }
 
+function calcularMesesCNPJ(dataStr){
+  if(!dataStr) return null;
+  const m = String(dataStr).trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+  let d;
+  if(m) d = new Date(Date.UTC(Number(m[1]), Number(m[2])-1, Number(m[3])));
+  else d = new Date(dataStr);
+  if(Number.isNaN(d.getTime())) return null;
+  const hoje = new Date();
+  let meses = (hoje.getUTCFullYear()-d.getUTCFullYear())*12 + (hoje.getUTCMonth()-d.getUTCMonth());
+  if(hoje.getUTCDate() < d.getUTCDate()) meses--;
+  return Math.max(0, meses);
+}
 function calcularIdadeCNPJ(dataStr){
   if(!dataStr) return null;
   const m = String(dataStr).trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -2351,8 +2417,42 @@ function renderCNPJResult(data, avaliacao, raw){
     }
   }
   const idade = calcularIdadeCNPJ(dataAberturaRaw);
-  document.getElementById('cnpjDataAbertura').textContent = idade ? `${dataAberturaFormatada} · ${idade}` : dataAberturaFormatada;
-  document.getElementById('cnpjAtividade').textContent = data.cnae_fiscal_descricao || '—';
+  const mesesCNPJ = calcularMesesCNPJ(dataAberturaRaw);
+  const dataAberturaExibida = idade ? `${dataAberturaFormatada} · ${idade}` : dataAberturaFormatada;
+
+  const cnaeCodigo = data.cnae_fiscal || data.cnae_principal || data.cnae || '';
+  const cnaeDescricao = data.cnae_fiscal_descricao || '—';
+  const atividadeExibida = cnaeCodigo ? `CNAE ${cnaeCodigo} — ${cnaeDescricao}` : cnaeDescricao;
+
+  document.getElementById('cnpjDataAbertura').textContent = dataAberturaExibida;
+  document.getElementById('cnpjAtividade').textContent = atividadeExibida;
+  document.getElementById('cnpjDataAberturaPreventiva').textContent = dataAberturaExibida;
+  document.getElementById('cnpjAtividadePreventiva').textContent = atividadeExibida;
+
+  const preventiveAlert = document.getElementById('cnpjPreventiveAlert');
+  const flagsPreventivas = (avaliacao && Array.isArray(avaliacao.flags)) ? avaliacao.flags : [];
+  const atividadeIncompativel = flagsPreventivas.some(f => {
+    const t = norm(f.title || '');
+    return t.includes('atividade') && (t.includes('nao bate') || t.includes('pode nao bater') || t.includes('incompativ'));
+  });
+
+  let alertaClasse = 'neutral';
+  let alertaTexto = 'Confira se a atividade econômica acima corresponde ao que está sendo oferecido e valide o beneficiário do pagamento por canal oficial independente.';
+
+  if(atividadeIncompativel){
+    alertaClasse = 'danger';
+    alertaTexto = '⚠️ POSSÍVEL INCOMPATIBILIDADE DE ATIVIDADE: o CNAE cadastrado pode não corresponder ao serviço ou produto informado. Confirme a empresa por canais oficiais antes de pagar, enviar documentos ou fornecer dados pessoais.';
+  } else if(mesesCNPJ !== null && mesesCNPJ < 6){
+    alertaClasse = 'attention';
+    alertaTexto = '⚠️ CNPJ MUITO RECENTE: aberto há menos de 6 meses. Faça verificações adicionais sobre atividade, beneficiário, endereço e canais oficiais antes de prosseguir. A abertura recente, isoladamente, não comprova fraude.';
+  } else if(mesesCNPJ !== null && mesesCNPJ < 12){
+    alertaClasse = 'attention';
+    alertaTexto = '⚠️ CNPJ RECENTE: aberto há menos de 12 meses. Confirme cuidadosamente a atividade econômica, o beneficiário e os canais oficiais antes de prosseguir. A idade do CNPJ, isoladamente, não comprova fraude.';
+  }
+
+  preventiveAlert.className = `cnpj-preventive-alert ${alertaClasse}`;
+  preventiveAlert.textContent = alertaTexto;
+
   document.getElementById('cnpjNatureza').textContent = data.natureza_juridica || '—';
   document.getElementById('cnpjMunicipio').textContent = (data.municipio ? data.municipio+' / '+data.uf : '—');
   document.getElementById('cnpjPorte').textContent = data.porte || '—';
