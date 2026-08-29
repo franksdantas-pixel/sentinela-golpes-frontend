@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- Sentinela Golpes v3.4.1 — otimização consolidada mobile + computador -->
+  <!-- Sentinela Golpes v3.4.2 — conversão e venda de créditos -->
   <!-- Google Analytics: fila leve; biblioteca carregada somente após consentimento/interação -->
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -288,6 +288,14 @@
   .linklike{background:none;border:none;color:var(--muted);font-size:13px;font-weight:600;text-decoration:underline;}
 
   /* guia de ação */
+  .guide-paywall{max-width:760px;margin:18px auto 0;background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 12px 34px rgba(15,27,45,.07);text-align:center;}
+  .guide-paywall .guide-lock{width:54px;height:54px;margin:0 auto 13px;border-radius:16px;background:#eaf8f3;display:grid;place-items:center;font-size:25px;}
+  .guide-paywall h2{font-size:26px;color:var(--navy);margin-bottom:8px;}
+  .guide-paywall p{max-width:590px;margin:0 auto;color:var(--muted);font-size:14px;line-height:1.6;}
+  .guide-paywall .guide-price{display:inline-flex;margin:16px 0 4px;padding:7px 12px;border-radius:999px;background:#eefaf6;color:#176b58;font-weight:800;font-size:13px;}
+  .guide-paywall .guide-pay-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:17px;}
+  .guide-paywall .guide-note{font-size:11.5px;color:var(--muted);margin-top:12px;}
+
   .steps{counter-reset:step;display:flex;flex-direction:column;gap:0;}
   .step{display:grid;grid-template-columns:36px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);}
   .step:last-child{border-bottom:none;}
@@ -1208,6 +1216,7 @@
 
 #view-creditos .credit-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
 #view-creditos .qtd-opt.credit-plan{position:relative;display:block;width:100%;text-align:left;padding:16px;border-radius:13px;background:#fff;border:1.5px solid var(--line);min-height:122px;transition:.18s ease;box-shadow:0 5px 16px rgba(16,32,59,.035);}
+#view-creditos .qtd-opt.credit-plan.featured::before{content:"Mais escolhido";position:absolute;top:-11px;left:16px;background:var(--teal);color:#062c25;font-size:10px;font-weight:900;padding:3px 9px;border-radius:999px;letter-spacing:.03em;}
 #view-creditos .qtd-opt.credit-plan:hover{transform:translateY(-1px);border-color:#a7dcd0;box-shadow:0 10px 24px rgba(16,32,59,.07);}
 #view-creditos .qtd-opt.credit-plan.sel{border-color:var(--teal);background:linear-gradient(180deg,#f3fcf9,#fff);box-shadow:0 0 0 2px rgba(18,165,148,.08),0 10px 24px rgba(16,32,59,.06);color:var(--navy);}
 #view-creditos .plan-check{position:absolute;right:12px;top:12px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:1px solid #d6e1e4;color:transparent;background:#fff;font-size:12px;font-weight:900;}
@@ -1334,6 +1343,28 @@
   .switch{position:relative;width:44px;height:24px;flex:none;}.switch input{opacity:0;width:0;height:0;}.slider{position:absolute;inset:0;background:#C8D0D8;border-radius:999px;transition:.2s;}.slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}.switch input:checked + .slider{background:var(--teal);}.switch input:checked + .slider:before{transform:translateX(20px);}.switch input:disabled + .slider{opacity:.55;cursor:not-allowed;}
   @media(max-width:640px){.cookie-banner{left:10px;right:10px;bottom:10px}.legal-box{max-height:92vh}.legal-head,.legal-content{padding:16px}}
 
+  /* ---------- CONVERSÃO / VENDA DE CRÉDITOS ---------- */
+  .compact-head{margin:30px 0 14px;}
+  .service-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  .service-card{appearance:none;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;color:var(--ink);display:flex;flex-direction:column;gap:8px;min-height:190px;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;}
+  .service-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(15,27,45,.08);border-color:rgba(8,124,114,.35);}
+  .service-card .service-tag{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--teal);}
+  .service-card strong{font-size:19px;color:var(--navy);}
+  .service-card>span:not(.service-tag){font-size:13.5px;color:var(--muted);line-height:1.55;flex:1;}
+  .service-card b{font-size:14px;color:var(--teal);}
+  .service-card.free{background:#f4fbf9;border-color:rgba(8,124,114,.22);}
+  .pattern-cta{margin:22px 0 28px;background:var(--navy);color:#fff;border-radius:var(--radius);padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px;}
+  .pattern-cta strong{font-size:18px;} .pattern-cta p{margin:5px 0 0;color:#cbd8e4;font-size:13.5px;}
+  .pattern-cta-actions{display:flex;gap:10px;flex-wrap:wrap;flex:none;}
+  .btn-secondary-light{background:#fff;color:var(--navy);border:1px solid var(--line);}
+  .btn-secondary-light:hover{box-shadow:0 6px 18px rgba(15,27,45,.10);}
+  .auth-credit-panel{display:flex;align-items:center;justify-content:space-between;gap:24px;}
+  .auth-credit-panel h3{font-size:19px;margin:0 0 7px;} .auth-credit-panel p{color:var(--muted);font-size:14px;margin:0;}
+  .auth-credit-note{margin-top:10px;font-size:12.5px;font-weight:700;color:var(--teal);}
+  .auth-credit-actions{display:flex;gap:10px;flex-wrap:wrap;flex:none;}
+  .credit-chip-btn{font-family:inherit;cursor:pointer;}
+  @media(max-width:820px){.service-cards{grid-template-columns:1fr}.pattern-cta,.auth-credit-panel{align-items:stretch;flex-direction:column}.pattern-cta-actions,.auth-credit-actions{width:100%}.pattern-cta-actions .btn,.auth-credit-actions .btn{justify-content:center;flex:1}}
+
 </style>
 </head>
 <body>
@@ -1353,7 +1384,7 @@
       <button data-view="mensagem">Analisar Mensagem</button>
       <button data-view="simulador">Simulador "É Golpe?"</button>
       <button data-view="guia">Guia de Ação</button>
-      <button data-view="creditos">Créditos</button>
+      <button data-view="creditos">Comprar créditos</button>
     </nav>
     <div class="account-box" id="accountBox"></div>
   </div>
@@ -1374,8 +1405,8 @@
         <p class="lead">Recebeu uma mensagem estranha, uma proposta “boa demais” ou vai pagar para uma empresa que não conhece? Faça uma triagem rápida antes de transferir, assinar ou fornecer dados.</p>
         <div class="hero-actions">
           <button class="btn btn-primary" onclick="goTo('simulador')">Testar grátis: “É Golpe?” →</button>
-          <button class="btn btn-ghost" onclick="goTo('mensagem')">Análise aprofundada</button>
-          <button class="btn btn-ghost" onclick="goTo('cnpj')">Verificar CNPJ</button>
+          <button class="btn btn-ghost" onclick="goTo('mensagem')">Analisar mensagem — R$ 5</button>
+          <button class="btn btn-ghost" onclick="goTo('cnpj')">Consultar CNPJ — R$ 5</button>
         </div>
         <div class="hero-trust">
           <span>✓ Simulador gratuito e sem login</span>
@@ -1400,6 +1431,62 @@
       <button class="btn btn-primary" onclick="goTo('simulador')">Fazer teste gratuito →</button>
     </div>
 
+    <div class="service-first" aria-label="Ferramentas do Sentinela Golpes">
+      <div class="section-head compact-head">
+        <h2>Antes de pagar, transferir ou responder, verifique.</h2>
+        <p>Escolha a ferramenta de acordo com a situação. O preço é informado antes de qualquer uso pago.</p>
+      </div>
+      <div class="service-cards">
+        <button class="service-card" type="button" onclick="goTo('cnpj')">
+          <span class="service-tag">VERIFICAÇÃO</span>
+          <strong>Consultar CNPJ</strong>
+          <span>Confira situação cadastral, data de abertura, CNAE e outros pontos preventivos.</span>
+          <b>R$ 5 por consulta →</b>
+        </button>
+        <button class="service-card" type="button" onclick="goTo('mensagem')">
+          <span class="service-tag">ANÁLISE</span>
+          <strong>Analisar mensagem</strong>
+          <span>Procure sinais de urgência, pressão, pedido de pagamento, links suspeitos e outros padrões.</span>
+          <b>R$ 5 por análise →</b>
+        </button>
+        <button class="service-card" type="button" onclick="goTo('guia')">
+          <span class="service-tag">RESPOSTA RÁPIDA</span>
+          <strong>Guia de Ação</strong>
+          <span>Veja um checklist organizado do que fazer após um golpe ou suspeita de fraude.</span>
+          <b>R$ 5 por acesso →</b>
+        </button>
+        <button class="service-card free" type="button" onclick="goTo('simulador')">
+          <span class="service-tag">GRÁTIS</span>
+          <strong>Não sabe por onde começar?</strong>
+          <span>Faça uma triagem rápida sem criar conta e sem consumir créditos.</span>
+          <b>Testar grátis →</b>
+        </button>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">Grátis</div><div class="lbl">Simulador “É Golpe?” — sem login e sem consumir créditos</div></div>
+      <div class="stat"><div class="num">R$ 5</div><div class="lbl">Consulta de CNPJ, análise aprofundada de mensagem ou acesso ao Guia de Ação</div></div>
+      <div class="stat"><div class="num">Rápido</div><div class="lbl">Triagem objetiva para decidir com mais cautela antes de agir</div></div>
+    </div>
+
+    <div class="section-head">
+      <h2>Reconheça o padrão antes que o golpe avance</h2>
+      <p>Conheça abordagens recorrentes usadas para gerar urgência, confiança artificial e induzir pagamentos ou entrega de dados.</p>
+    </div>
+    <div class="scam-grid" id="scamGrid"></div>
+
+    <div class="pattern-cta" aria-label="Acesso às ferramentas do Sentinela">
+      <div>
+        <strong>Está diante de uma situação parecida?</strong>
+        <p>Faça uma verificação preventiva antes de pagar, transferir dinheiro ou responder à abordagem.</p>
+      </div>
+      <div class="pattern-cta-actions">
+        <button class="btn btn-primary" onclick="goTo('mensagem')">Analisar mensagem — R$ 5</button>
+        <button class="btn btn-secondary-light" onclick="goTo('cnpj')">Consultar CNPJ — R$ 5</button>
+      </div>
+    </div>
+
     <div class="content-highlight" aria-label="Livro e conteúdos em destaque">
       <div class="content-highlight-top">
         <div class="book-feature">
@@ -1419,17 +1506,7 @@
       </div>
     </div>
 
-    <div class="stat-row">
-      <div class="stat"><div class="num">Grátis</div><div class="lbl">Simulador “É Golpe?” — sem login e sem consumir créditos</div></div>
-      <div class="stat"><div class="num">R$ 5</div><div class="lbl">Consulta de CNPJ ou análise aprofundada de mensagem</div></div>
-      <div class="stat"><div class="num">Rápido</div><div class="lbl">Triagem objetiva para decidir com mais cautela antes de agir</div></div>
-    </div>
 
-    <div class="section-head">
-      <h2>Reconheça o padrão antes que o golpe avance</h2>
-      <p>Conheça abordagens recorrentes usadas para gerar urgência, confiança artificial e induzir pagamentos ou entrega de dados.</p>
-    </div>
-    <div class="scam-grid" id="scamGrid"></div>
   </section>
 
   <!-- ======================= CONSULTA CNPJ ======================= -->
@@ -1628,186 +1705,16 @@
   
 <!-- ======================= GUIA DE AÇÃO ======================= -->
   <section class="view" id="view-guia">
-    <div class="guide-hero">
-      <div>
-        <span class="guide-kicker">🛡️ Guia de resposta rápida</span>
-        <h2>Caí no golpe (ou desconfio que caí). O que fazer agora?</h2>
-        <p>Velocidade é o fator mais importante nas primeiras horas. Siga primeiro as ações imediatas e depois consulte a orientação específica para o que aconteceu.</p>
-      </div>
-      <div class="guide-disclaimer">
-        <div class="ico">🛡</div>
-        <div>
-          <strong>Este guia é informativo e educativo.</strong>
-          <span>Não substitui orientação jurídica, contábil ou financeira profissional.</span>
-        </div>
-      </div>
+    <div id="guiaPaywall" class="guide-paywall">
+      <div class="guide-lock">🛡️</div>
+      <h2>Guia de Ação</h2>
+      <p>Orientações organizadas para quem caiu em um golpe ou suspeita que caiu, incluindo Pix, dados e senhas, acesso remoto, consignado/portabilidade e canais de denúncia.</p>
+      <div class="guide-price">1 crédito • equivalente a R$ 5,00 no acesso avulso</div>
+      <div class="guide-pay-actions" id="guiaPayActions"></div>
+      <div class="guide-note">O crédito só é descontado quando você confirmar o acesso ao guia.</div>
+      <div class="error-box" id="guiaError" style="margin-top:14px;text-align:left;"></div>
     </div>
-
-    <div class="guide-tabs">
-      <a class="guide-tab primary" href="#guia-imediato">⚡ Ação imediata</a>
-      <a class="guide-tab" href="#guia-pix">⇄ Fiz Pix / transferência</a>
-      <a class="guide-tab" href="#guia-senha">🔒 Passei dados / senha</a>
-      <a class="guide-tab" href="#guia-remoto">💻 Instalei acesso remoto</a>
-      <a class="guide-tab" href="#guia-consignado">🏦 Consignado / portabilidade</a>
-      <a class="guide-tab" href="#guia-denunciar">↗ Onde denunciar</a>
-    </div>
-
-    <div class="guide-layout" id="guia-imediato">
-      <div class="guide-card">
-        <div class="guide-card-head">
-          <h3>Ação imediata — todos os casos</h3>
-          <span>Priorize o que pode reduzir o prejuízo</span>
-        </div>
-        <div class="guide-action-list">
-          <div class="guide-action">
-            <div class="guide-num">1</div><div class="guide-icon">🏦</div>
-            <div><h3 class="subheading">Acione o MED (Mecanismo Especial de Devolução) no app do seu banco</h3>
-              <p>Procure "Fui vítima de golpe" ou "Solicitar MED" no app ou canal oficial do seu banco. O pedido de devolução pelo MED pode ser registrado em até 80 dias da data do Pix. Em caso de golpe, fraude ou crime, as instituições avaliam o caso em até 7 dias corridos e, comprovada a fraude, a devolução ocorre em até 96 horas após a avaliação, integral ou parcialmente, se houver recursos disponíveis.</p></div>
-            <span class="guide-time">Imediato</span>
-          </div>
-          <div class="guide-action">
-            <div class="guide-num">2</div><div class="guide-icon">📄</div>
-            <div><h3 class="subheading">Registre um Boletim de Ocorrência digital imediatamente</h3>
-              <p>Tenha em mãos prints da conversa, comprovante e dados da chave Pix recebedora.</p></div>
-            <span class="guide-time">Imediato</span>
-          </div>
-          <div class="guide-action">
-            <div class="guide-num">3</div><div class="guide-icon">📣</div>
-            <div><h3 class="subheading">Formalize a reclamação em consumidor.gov.br e no Banco Central</h3>
-              <p>Registre em <strong>consumidor.gov.br</strong> e abra manifestação no <strong>Banco Central (Registrato/RDR)</strong>.</p></div>
-            <span class="guide-time warn">Empresa responde em até 10 dias</span>
-          </div>
-          <div class="guide-action">
-            <div class="guide-num">4</div><div class="guide-icon">🛡</div>
-            <div><h3 class="subheading">Peça o bloqueio preventivo da chave Pix golpista</h3>
-              <p>Peça ao seu banco que solicite ao banco recebedor o bloqueio cautelar dos valores ainda disponíveis.</p></div>
-            <span class="guide-time warn">Empresa responde em até 10 dias</span>
-          </div>
-          <div class="guide-action">
-            <div class="guide-num">5</div><div class="guide-icon">⚖️</div>
-            <div><h3 class="subheading">Avalie entrar com ação nos Juizados Especiais (sem advogado)</h3>
-              <p>Para causas de até 20 salários mínimos, a <strong>atermação online</strong> pode ser feita direto no site do Tribunal de Justiça do seu estado.</p></div>
-            <span class="guide-time">Se necessário</span>
-          </div>
-          <div class="guide-action">
-            <div class="guide-num">6</div><div class="guide-icon">🔐</div>
-            <div><h3 class="subheading">Proteja o que ainda não foi comprometido</h3>
-              <p>Desinstale apps de acesso remoto, troque senhas e ative autenticação em duas etapas.</p></div>
-            <span class="guide-time">Imediato</span>
-          </div>
-        </div>
-      </div>
-
-      <aside>
-        <div class="guide-danger">
-          <h3>🚨 Se o golpe ainda está em andamento</h3>
-          <ul>
-            <li>Não realize novos pagamentos ou transferências.</li>
-            <li>Não instale aplicativos nem conceda acesso remoto.</li>
-            <li>Não compartilhe senhas, códigos, tokens ou dados pessoais.</li>
-            <li>Encerre o contato e procure o banco ou a instituição por um canal oficial obtido por você.</li>
-          </ul>
-          <div class="emergency">Em caso de ameaça ou coação, procure imediatamente a autoridade policial competente.</div>
-        </div>
-        <div class="guide-tip">
-          <strong>Dica Sentinela</strong>
-          Em dúvida? Confirme sempre diretamente com a instituição financeira, órgão público ou empresa usando site, aplicativo ou telefone oficial encontrado por você.
-        </div>
-      </aside>
-    </div>
-
-    <div class="guide-cases-title">
-      <h3>O que fazer conforme o ocorrido</h3>
-      <p>Use estas orientações como checklist complementar às ações imediatas acima.</p>
-    </div>
-
-    <div class="guide-cases">
-      <div class="guide-case" id="guia-pix">
-        <div class="case-top"><div class="case-ico">⇄</div><h3 class="subheading">Se fez Pix ou transferência</h3></div>
-        <ul>
-          <li>Acione o banco imediatamente e solicite as medidas cabíveis, inclusive MED quando aplicável.</li>
-          <li>Peça o bloqueio preventivo dos valores ainda disponíveis.</li>
-          <li>Guarde comprovantes, chave Pix, nomes e dados da conta recebedora.</li>
-        </ul>
-      </div>
-
-      <div class="guide-case" id="guia-senha">
-        <div class="case-top"><div class="case-ico">🔒</div><h3 class="subheading">Se passou senha, código ou dados</h3></div>
-        <ul>
-          <li>Troque imediatamente as senhas dos serviços afetados.</li>
-          <li>Ative autenticação em duas etapas sempre que disponível.</li>
-          <li>Avise a instituição envolvida e monitore movimentações e acessos.</li>
-        </ul>
-      </div>
-
-      <div class="guide-case" id="guia-remoto">
-        <div class="case-top"><div class="case-ico">💻</div><h3 class="subheading">Se instalou acesso remoto</h3></div>
-        <ul>
-          <li>Desinstale o aplicativo de acesso remoto.</li>
-          <li>Troque senhas, preferencialmente a partir de outro dispositivo confiável.</li>
-          <li>Avise seu banco e revise transações, autorizações e dispositivos conectados.</li>
-        </ul>
-      </div>
-
-      <div class="guide-case">
-        <div class="case-top"><div class="case-ico">📄</div><h3 class="subheading">Se enviou documentos ou dados pessoais</h3></div>
-        <ul>
-          <li>Guarde as provas do envio e do contato.</li>
-          <li>Monitore uso indevido de seus dados e novas tentativas de fraude.</li>
-          <li>Registre ocorrência se houver indício de uso indevido ou prejuízo.</li>
-        </ul>
-      </div>
-
-      <div class="guide-case">
-        <div class="case-top"><div class="case-ico">💬</div><h3 class="subheading">Se teve WhatsApp clonado ou perfil falso</h3></div>
-        <ul>
-          <li>Avise seus contatos por outro canal.</li>
-          <li>Tente recuperar e proteger a conta, ativando verificação em duas etapas.</li>
-          <li>Peça que ninguém faça pagamentos com base em mensagens suspeitas.</li>
-        </ul>
-      </div>
-
-      <div class="guide-case" id="guia-consignado">
-        <div class="case-top"><div class="case-ico">🏦</div><h3 class="subheading">Se foi golpe de consignado ou portabilidade</h3></div>
-        <ul>
-          <li>Contate diretamente o banco envolvido e registre a contestação.</li>
-          <li>Guarde propostas, contratos, prints, gravações e comprovantes.</li>
-          <li>Formalize reclamações e, se necessário, avalie a via judicial.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="guide-links-title" id="guia-denunciar">
-      <h3>Onde denunciar — links diretos</h3>
-      <p>Os mesmos canais oficiais já disponíveis no Sentinela, agora organizados para acesso rápido.</p>
-    </div>
-
-    <div class="guide-links-grid">
-      <a class="link-card" href="https://www.bcb.gov.br/cidadaniafinanceira/registrato" target="_blank" rel="noopener">
-        <div><div class="t">Banco Central — Registrato / RDR</div><div class="d">Consulta e registro de reclamação sobre a instituição financeira e a conta recebedora.</div></div><div class="arrow">↗</div>
-      </a>
-      <a class="link-card" href="https://www.consumidor.gov.br" target="_blank" rel="noopener">
-        <div><div class="t">consumidor.gov.br</div><div class="d">Reclame diretamente com bancos e empresas, com prazo de resposta.</div></div><div class="arrow">↗</div>
-      </a>
-      <a class="link-card" href="https://delegaciavirtual.sinesp.gov.br/portal/" target="_blank" rel="noopener">
-        <div><div class="t">Boletim de Ocorrência digital</div><div class="d">Delegacia Virtual (atende 12 estados). Se o seu não constar, busque "delegacia eletrônica" + seu estado.</div></div><div class="arrow">↗</div>
-      </a>
-      <a class="link-card" href="https://www.cnj.jus.br/programas-e-acoes/juizados-especiais/" target="_blank" rel="noopener">
-        <div><div class="t">Juizados Especiais / Atermação online</div><div class="d">Página do CNJ. Busque o Tribunal de Justiça do seu estado + "atermação online".</div></div><div class="arrow">↗</div>
-      </a>
-    </div>
-
-    <div class="guide-evidence">
-      <div class="doc">📑</div>
-      <div>
-        <strong>Guarde todas as provas</strong>
-        <span>Preserve prints, comprovantes, números de telefone, links, anúncios, documentos, contratos, nomes utilizados na abordagem e qualquer registro de pagamento ou comunicação.</span>
-      </div>
-    </div>
-
-    <div class="guide-bottom-note">
-      <strong>Cada minuto conta.</strong> Quanto mais rápido você interromper a fraude, avisar as instituições envolvidas e preservar as provas, maiores são as chances de reduzir prejuízos.
-    </div>
+    <div id="guiaConteudo"></div>
   </section>
 
   
@@ -1816,8 +1723,8 @@
     <div class="credits-hero">
       <div class="credits-intro">
         <span class="credits-kicker">💳 Créditos Sentinela</span>
-        <h2>Compre somente o que pretende usar.</h2>
-        <p>Use créditos para consultar CNPJ ou fazer uma análise aprofundada de mensagem suspeita. O Simulador “É Golpe?” continua gratuito e não consome créditos.</p>
+        <h2>R$ 5 por análise. Compre somente o que precisar.</h2>
+        <p><strong>1 crédito permite 1 consulta de CNPJ, 1 análise aprofundada de mensagem ou 1 acesso ao Guia de Ação.</strong> O Simulador “É Golpe?” continua gratuito e não consome créditos.</p>
         <div class="credits-points">
           <span class="credits-point">✓ R$ 5,00 por crédito</span>
           <span class="credits-point">✓ Pix ou cartão</span>
@@ -1831,8 +1738,16 @@
       </div>
     </div>
 
-    <div class="panel" id="loggedOutCreditsMsg" style="display:none;">
-      <p style="color:var(--muted);font-size:14px;">Você precisa <button class="linklike" onclick="abrirAuthModal('login')" style="color:var(--teal);">entrar ou criar uma conta</button> antes de comprar créditos.</p>
+    <div class="panel auth-credit-panel" id="loggedOutCreditsMsg" style="display:none;">
+      <div>
+        <h3>Para comprar créditos, entre ou crie sua conta</h3>
+        <p>Os créditos ficam vinculados à sua conta e são liberados após a confirmação do pagamento.</p>
+        <div class="auth-credit-note">R$ 5 no acesso avulso • 1 crédito = 1 consulta de CNPJ, 1 análise de mensagem ou 1 acesso ao Guia de Ação</div>
+      </div>
+      <div class="auth-credit-actions">
+        <button class="btn btn-primary" onclick="abrirAuthModal('login','comprar créditos')">Entrar</button>
+        <button class="btn btn-secondary-light" onclick="abrirAuthModal('cadastro','comprar créditos')">Criar conta</button>
+      </div>
     </div>
 
     <div class="panel purchase-panel" id="loggedInCredits" style="display:none;">
@@ -1841,12 +1756,12 @@
           <div class="balance-label">Seu saldo atual</div>
           <div class="balance-value" id="saldoCreditos">0 créditos</div>
         </div>
-        <div class="balance-help">✓ 1 crédito = 1 consulta de CNPJ ou 1 análise de mensagem</div>
+        <div class="balance-help">✓ 1 crédito = CNPJ, mensagem ou Guia de Ação</div>
       </div>
 
       <div class="purchase-body">
         <h3 class="purchase-title">Escolha a quantidade de créditos</h3>
-        <p class="purchase-sub">O valor unitário permanece R$ 5,00 em todas as opções.</p>
+        <p class="purchase-sub">Quanto mais créditos você compra, menor o valor por análise.</p>
 
         <div class="credit-plans qtd-opts" id="qtdOpts">
           <button class="qtd-opt credit-plan sel" data-qtd="1" onclick="selecionarQtd(1)" type="button">
@@ -1856,19 +1771,19 @@
             <div class="plan-desc">Ideal para uma verificação pontual.</div>
             <div class="plan-unit">R$ 5,00 por crédito</div>
           </button>
-          <button class="qtd-opt credit-plan" data-qtd="5" onclick="selecionarQtd(5)" type="button">
+          <button class="qtd-opt credit-plan featured" data-qtd="5" onclick="selecionarQtd(5)" type="button">
             <span class="plan-check">✓</span>
             <div class="plan-qty">5 créditos</div>
-            <div class="plan-price">R$ 25,00</div>
-            <div class="plan-desc">Para várias consultas e análises.</div>
-            <div class="plan-unit">R$ 5,00 por crédito</div>
+            <div class="plan-price">R$ 20,00</div>
+            <div class="plan-desc">Para várias consultas e análises. <strong>Economize 20%.</strong></div>
+            <div class="plan-unit">R$ 4,00 por crédito</div>
           </button>
           <button class="qtd-opt credit-plan" data-qtd="10" onclick="selecionarQtd(10)" type="button">
             <span class="plan-check">✓</span>
             <div class="plan-qty">10 créditos</div>
-            <div class="plan-price">R$ 50,00</div>
-            <div class="plan-desc">Para uso mais frequente do Sentinela.</div>
-            <div class="plan-unit">R$ 5,00 por crédito</div>
+            <div class="plan-price">R$ 35,00</div>
+            <div class="plan-desc">Para uso mais frequente do Sentinela. <strong>Economize 30%.</strong></div>
+            <div class="plan-unit">R$ 3,50 por crédito</div>
           </button>
         </div>
 
@@ -2169,12 +2084,18 @@ function sgTrack(eventName, params = {}){
   }
 }
 
+function sgValorPacote(qtd){
+  const q = Number(qtd || 1);
+  return ({1:5, 5:20, 10:35})[q] || 5;
+}
+
 function sgCreditItems(qtd){
+  const q = Number(qtd || 1);
   return [{
     item_id: 'credito_sentinela',
     item_name: 'Crédito Sentinela',
-    price: 5,
-    quantity: Number(qtd || 1)
+    price: Number((sgValorPacote(q) / q).toFixed(2)),
+    quantity: q
   }];
 }
 
@@ -2187,7 +2108,7 @@ function sgTrackPurchaseOnce({ transactionId, value, quantity, paymentType }){
   }catch(e){}
   sgTrack('purchase', {
     transaction_id: String(transactionId),
-    value: Number(value || (Number(quantity || 1) * 5)),
+    value: Number(value || sgValorPacote(quantity)),
     currency: 'BRL',
     payment_type: paymentType || 'unknown',
     items: sgCreditItems(quantity)
@@ -2217,6 +2138,7 @@ function goTo(view){
   document.querySelectorAll('#mainTabs button').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
   window.scrollTo({top:0,behavior:'smooth'});
   if(view === 'creditos') atualizarTelaCreditos();
+  if(view === 'guia') atualizarTelaGuia();
 }
 document.getElementById('mainTabs').addEventListener('click', e=>{
   const btn = e.target.closest('button[data-view]');
@@ -2264,11 +2186,16 @@ async function carregarSessao(){
   renderAccountBox();
 }
 
+function formatarCreditos(qtd){
+  const n = Number(qtd) || 0;
+  return `${n} ${n === 1 ? 'crédito' : 'créditos'}`;
+}
+
 function renderAccountBox(){
   const box = document.getElementById('accountBox');
   if(currentUser){
     box.innerHTML = `
-      <span class="credit-chip">${currentUser.creditos} crédito(s)</span>
+      <button class="credit-chip credit-chip-btn" type="button" onclick="goTo('creditos')" title="Comprar créditos">${formatarCreditos(currentUser.creditos)}</button>
       <button class="btn btn-ghost" style="padding:8px 14px;" onclick="logout()">Sair</button>`;
   } else {
     box.innerHTML = `<button class="btn btn-primary" style="padding:8px 16px;" onclick="abrirAuthModal('login')">Entrar / Criar conta</button>`;
@@ -2277,6 +2204,8 @@ function renderAccountBox(){
 
 function logout(){
   authToken = null; currentUser = null;
+  guiaLiberadoNestaSessao = false;
+  const guiaConteudo = document.getElementById('guiaConteudo'); if(guiaConteudo) guiaConteudo.innerHTML = '';
   localStorage.removeItem('sg_token');
   renderAccountBox();
   atualizarTelaCreditos();
@@ -2285,11 +2214,11 @@ function logout(){
 /* =========================================================
    MODAL DE LOGIN / CADASTRO
 ========================================================= */
-function abrirAuthModal(modo){
+function abrirAuthModal(modo, contexto=''){
   authMode = modo;
   document.getElementById('authError').textContent = '';
   document.getElementById('authError').classList.remove('show');
-  document.getElementById('authModalTitle').textContent = modo === 'login' ? 'Entrar' : 'Criar conta';
+  document.getElementById('authModalTitle').textContent = contexto ? (modo === 'login' ? `Entre para ${contexto}` : `Crie sua conta para ${contexto}`) : (modo === 'login' ? 'Entrar' : 'Criar conta');
   document.getElementById('campoNome').style.display = modo === 'login' ? 'none' : 'block';
   document.getElementById('authConsentRow').style.display = modo === 'login' ? 'none' : 'flex';
   if(modo === 'cadastro') document.getElementById('authConsent').checked = false;
@@ -2334,10 +2263,57 @@ async function submitAuth(){
     fecharAuthModal();
     renderAccountBox();
     atualizarTelaCreditos();
+    if(document.getElementById('view-guia')?.classList.contains('active')) atualizarTelaGuia();
     sgTrack(authMode === 'login' ? 'login' : 'sign_up', { method: 'email' });
   }catch(e){
     errBox.textContent = e.message || 'Não foi possível entrar. Verifique os dados e tente novamente.';
     errBox.classList.add('show');
+  }
+}
+
+/* =========================================================
+   GUIA DE AÇÃO — ACESSO COM 1 CRÉDITO
+========================================================= */
+let guiaLiberadoNestaSessao = false;
+
+function atualizarTelaGuia(){
+  const actions = document.getElementById('guiaPayActions');
+  const paywall = document.getElementById('guiaPaywall');
+  const conteudo = document.getElementById('guiaConteudo');
+  const err = document.getElementById('guiaError');
+  if(!actions || !paywall || !conteudo) return;
+  if(guiaLiberadoNestaSessao && conteudo.innerHTML.trim()){ paywall.style.display='none'; return; }
+  paywall.style.display='block';
+  conteudo.innerHTML='';
+  if(err){ err.textContent=''; err.classList.remove('show'); }
+  if(!authToken){
+    actions.innerHTML = `<button class="btn btn-primary" onclick="abrirAuthModal('login','acessar o Guia de Ação')">Entrar</button><button class="btn btn-secondary-light" onclick="abrirAuthModal('cadastro','acessar o Guia de Ação')">Criar conta</button>`;
+    return;
+  }
+  actions.innerHTML = `<button class="btn btn-primary" onclick="acessarGuiaPago()">Acessar Guia — usar 1 crédito</button>`;
+}
+
+async function acessarGuiaPago(){
+  const err = document.getElementById('guiaError');
+  if(!authToken){ abrirAuthModal('login','acessar o Guia de Ação'); return; }
+  try{
+    const resp = await api('/guia/acessar', { method:'POST', body:{} });
+    const conteudo = document.getElementById('guiaConteudo');
+    conteudo.innerHTML = resp.html || '';
+    guiaLiberadoNestaSessao = true;
+    document.getElementById('guiaPaywall').style.display='none';
+    if(currentUser && resp.creditosRestantes !== 'ilimitado') currentUser.creditos = resp.creditosRestantes;
+    renderAccountBox();
+    sgTrack('guide_access', { currency:'BRL', value:5 });
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(e){
+    if(e.status === 402){
+      if(err){ err.textContent='Você não tem créditos suficientes. Compre créditos para acessar o Guia de Ação.'; err.classList.add('show'); }
+      const actions = document.getElementById('guiaPayActions');
+      if(actions) actions.innerHTML = `<button class="btn btn-primary" onclick="goTo('creditos')">Comprar créditos</button>`;
+      return;
+    }
+    if(err){ err.textContent=e.message || 'Não foi possível liberar o Guia de Ação.'; err.classList.add('show'); }
   }
 }
 
@@ -2933,7 +2909,7 @@ function atualizarTelaCreditos(){
   document.getElementById('loggedOutCreditsMsg').style.display = logged ? 'none' : 'block';
   document.getElementById('loggedInCredits').style.display = logged ? 'block' : 'none';
   if(logged){
-    document.getElementById('saldoCreditos').textContent = currentUser.creditos + ' crédito(s)';
+    document.getElementById('saldoCreditos').textContent = formatarCreditos(currentUser.creditos);
     selecionarQtd(qtdSelecionada || 1);
     carregarHistorico();
   } else {
@@ -2948,7 +2924,7 @@ function selecionarQtd(q){
     b.classList.toggle('sel', selected);
     b.setAttribute('aria-pressed', selected ? 'true' : 'false');
   });
-  const total = q * 5;
+  const total = sgValorPacote(q);
   const totalEl = document.getElementById('creditTotalText');
   const choiceEl = document.getElementById('creditChoiceText');
   if(totalEl) totalEl.textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
@@ -2962,12 +2938,12 @@ async function comprarPix(){
     const cobranca = await api('/pagamentos/pix', { method:'POST', body:{ quantidade: qtdSelecionada } });
     sgTrack('begin_checkout', {
       currency: 'BRL',
-      value: Number(cobranca.valor || (qtdSelecionada * 5)),
+      value: Number(cobranca.valor || sgValorPacote(qtdSelecionada)),
       items: sgCreditItems(qtdSelecionada)
     });
     sgTrack('add_payment_info', {
       currency: 'BRL',
-      value: Number(cobranca.valor || (qtdSelecionada * 5)),
+      value: Number(cobranca.valor || sgValorPacote(qtdSelecionada)),
       payment_type: 'pix',
       items: sgCreditItems(qtdSelecionada)
     });
@@ -2984,12 +2960,12 @@ async function comprarCartao(){
     const cobranca = await api('/pagamentos/cartao', { method:'POST', body:{ quantidade: qtdSelecionada } });
     sgTrack('begin_checkout', {
       currency: 'BRL',
-      value: Number(cobranca.valor || (qtdSelecionada * 5)),
+      value: Number(cobranca.valor || sgValorPacote(qtdSelecionada)),
       items: sgCreditItems(qtdSelecionada)
     });
     sgTrack('add_payment_info', {
       currency: 'BRL',
-      value: Number(cobranca.valor || (qtdSelecionada * 5)),
+      value: Number(cobranca.valor || sgValorPacote(qtdSelecionada)),
       payment_type: 'card',
       items: sgCreditItems(qtdSelecionada)
     });
